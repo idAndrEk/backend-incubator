@@ -17,11 +17,11 @@
   },
   "devDependencies": {
     "@types/express": "^4.17.13",
-    "@types/node": "^17.0.40",
+    "@types/node": "^17.0.42",
     "nodemon": "^2.0.16",
     "ts-node": "^10.8.1",
     "typescript": "^4.7.3"
   },
-  "repository": "https://github.com/idAndrEk/HomeBlogger.git",
+  "repository": "https://github.com/idAndrEk/Bloggers-01-home.git",
   "author": "Andrey <AndrEkat96@yandex.ru>"
 }
