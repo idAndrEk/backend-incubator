@@ -11,7 +11,7 @@ app.use(bodyParser.json())
 const port = process.env.PORT || 5000
 
 export const bloggers = [
-    {id: 1, name: 'IT-KAMASUTRA!1111', youtubeUrl: 'https://www.youtube.com/c/ITKAMASUTRA'},
+    {id: 1, name: 'IT-KAMASUTRA', youtubeUrl: 'https://www.youtube.com/c/ITKAMASUTRA'},
     {id: 2, name: 'webDev', youtubeUrl: 'https://www.youtube.com/c/YauhenKavalchuk'},
     {id: 3, name: 'Egor Malkevich', youtubeUrl: 'https://www.youtube.com/c/EgorMalkevich'},
     {id: 4, name: 'Ulbi TV', youtubeUrl: 'https://www.youtube.com/c/UlbiTV'},
