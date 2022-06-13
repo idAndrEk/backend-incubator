@@ -85,6 +85,44 @@ app.get('/posts/:postId', (req: Request, res: Response) => {
     }
 })
 
+app.post('/posts', (req: Request, res: Response) => {
+    const newPost = {
+        title: req.body.title,
+        shortDescription: req.body.shortDescription,
+        content: req.body.content,
+        bloggerID: +req.body.bloggerId,
+        bloggerName: req.body.bloggerName
+    }
+    posts.push(newPost)
+    res.status(201).send(newPost)
+})
+
+app.delete('/posts/:id',(req: Request, res: Response)=>{
+    for (let i = 0; i < posts.length; i++) {
+        if (posts[i].id === +req.params.id) {
+            posts.splice(i, 1);
+            res.send(204)
+            return
+        }
+    }
+    res.send(404)
+})
+
+app.put('/posts/:bloggerId',(req: Request, res: Response)=>{
+    const id = +req.params.postId;
+    const post = posts.find(p => p.id === id);
+    if(post) {
+        post.title = req.body.title,
+            post.shortDescription = req.body.shortDescription,
+            post.content = req.body.content,
+            post.bloggerID = +req.body.bloggerId,
+            post.bloggerName = req.body.bloggerName
+        res.send(post)
+    } else {
+        res.send(404)
+    }
+})
+
 // app.post (req: Request, res: Response) {
 //     const blogger = bloggers.find(b => b.id === +req.body.bloggerId)
 //     if (blogger) {
