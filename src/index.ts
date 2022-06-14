@@ -33,17 +33,19 @@ app.get('/bloggers/:bloggerId', (req: Request, res: Response) => {
 })
 
 app.post('/bloggers', (req: Request, res: Response) => {
+    const bloggerName = req.body.name;
+    const bloggerYoutubeUrl = req.body.youtubeUrl;
+    const newBlogger = {id: 0, name: `${req.body.name}`, youtubeUrl: `${req.body.youtubeUrl}`}
     const errorsMessagesCreat = [
         {
             "message": "test01",
             "field": "test2"
         }
     ]
-    if (typeof req.body.name === "string" && typeof req.body.youtubeUrl === "string") {
-        if (req.body.name.length <= 15 && req.body.youtubeUrl.length <= 100) {
-            const nameBlogger = {id: 0, name: `${req.body.name}`, youtubeUrl: `${req.body.youtubeUrl}`}
-            bloggers.push(req.body.name)
-            res.status(201).send(req.body.name)
+    if (typeof bloggerName === "string" && typeof bloggerYoutubeUrl === "string") {
+        if (bloggerName.length <= 15 && bloggerYoutubeUrl.length <= 100) {
+            bloggers.push(newBlogger)
+            res.status(201).send(newBlogger)
         }
     }
     return errorsMessagesCreat
@@ -67,16 +69,18 @@ app.put('/bloggers/:bloggerId',(req: Request, res: Response)=> {
             "field": "test04"
         }
     ]
+    const nameBlogger = req.body.name;
+    const youtubeUrlBlogger = req.body.youtubeUrl;
+    const newBlogger = {id: 0, name: `${req.body.name}`, youtubeUrl: `${req.body.youtubeUrl}`}
     const reges = RegExp('^https:\/\/([a-zA-Z0-9_-]+\.)+[a-zA-Z0-9_-]+(\/[a-zA-Z0-9_-]+)*\/?$');
-    if (typeof req.body.name !== "string" || req.body.name.length > 15 || !req.body.name.match(reges)) {
+    if (typeof nameBlogger !== "string" || nameBlogger.length > 15 || !nameBlogger.match(reges)) {
         res.status(400).send(errorsMessagesUpdate)
     }
-    if (typeof req.body.youtubeUrl !== "string" || req.body.youtubeUrl.length > 100 || !req.body.youtubeUrl.match(reges)) {
+    if (typeof youtubeUrlBlogger !== "string" || youtubeUrlBlogger.length > 100 || !youtubeUrlBlogger.match(reges)) {
         res.status(400).send(errorsMessagesUpdate)
     } else {
-        bloggers.push(req.body.name)
-        bloggers.push(req.body.youtubeUrl)
-        res.status(201)
+        bloggers.push(newBlogger)
+        res.status(201).send(newBlogger)
     }
 })
 
