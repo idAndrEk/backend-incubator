@@ -55,11 +55,11 @@ app.delete('/bloggers/:id',(req: Request, res: Response)=>{
     for (let i = 0; i < bloggers.length; i++) {
         if (bloggers[i].id === +req.params.id) {
             bloggers.splice(i, 1);
-            res.send(204)
+            res.sendStatus(204)
             return
         }
     }
-    res.send(404)
+    res.sendStatus(404)
 })
 
 app.put('/bloggers/:bloggerId',(req: Request, res: Response)=>{
@@ -75,7 +75,7 @@ app.put('/bloggers/:bloggerId',(req: Request, res: Response)=>{
     if (typeof nameBlogger !== "string" || nameBlogger.length > 15) {
         res.status(400).send(errorsMessagesUpdate)
     }
-    if (typeof youtubeUrlBlogger !== "string" || youtubeUrlBlogger.length > 100 || youtubeUrlBlogger.match(reges)) {
+    if (typeof youtubeUrlBlogger !== "string" || youtubeUrlBlogger.length > 100 || !youtubeUrlBlogger.match(reges)) {
         res.status(400).send(errorsMessagesUpdate)
     }
     })
@@ -101,24 +101,11 @@ app.get('/posts/:postId', (req: Request, res: Response) => {
     }
 })
 
-// app.post('/posts', (req: Request, res: Response) => {
-//     const newPost = {
-//         title: req.body.title,
-//         shortDescription: req.body.shortDescription,
-//         content: req.body.content,
-//         bloggerID: +req.body.bloggerId,
-//         bloggerName: req.body.bloggerName
-//     }
-//     posts.push(newPost)
-//     res.status(201).send(newPost)
-// })
-
 app.delete('/posts/:id',(req: Request, res: Response)=>{
     for (let i = 0; i < posts.length; i++) {
         if (posts[i].id === +req.params.id) {
             posts.splice(i, 1);
             res.send(204)
-            return
         }
     }
     res.send(404)
@@ -138,22 +125,6 @@ app.put('/posts/:bloggerId',(req: Request, res: Response)=>{
         res.send(404)
     }
 })
-
-// app.post (req: Request, res: Response) {
-//     const blogger = bloggers.find(b => b.id === +req.body.bloggerId)
-//     if (blogger) {
-//         const newPost = {
-//             id = +(newDate()),
-//             title = req.body.title,
-//
-//
-//             bloggerId = +req.body.bloggerId,
-//             bloggerName = blogger.name
-//         }
-//     } else {
-//         res.send(400).send(".....")
-//     }
-// }
 
 app.listen(port, () => {
     console.log(`Example app listening on port ${port}`)
