@@ -69,18 +69,16 @@ app.put('/bloggers/:bloggerId',(req: Request, res: Response)=> {
             "field": "test04"
         }
     ]
-    const nameBlogger = req.body.name;
-    const youtubeUrlBlogger = req.body.youtubeUrl;
     const reges = RegExp('^https:\/\/([a-zA-Z0-9_-]+\.)+[a-zA-Z0-9_-]+(\/[a-zA-Z0-9_-]+)*\/?$');
-    if (typeof nameBlogger !== "string" || nameBlogger.length > 15 || !nameBlogger.match(reges)) {
+    if (typeof req.body.name !== "string" || req.body.name.length > 15 || !req.body.name.match(reges)) {
         res.status(400).send(errorsMessagesUpdate)
     }
-    if (typeof youtubeUrlBlogger !== "string" || youtubeUrlBlogger.length > 100 || !youtubeUrlBlogger.match(reges)) {
+    if (typeof req.body.youtubeUrl !== "string" || req.body.youtubeUrl.length > 100 || !req.body.youtubeUrl.match(reges)) {
         res.status(400).send(errorsMessagesUpdate)
     } else {
-        const result = nameBlogger + youtubeUrlBlogger
-        return result
-
+        bloggers.push(req.body.name)
+        bloggers.push(req.body.youtubeUrl)
+        res.status(201)
     }
 })
 
