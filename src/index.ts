@@ -62,7 +62,7 @@ app.delete('/bloggers/:id',(req: Request, res: Response)=>{
     res.sendStatus(404)
 })
 
-app.put('/bloggers/:bloggerId',(req: Request, res: Response)=>{
+app.put('/bloggers/:bloggerId',(req: Request, res: Response)=> {
     const errorsMessagesUpdate = [
         {
             "message": "test03",
@@ -72,13 +72,17 @@ app.put('/bloggers/:bloggerId',(req: Request, res: Response)=>{
     const nameBlogger = req.body.name;
     const youtubeUrlBlogger = req.body.youtubeUrl;
     const reges = RegExp('^https:\/\/([a-zA-Z0-9_-]+\.)+[a-zA-Z0-9_-]+(\/[a-zA-Z0-9_-]+)*\/?$');
-    if (typeof nameBlogger !== "string" || nameBlogger.length > 15) {
+    if (typeof nameBlogger !== "string" || nameBlogger.length > 15 || !nameBlogger.match(reges)) {
         res.status(400).send(errorsMessagesUpdate)
     }
     if (typeof youtubeUrlBlogger !== "string" || youtubeUrlBlogger.length > 100 || !youtubeUrlBlogger.match(reges)) {
         res.status(400).send(errorsMessagesUpdate)
+    } else {
+        const result = nameBlogger + youtubeUrlBlogger
+        return result
+
     }
-    })
+})
 
 export const posts = [
     {id: 1, title: 'Test01', shortDescription: 'test001', content: 'IT', bloggerId: 1, bloggerName: 'IT-KAMASUTRA'},
