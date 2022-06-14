@@ -84,7 +84,7 @@ app.put('/bloggers/:bloggerId',(req: Request, res: Response)=> {
             upBlogger.youtubeUrl = req.body.youtubeUrl
             res.sendStatus(204)
         } else {
-            res.status(404)
+            res.sendStatus(404)
         }
         }
 })
