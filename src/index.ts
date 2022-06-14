@@ -2,6 +2,7 @@ import express from "express";
 import cors from "cors";
 import bodyParser from "body-parser";
 import {Request, Response} from 'express'
+import {isNumberObject} from "util/types";
 
 const app = express()
 
@@ -18,7 +19,7 @@ export const bloggers = [
 ]
 
 app.get('/bloggers', (req: Request, res: Response) => {
-    res.send(bloggers)
+    res.send(bloggers).sendStatus(200)
 });
 
 app.get('/bloggers/:bloggerId', (req: Request, res: Response) => {
@@ -27,18 +28,27 @@ app.get('/bloggers/:bloggerId', (req: Request, res: Response) => {
     if(!blogger) {
         res.sendStatus(404).send('Not found')
     } else {
-        res.json(blogger)
+        res.json(blogger).sendStatus(200)
     }
 })
 
 app.post('/bloggers', (req: Request, res: Response) => {
-    const newBlogger = {
-        id: +req.body.id,
-        name: req.body.name,
-        youtubeUrl: req.body.youtubeUrl
+    const bloggerName = req.body.name;
+    const bloggerYoutubeUrl = req.body.youtubeUrl;
+    const errorsMessagesCreat = [
+        {
+            "message": "test01",
+            "field": "test2"
+        }
+    ]
+    if (typeof bloggerName === "string" && typeof bloggerYoutubeUrl === "string") {
+        if (bloggerName.length <= 15 && bloggerYoutubeUrl.length <= 100) {
+            const nameBlogger = {id: 0, name: `${req.body.name}`, youtubeUrl: `${req.body.youtubeUrl}`}
+            bloggers.push(nameBlogger)
+            res.status(201).send(nameBlogger)
+        }
     }
-    bloggers.push(newBlogger)
-    res.status(201).send(newBlogger)
+    return errorsMessagesCreat
 })
 
 app.delete('/bloggers/:id',(req: Request, res: Response)=>{
@@ -53,16 +63,22 @@ app.delete('/bloggers/:id',(req: Request, res: Response)=>{
 })
 
 app.put('/bloggers/:bloggerId',(req: Request, res: Response)=>{
-    const id = +req.params.bloggerId;
-    const blogger = bloggers.find(n => n.id === id);
-    if(blogger) {
-        blogger.name = req.body.name,
-            blogger.youtubeUrl = req.body.youtubeUrl
-        res.send(blogger)
-    } else {
-        res.send(404)
+    const errorsMessagesUpdate = [
+        {
+            "message": "test03",
+            "field": "test04"
+        }
+    ]
+    const nameBlogger = req.body.name;
+    const youtubeUrlBlogger = req.body.youtubeUrl;
+    const reges = RegExp('^https:\/\/([a-zA-Z0-9_-]+\.)+[a-zA-Z0-9_-]+(\/[a-zA-Z0-9_-]+)*\/?$');
+    if (typeof nameBlogger !== "string" || nameBlogger.length > 15) {
+        res.status(400).send(errorsMessagesUpdate)
     }
-})
+    if (typeof youtubeUrlBlogger !== "string" || youtubeUrlBlogger.length > 100 || youtubeUrlBlogger.match(reges)) {
+        res.status(400).send(errorsMessagesUpdate)
+    }
+    })
 
 export const posts = [
     {id: 1, title: 'Test01', shortDescription: 'test001', content: 'IT', bloggerId: 1, bloggerName: 'IT-KAMASUTRA'},
@@ -85,17 +101,17 @@ app.get('/posts/:postId', (req: Request, res: Response) => {
     }
 })
 
-app.post('/posts', (req: Request, res: Response) => {
-    const newPost = {
-        title: req.body.title,
-        shortDescription: req.body.shortDescription,
-        content: req.body.content,
-        bloggerID: +req.body.bloggerId,
-        bloggerName: req.body.bloggerName
-    }
-    posts.push(newPost)
-    res.status(201).send(newPost)
-})
+// app.post('/posts', (req: Request, res: Response) => {
+//     const newPost = {
+//         title: req.body.title,
+//         shortDescription: req.body.shortDescription,
+//         content: req.body.content,
+//         bloggerID: +req.body.bloggerId,
+//         bloggerName: req.body.bloggerName
+//     }
+//     posts.push(newPost)
+//     res.status(201).send(newPost)
+// })
 
 app.delete('/posts/:id',(req: Request, res: Response)=>{
     for (let i = 0; i < posts.length; i++) {
@@ -115,7 +131,7 @@ app.put('/posts/:bloggerId',(req: Request, res: Response)=>{
         post.title = req.body.title,
             post.shortDescription = req.body.shortDescription,
             post.content = req.body.content,
-            post.bloggerID = +req.body.bloggerId,
+            //post.bloggerID = +req.body.bloggerId,
             post.bloggerName = req.body.bloggerName
         res.send(post)
     } else {
