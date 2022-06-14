@@ -35,7 +35,7 @@ app.get('/bloggers/:bloggerId', (req: Request, res: Response) => {
 app.post('/bloggers', (req: Request, res: Response) => {
     const bloggerName = req.body.name;
     const bloggerYoutubeUrl = req.body.youtubeUrl;
-    const newBlogger = {id: 0, name: `${bloggerName}`, youtubeUrl: `${bloggerYoutubeUrl}`}
+    const newBlogger = {id: +(new Date()), name: `${bloggerName}`, youtubeUrl: `${bloggerYoutubeUrl}`}
     const errorsMessagesCreat = [
         {
             "message": "test01",
@@ -71,7 +71,6 @@ app.put('/bloggers/:bloggerId',(req: Request, res: Response)=> {
     ]
     const nameBlogger = req.body.name;
     const youtubeUrlBlogger = req.body.youtubeUrl;
-    const newBlogger = {id: 0, name: `${nameBlogger}`, youtubeUrl: `${youtubeUrlBlogger}`}
     const reges = RegExp('^https:\/\/([a-zA-Z0-9_-]+\.)+[a-zA-Z0-9_-]+(\/[a-zA-Z0-9_-]+)*\/?$');
     if (typeof nameBlogger !== "string" || nameBlogger.length > 15) {
         res.status(400).send(errorsMessagesUpdate)
@@ -79,9 +78,15 @@ app.put('/bloggers/:bloggerId',(req: Request, res: Response)=> {
     if (typeof youtubeUrlBlogger !== "string" || youtubeUrlBlogger.length > 100 || !youtubeUrlBlogger.match(reges)) {
         res.status(400).send(errorsMessagesUpdate)
     } else {
-        bloggers.push(newBlogger)
-        res.status(204).send(newBlogger)
-    }
+        const upBlogger = bloggers.find(b => b.id === +(req.params.bloggerId))
+        if (upBlogger) {
+            upBlogger.name = req.body.name
+            upBlogger.youtubeUrl = req.body.youtubeUrl
+            res.sendStatus(204)
+        } else {
+            res.status(404)
+        }
+        }
 })
 
 export const posts = [
