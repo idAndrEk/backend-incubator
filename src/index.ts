@@ -33,16 +33,14 @@ app.get('/bloggers/:bloggerId', (req: Request, res: Response) => {
 })
 
 app.post('/bloggers', (req: Request, res: Response) => {
-    const bloggerName = req.body.name;
-    const bloggerYoutubeUrl = req.body.youtubeUrl;
     const errorsMessagesCreat = [
         {
             "message": "test01",
             "field": "test2"
         }
     ]
-    if (typeof bloggerName === "string" && typeof bloggerYoutubeUrl === "string") {
-        if (bloggerName.length <= 15 && bloggerYoutubeUrl.length <= 100) {
+    if (typeof req.body.name === "string" && typeof req.body.youtubeUrl === "string") {
+        if (req.body.name.length <= 15 && req.body.youtubeUrl.length <= 100) {
             const nameBlogger = {id: 0, name: `${req.body.name}`, youtubeUrl: `${req.body.youtubeUrl}`}
             bloggers.push(nameBlogger)
             res.status(201).send(nameBlogger)
