@@ -80,7 +80,7 @@ app.put('/bloggers/:bloggerId',(req: Request, res: Response)=> {
         res.status(400).send(errorsMessagesUpdate)
     } else {
         bloggers.push(newBlogger)
-        res.status(201).send(newBlogger)
+        res.status(204).send(newBlogger)
     }
 })
 
