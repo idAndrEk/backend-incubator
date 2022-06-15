@@ -90,7 +90,7 @@ app.put('/bloggers/:bloggerId',(req: Request, res: Response)=> {
 })
 
 export const posts = [
-    {id: 1, title: 'Test01111', shortDescription: 'test001', content: 'IT', bloggerId: 1, bloggerName: 'IT-KAMASUTRA'},
+    {id: 1, title: 'Test01', shortDescription: 'test001', content: 'IT', bloggerId: 1, bloggerName: 'IT-KAMASUTRA'},
     {id: 2, title: 'Test02', shortDescription: 'test002', content: 'IT', bloggerId: 2, bloggerName: 'webDev'},
     {id: 3, title: 'Test03', shortDescription: 'test003', content: 'IT', bloggerId: 3, bloggerName: 'Egor Malkevich'},
     {id: 4, title: 'Test04', shortDescription: 'test004', content: 'IT', bloggerId: 4, bloggerName: 'Ulbi TV'},
@@ -157,7 +157,7 @@ app.post('/posts', (req: Request, res: Response) => {
         })
         return
     }
-    posts.push(newPost)
+    // posts.push(newPost)
     res.sendStatus(201).json(newPost)
 })
 
