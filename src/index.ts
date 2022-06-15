@@ -32,25 +32,18 @@ app.get('/bloggers/:bloggerId', (req: Request, res: Response) => {
 })
 
 app.post('/bloggers', (req: Request, res: Response) => {
+    const errors = [];
     const bloggerName = req.body.name;
     const bloggerYoutubeUrl = req.body.youtubeUrl;
-    const errors = [];
     const newBlogger = {id: +(new Date()), name: `${bloggerName}`, youtubeUrl: `${bloggerYoutubeUrl}`}
-
-    if (typeof bloggerName === "string" || bloggerYoutubeUrl.length <= 100) {
-        errors.push({message: 'Error name', field: 'name'})
+    ]
+    if (typeof bloggerName === "string" && typeof bloggerYoutubeUrl === "string") {
+        if (bloggerName.length <= 15 && bloggerYoutubeUrl.length <= 100) {
+            bloggers.push(newBlogger)
+            res.status(201).send(newBlogger)
+        }
     }
-    if (bloggerName.length <= 15 || typeof bloggerYoutubeUrl === "string") {
-        errors.push({message: 'Error youtubeUrl', field: 'youtubeUrl'})
-    }
-    if (errors.length) {
-       res.sendStatus(400).json({
-           errorsMessages: errors
-       })
-        return
-    }
-        bloggers.push(newBlogger)
-        res.status(201).send(newBlogger)
+    return errorsMessagesCreat
 })
 
 app.delete('/bloggers/:id',(req: Request, res: Response)=>{
@@ -65,27 +58,29 @@ app.delete('/bloggers/:id',(req: Request, res: Response)=>{
 })
 
 app.put('/bloggers/:bloggerId',(req: Request, res: Response)=> {
+    const errorsMessagesUpdate = [
+        {
+            "message": "test03",
+            "field": "test04"
+        }
+    ]
     const nameBlogger = req.body.name;
     const youtubeUrlBlogger = req.body.youtubeUrl;
-    const errors = [];
     const reges = RegExp('^https:\/\/([a-zA-Z0-9_-]+\.)+[a-zA-Z0-9_-]+(\/[a-zA-Z0-9_-]+)*\/?$');
     if (typeof nameBlogger !== "string" || nameBlogger.length > 15) {
-        errors.push({message: 'Error name', field: 'name'})
+        res.status(400).send(errorsMessagesUpdate)
     }
     if (typeof youtubeUrlBlogger !== "string" || youtubeUrlBlogger.length > 100 || !youtubeUrlBlogger.match(reges)) {
-        errors.push({message: 'Error youtubeUrl', field: 'youtubeUrl'})
-    }
-    if (errors.length) {
-        res.sendStatus(400).json({
-            errorsMessages: errors
-        })
-        return
-    }
-    const upBlogger = bloggers.find(b => b.id === +(req.params.bloggerId))
-    if (upBlogger) {
-        upBlogger.name = req.body.name
-        upBlogger.youtubeUrl = req.body.youtubeUrl
-        res.sendStatus(204)
+        res.status(400).send(errorsMessagesUpdate)
+    } else {
+        const upBlogger = bloggers.find(b => b.id === +(req.params.bloggerId))
+        if (upBlogger) {
+            upBlogger.name = req.body.name
+            upBlogger.youtubeUrl = req.body.youtubeUrl
+            res.sendStatus(204)
+        } else {
+            res.sendStatus(404)
+        }
     }
 })
 
@@ -118,15 +113,15 @@ app.post('/posts', (req: Request, res: Response) => {
         content: req.body.content
     }
     if (typeof req.body.title === "string" || req.body.title.length <= 30){
-        errors.push({message: 'Error title', field: 'title'})
+        errors.push({message: 'Incorrect title', field: 'title'})
     }
     if (typeof req.body.shortDescription === "string" || req.body.shortDescription <= 100) {
-        errors.push({message: 'Error shortDescription', field: 'shortDescription'})
+        errors.push({message: 'Incorrect shortDescription', field: 'shortDescription'})
     }
     if (req.body.content === "string" || req.body.content <= 1000) {
-        errors.push({message: 'Error content', field: 'content'})
+        errors.push({message: 'Incorrect content', field: 'content'})
     }
-    // posts.push(newPost)
+    posts.push(newPost)
     res.sendStatus(201).json(newPost)
 })
 
