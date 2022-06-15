@@ -120,15 +120,15 @@ app.post('/posts', (req: Request, res: Response) => {
         content: req.body.content
     }
     if (typeof req.body.title === "string" || req.body.title.length <= 30){
-        errors.push({message: 'Incorrect title', field: 'title'})
+        errors.push({message: 'Error title', field: 'title'})
     }
     if (typeof req.body.shortDescription === "string" || req.body.shortDescription <= 100) {
-        errors.push({message: 'Incorrect shortDescription', field: 'shortDescription'})
+        errors.push({message: 'Error shortDescription', field: 'shortDescription'})
     }
     if (req.body.content === "string" || req.body.content <= 1000) {
-        errors.push({message: 'Incorrect content', field: 'content'})
+        errors.push({message: 'Error content', field: 'content'})
     }
-    posts.push(newPost)
+    // posts.push(newPost)
     res.sendStatus(201).json(newPost)
 })
 
