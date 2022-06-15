@@ -137,21 +137,13 @@ app.put('/posts/:bloggerId',(req: Request, res: Response)=>{
 
 app.post('/posts', (req: Request, res: Response) => {
     const errors = []
-    const newPost = {
-        id: posts.length + 1,
-        title: req.body.title,
-        shortDescription: req.body.shortDescription,
-        content: req.body.content,
-        bloggerId: +req.body.bloggerId,
-        bloggerName: req.body.bloggerName
-    }
-    if (typeof req.body.title !== "string" || req.body.title.length > 30){
+    if (typeof req.body.title !== "string" || req.body.title.length > 30 || req.body.title.trim() === ""){
         errors.push({message: 'Error title', field: 'title'})
     }
-    if (typeof req.body.shortDescription !== "string" || req.body.shortDescription > 100) {
+    if (typeof req.body.shortDescription !== "string" || req.body.shortDescription > 100 || req.body.shortDescription.trim() === "") {
         errors.push({message: 'Error shortDescription', field: 'shortDescription'})
     }
-    if (typeof req.body.content !== "string" || req.body.content > 1000) {
+    if (typeof req.body.content !== "string" || req.body.content > 1000 || req.body.content.trim() === "") {
         errors.push({message: 'Error content', field: 'content'})
     }
     if(errors.length) {
@@ -160,8 +152,21 @@ app.post('/posts', (req: Request, res: Response) => {
         })
         return
     }
-    posts.push(newPost)
-    res.sendStatus(201).json(newPost)
+    const blogger = bloggers.find(b => b.id === +req.body.bloggerId)
+    if (blogger) {
+        const newPost = {
+            id: posts.length + 1,
+            title: req.body.title,
+            shortDescription: req.body.shortDescription,
+            content: req.body.content,
+            bloggerId: +req.body.bloggerId,
+            bloggerName: blogger.name
+        }
+        posts.push(newPost)
+        res.sendStatus(201).json(newPost)
+    } else {
+        res.status(400)
+    }
 })
 
 app.listen(port, () => {
