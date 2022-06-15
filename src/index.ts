@@ -86,7 +86,7 @@ app.put('/bloggers/:bloggerId',(req: Request, res: Response)=> {
         } else {
             res.sendStatus(404)
         }
-        }
+    }
 })
 
 export const posts = [
@@ -133,6 +133,32 @@ app.put('/posts/:bloggerId',(req: Request, res: Response)=>{
     } else {
         res.send(404)
     }
+})
+
+app.post('/posts', (req: Request, res: Response) => {
+    const errors = []
+    const newPost = {
+        title: req.body.title,
+        shortDescription: req.body.shortDescription,
+        content: req.body.content
+    }
+    if (typeof req.body.title !== "string" || req.body.title.length > 30){
+        errors.push({message: 'Error title', field: 'title'})
+    }
+    if (typeof req.body.shortDescription !== "string" || req.body.shortDescription > 100) {
+        errors.push({message: 'Error shortDescription', field: 'shortDescription'})
+    }
+    if (req.body.content === "string" || req.body.content > 1000) {
+        errors.push({message: 'Error content', field: 'content'})
+    }
+    if(errors.length) {
+        res.status(400).json({
+            errorsMessages: errors
+        })
+        return
+    }
+    posts.push(newPost)
+    res.sendStatus(201).json(newPost)
 })
 
 app.listen(port, () => {
