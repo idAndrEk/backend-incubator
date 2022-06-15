@@ -151,7 +151,7 @@ app.post('/posts', (req: Request, res: Response) => {
     if (typeof req.body.shortDescription !== "string" || req.body.shortDescription > 100) {
         errors.push({message: 'Error shortDescription', field: 'shortDescription'})
     }
-    if (req.body.content !== "string" || req.body.content > 1000) {
+    if (typeof req.body.content !== "string" || req.body.content > 1000) {
         errors.push({message: 'Error content', field: 'content'})
     }
     if(errors.length) {
