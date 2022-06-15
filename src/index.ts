@@ -138,9 +138,12 @@ app.put('/posts/:bloggerId',(req: Request, res: Response)=>{
 app.post('/posts', (req: Request, res: Response) => {
     const errors = []
     const newPost = {
+        id: posts.length + 1,
         title: req.body.title,
         shortDescription: req.body.shortDescription,
-        content: req.body.content
+        content: req.body.content,
+        bloggerId: +req.body.bloggerId,
+        bloggerName: req.body.bloggerName
     }
     if (typeof req.body.title !== "string" || req.body.title.length > 30){
         errors.push({message: 'Error title', field: 'title'})
@@ -148,7 +151,7 @@ app.post('/posts', (req: Request, res: Response) => {
     if (typeof req.body.shortDescription !== "string" || req.body.shortDescription > 100) {
         errors.push({message: 'Error shortDescription', field: 'shortDescription'})
     }
-    if (req.body.content === "string" || req.body.content > 1000) {
+    if (req.body.content !== "string" || req.body.content > 1000) {
         errors.push({message: 'Error content', field: 'content'})
     }
     if(errors.length) {
@@ -157,7 +160,7 @@ app.post('/posts', (req: Request, res: Response) => {
         })
         return
     }
-    // posts.push(newPost)
+    posts.push(newPost)
     res.sendStatus(201).json(newPost)
 })
 
