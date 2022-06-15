@@ -41,7 +41,6 @@ app.post('/bloggers', (req: Request, res: Response) => {
     const bloggerName = req.body.name;
     const bloggerYoutubeUrl = req.body.youtubeUrl;
     const newBlogger = {id: +(new Date()), name: `${bloggerName}`, youtubeUrl: `${bloggerYoutubeUrl}`}
-    ]
     if (typeof bloggerName === "string" && typeof bloggerYoutubeUrl === "string") {
         if (bloggerName.length <= 15 && bloggerYoutubeUrl.length <= 100) {
             bloggers.push(newBlogger)
@@ -126,7 +125,7 @@ app.post('/posts', (req: Request, res: Response) => {
     if (req.body.content === "string" || req.body.content <= 1000) {
         errors.push({message: 'Incorrect content', field: 'content'})
     }
-    posts.push(newPost)
+    // posts.push(newPost)
     res.sendStatus(201).json(newPost)
 })
 
