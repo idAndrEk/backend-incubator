@@ -32,16 +32,16 @@ app.get('/bloggers/:bloggerId', (req: Request, res: Response) => {
 })
 
 app.post('/bloggers', (req: Request, res: Response) => {
-    const errors = [];
     const bloggerName = req.body.name;
     const bloggerYoutubeUrl = req.body.youtubeUrl;
+    const errors = [];
     const newBlogger = {id: +(new Date()), name: `${bloggerName}`, youtubeUrl: `${bloggerYoutubeUrl}`}
 
     if (typeof bloggerName === "string" || bloggerYoutubeUrl.length <= 100) {
         errors.push({message: 'Error name', field: 'name'})
     }
     if (bloggerName.length <= 15 || typeof bloggerYoutubeUrl === "string") {
-        errors.push({message: 'Error name', field: 'name'})
+        errors.push({message: 'Error youtubeUrl', field: 'youtubeUrl'})
     }
     if (errors.length) {
        res.sendStatus(400).json({
@@ -65,29 +65,27 @@ app.delete('/bloggers/:id',(req: Request, res: Response)=>{
 })
 
 app.put('/bloggers/:bloggerId',(req: Request, res: Response)=> {
-    const errorsMessagesUpdate = [
-        {
-            "message": "test03",
-            "field": "test04"
-        }
-    ]
     const nameBlogger = req.body.name;
     const youtubeUrlBlogger = req.body.youtubeUrl;
+    const errors = [];
     const reges = RegExp('^https:\/\/([a-zA-Z0-9_-]+\.)+[a-zA-Z0-9_-]+(\/[a-zA-Z0-9_-]+)*\/?$');
     if (typeof nameBlogger !== "string" || nameBlogger.length > 15) {
-        res.status(400).send(errorsMessagesUpdate)
+        errors.push({message: 'Error name', field: 'name'})
     }
     if (typeof youtubeUrlBlogger !== "string" || youtubeUrlBlogger.length > 100 || !youtubeUrlBlogger.match(reges)) {
-        res.status(400).send(errorsMessagesUpdate)
-    } else {
-        const upBlogger = bloggers.find(b => b.id === +(req.params.bloggerId))
-        if (upBlogger) {
-            upBlogger.name = req.body.name
-            upBlogger.youtubeUrl = req.body.youtubeUrl
-            res.sendStatus(204)
-        } else {
-            res.sendStatus(404)
-        }
+        errors.push({message: 'Error youtubeUrl', field: 'youtubeUrl'})
+    }
+    if (errors.length) {
+        res.sendStatus(400).json({
+            errorsMessages: errors
+        })
+        return
+    }
+    const upBlogger = bloggers.find(b => b.id === +(req.params.bloggerId))
+    if (upBlogger) {
+        upBlogger.name = req.body.name
+        upBlogger.youtubeUrl = req.body.youtubeUrl
+        res.sendStatus(204)
     }
 })
 
