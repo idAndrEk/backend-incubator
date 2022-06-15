@@ -32,7 +32,12 @@ app.get('/bloggers/:bloggerId', (req: Request, res: Response) => {
 })
 
 app.post('/bloggers', (req: Request, res: Response) => {
-    const errors = [];
+    const errorsMessagesCreat = [
+        {
+            "message": "test01",
+            "field": "test02"
+        }
+    ]
     const bloggerName = req.body.name;
     const bloggerYoutubeUrl = req.body.youtubeUrl;
     const newBlogger = {id: +(new Date()), name: `${bloggerName}`, youtubeUrl: `${bloggerYoutubeUrl}`}
