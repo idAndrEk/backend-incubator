@@ -32,22 +32,25 @@ app.get('/bloggers/:bloggerId', (req: Request, res: Response) => {
 })
 
 app.post('/bloggers', (req: Request, res: Response) => {
+    const errors = [];
     const bloggerName = req.body.name;
     const bloggerYoutubeUrl = req.body.youtubeUrl;
     const newBlogger = {id: +(new Date()), name: `${bloggerName}`, youtubeUrl: `${bloggerYoutubeUrl}`}
-    const errorsMessagesCreat = [
-        {
-            "message": "test01",
-            "field": "test2"
-        }
-    ]
-    if (typeof bloggerName === "string" && typeof bloggerYoutubeUrl === "string") {
-        if (bloggerName.length <= 15 && bloggerYoutubeUrl.length <= 100) {
-            bloggers.push(newBlogger)
-            res.status(201).send(newBlogger)
-        }
+
+    if (typeof bloggerName === "string" || bloggerYoutubeUrl.length <= 100) {
+        errors.push({message: 'Error name', field: 'name'})
     }
-    return errorsMessagesCreat
+    if (bloggerName.length <= 15 || typeof bloggerYoutubeUrl === "string") {
+        errors.push({message: 'Error name', field: 'name'})
+    }
+    if (errors.length) {
+       res.sendStatus(400).json({
+           errorsMessages: errors
+       })
+        return
+    }
+        bloggers.push(newBlogger)
+        res.status(201).send(newBlogger)
 })
 
 app.delete('/bloggers/:id',(req: Request, res: Response)=>{
