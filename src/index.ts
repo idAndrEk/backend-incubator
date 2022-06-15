@@ -2,7 +2,6 @@ import express from "express";
 import cors from "cors";
 import bodyParser from "body-parser";
 import {Request, Response} from 'express'
-import {isNumberObject} from "util/types";
 
 const app = express()
 
@@ -90,7 +89,7 @@ app.put('/bloggers/:bloggerId',(req: Request, res: Response)=> {
 })
 
 export const posts = [
-    {id: 1, title: 'Test01!', shortDescription: 'test001', content: 'IT', bloggerId: 1, bloggerName: 'IT-KAMASUTRA'},
+    {id: 1, title: 'Test01', shortDescription: 'test001', content: 'IT', bloggerId: 1, bloggerName: 'IT-KAMASUTRA'},
     {id: 2, title: 'Test02', shortDescription: 'test002', content: 'IT', bloggerId: 2, bloggerName: 'webDev'},
     {id: 3, title: 'Test03', shortDescription: 'test003', content: 'IT', bloggerId: 3, bloggerName: 'Egor Malkevich'},
     {id: 4, title: 'Test04', shortDescription: 'test004', content: 'IT', bloggerId: 4, bloggerName: 'Ulbi TV'},
@@ -139,20 +138,20 @@ app.delete('/posts/:id',(req: Request, res: Response)=>{
     res.sendStatus(404).send('Not Found')
 })
 
-app.put('/posts/:bloggerId',(req: Request, res: Response)=>{
-    const id = +req.params.postId;
-    const post = posts.find(p => p.id === id);
-    if(post) {
-        post.title = req.body.title,
-            post.shortDescription = req.body.shortDescription,
-            post.content = req.body.content,
-            //post.bloggerID = +req.body.bloggerId,
-            post.bloggerName = req.body.bloggerName
-        res.send(post)
-    } else {
-        res.send(404)
-    }
-})
+// app.put('/posts/:bloggerId',(req: Request, res: Response)=>{
+//     const id = +req.params.postId;
+//     const post = posts.find(p => p.id === id);
+//     if(post) {
+//         post.title = req.body.title,
+//             post.shortDescription = req.body.shortDescription,
+//             post.content = req.body.content,
+//             post.bloggerID = +req.body.bloggerId,
+//             post.bloggerName = req.body.bloggerName
+//         res.send(post)
+//     } else {
+//         res.send(404)
+//     }
+// })
 
 app.listen(port, () => {
     console.log(`Example app listening on port ${port}`)
