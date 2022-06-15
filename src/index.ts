@@ -165,7 +165,7 @@ app.post('/posts', (req: Request, res: Response) => {
         posts.push(newPost)
         res.status(201).send(newPost)
     } else {
-        res.status(400)
+        res.status(400).send({errorsMessages: [{ message: "Not Found Blogger", field: "bloggerId" }] })
     }
 })
 
