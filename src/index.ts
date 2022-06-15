@@ -25,7 +25,7 @@ app.get('/bloggers', (req: Request, res: Response) => {
 app.get('/bloggers/:bloggerId', (req: Request, res: Response) => {
     const id = +req.params.bloggerId;
     const blogger = bloggers.find(b => b.id === id)
-    if(!blogger) {
+    if (!blogger) {
         res.sendStatus(404).send('Not found')
     } else {
         res.json(blogger).sendStatus(200)
@@ -51,7 +51,7 @@ app.post('/bloggers', (req: Request, res: Response) => {
     return errorsMessagesCreat
 })
 
-app.delete('/bloggers/:id',(req: Request, res: Response)=>{
+app.delete('/bloggers/:id', (req: Request, res: Response) => {
     for (let i = 0; i < bloggers.length; i++) {
         if (bloggers[i].id === +req.params.id) {
             bloggers.splice(i, 1);
@@ -62,7 +62,7 @@ app.delete('/bloggers/:id',(req: Request, res: Response)=>{
     res.sendStatus(404)
 })
 
-app.put('/bloggers/:bloggerId',(req: Request, res: Response)=> {
+app.put('/bloggers/:bloggerId', (req: Request, res: Response) => {
     const errorsMessagesUpdate = [
         {
             "message": "test03",
@@ -103,14 +103,14 @@ app.get('/posts', (req: Request, res: Response) => {
 app.get('/posts/:postId', (req: Request, res: Response) => {
     const id = +req.params.postId;
     const post = posts.find(p => p.id === id)
-    if(!post) {
+    if (!post) {
         res.sendStatus(404).send('Not found')
     } else {
         res.json(post)
     }
 })
 
-app.delete('/posts/:id',(req: Request, res: Response)=>{
+app.delete('/posts/:id', (req: Request, res: Response) => {
     for (let i = 0; i < posts.length; i++) {
         if (posts[i].id === +req.params.id) {
             posts.splice(i, 1);
@@ -120,9 +120,9 @@ app.delete('/posts/:id',(req: Request, res: Response)=>{
     res.send(404)
 })
 
-app.put('/posts/:postId',(req: Request, res: Response)=>{
+app.put('/posts/:postId', (req: Request, res: Response) => {
     const errors = []
-    if (typeof req.body.title !== "string" || req.body.title.length > 30 || req.body.title.trim() === ""){
+    if (typeof req.body.title !== "string" || req.body.title.length > 30 || req.body.title.trim() === "") {
         errors.push({message: 'Error title', field: 'title'})
     }
     if (typeof req.body.shortDescription !== "string" || req.body.shortDescription.length > 100 || req.body.shortDescription.trim() === "") {
@@ -131,35 +131,33 @@ app.put('/posts/:postId',(req: Request, res: Response)=>{
     if (typeof req.body.content !== "string" || req.body.content.length > 1000 || req.body.content.trim() === "") {
         errors.push({message: 'Error content', field: 'content'})
     }
-    if(errors.length) {
+    if (errors.length) {
         res.status(400).json({
             errorsMessages: errors
         })
         return
     }
-
     const blogger = bloggers.find(b => b.id === req.body.bloggerId)
     if (blogger) {
-    const id = +req.params.postId;
-    const post = posts.find(p => p.id === id);
-    if(post) {
-        post.title = req.body.title,
-            post.shortDescription = req.body.shortDescription,
-            post.content = req.body.content,
-            post.bloggerId = +req.body.bloggerId,
-            post.bloggerName = req.body.bloggerName
-        res.status(204).send(post)
+        const id = +req.params.postId;
+        const post = posts.find(p => p.id === id);
+        if (post) {
+            post.title = req.body.title,
+                post.shortDescription = req.body.shortDescription,
+                post.content = req.body.content,
+                post.bloggerId = +req.body.bloggerId,
+            res.status(204).send(post)
+        } else {
+            res.send(404)
+        }
     } else {
-        res.send(404)
-    }
-    } else {
-        res.status(400).send ({errorsMessages: [{ message: "Not Found Blogger", field: "bloggerId" }] })
+        res.status(400).send({errorsMessages: [{message: "Not Found Blogger", field: "bloggerId"}]})
     }
 })
 
 app.post('/posts', (req: Request, res: Response) => {
     const errors = []
-    if (typeof req.body.title !== "string" || req.body.title.length > 30 || req.body.title.trim() === ""){
+    if (typeof req.body.title !== "string" || req.body.title.length > 30 || req.body.title.trim() === "") {
         errors.push({message: 'Error title', field: 'title'})
     }
     if (typeof req.body.shortDescription !== "string" || req.body.shortDescription.length > 100 || req.body.shortDescription.trim() === "") {
@@ -168,7 +166,7 @@ app.post('/posts', (req: Request, res: Response) => {
     if (typeof req.body.content !== "string" || req.body.content.length > 1000 || req.body.content.trim() === "") {
         errors.push({message: 'Error content', field: 'content'})
     }
-    if(errors.length) {
+    if (errors.length) {
         res.status(400).json({
             errorsMessages: errors
         })
@@ -187,7 +185,7 @@ app.post('/posts', (req: Request, res: Response) => {
         posts.push(newPost)
         res.status(201).send(newPost)
     } else {
-        res.status(400).send({errorsMessages: [{ message: "Not Found Blogger", field: "bloggerId" }] })
+        res.status(400).send({errorsMessages: [{message: "Not Found Blogger", field: "bloggerId"}]})
     }
 })
 
