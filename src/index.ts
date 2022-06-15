@@ -148,7 +148,7 @@ app.put('/posts/:postId',(req: Request, res: Response)=>{
             post.content = req.body.content,
             post.bloggerId = +req.body.bloggerId,
             post.bloggerName = req.body.bloggerName
-        res.send(post)
+        res.send(204)
     } else {
         res.send(404)
     }
