@@ -120,18 +120,40 @@ app.delete('/posts/:id',(req: Request, res: Response)=>{
     res.send(404)
 })
 
-app.put('/posts/:bloggerId',(req: Request, res: Response)=>{
+app.put('/posts/:postId',(req: Request, res: Response)=>{
+    const errors = []
+    if (typeof req.body.title !== "string" || req.body.title.length > 30 || req.body.title.trim() === ""){
+        errors.push({message: 'Error title', field: 'title'})
+    }
+    if (typeof req.body.shortDescription !== "string" || req.body.shortDescription.length > 100 || req.body.shortDescription.trim() === "") {
+        errors.push({message: 'Error shortDescription', field: 'shortDescription'})
+    }
+    if (typeof req.body.content !== "string" || req.body.content.length > 1000 || req.body.content.trim() === "") {
+        errors.push({message: 'Error content', field: 'content'})
+    }
+    if(errors.length) {
+        res.status(400).json({
+            errorsMessages: errors
+        })
+        return
+    }
+
+    const blogger = bloggers.find(b => b.id === req.body.bloggerId)
+    if (blogger) {
     const id = +req.params.postId;
     const post = posts.find(p => p.id === id);
     if(post) {
         post.title = req.body.title,
             post.shortDescription = req.body.shortDescription,
             post.content = req.body.content,
-            //post.bloggerID = +req.body.bloggerId,
+            post.bloggerId = +req.body.bloggerId,
             post.bloggerName = req.body.bloggerName
         res.send(post)
     } else {
         res.send(404)
+    }
+    } else {
+        res.status(400).send ({errorsMessages: [{ message: "Not Found Blogger", field: "bloggerId" }] })
     }
 })
 
