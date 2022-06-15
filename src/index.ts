@@ -111,20 +111,22 @@ app.get('/posts/:postId', (req: Request, res: Response) => {
 
 app.post('/posts', (req: Request, res: Response) => {
     const errors = []
-
     const newPost = {
         title: req.body.title,
         shortDescription: req.body.shortDescription,
-        content: req.body.content,
-        bloggerId: req.body.bloggerId
+        content: req.body.content
     }
-    if (typeof req.body.title === "string" && typeof req.body.shortDescription === "string" && req.body.content === "string" && +req.body.bloggerId) {
-        if (req.body.title.length <= 30 && req.body.shortDescription <= 100 && req.body.content <= 1000) {
-            // posts.push(newPost)
-            res.sendStatus(201).json(newPost)
-        }
+    if (typeof req.body.title === "string" || req.body.title.length <= 30){
+        errors.push({message: 'Incorrect title', field: 'title'})
     }
-
+    if (typeof req.body.shortDescription === "string" || req.body.shortDescription <= 100) {
+        errors.push({message: 'Incorrect shortDescription', field: 'shortDescription'})
+    }
+    if (req.body.content === "string" || req.body.content <= 1000) {
+        errors.push({message: 'Incorrect content', field: 'content'})
+    }
+    posts.push(newPost)
+    res.sendStatus(201).json(newPost)
 })
 
 app.delete('/posts/:id',(req: Request, res: Response)=>{
