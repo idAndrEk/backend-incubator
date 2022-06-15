@@ -86,7 +86,7 @@ app.put('/bloggers/:bloggerId',(req: Request, res: Response)=> {
         } else {
             res.sendStatus(404)
         }
-        }
+    }
 })
 
 export const posts = [
@@ -97,7 +97,7 @@ export const posts = [
 ]
 
 app.get('/posts', (req: Request, res: Response) => {
-    res.send(posts)
+    res.send(posts).sendStatus(200)
 });
 
 app.get('/posts/:postId', (req: Request, res: Response) => {
@@ -106,18 +106,37 @@ app.get('/posts/:postId', (req: Request, res: Response) => {
     if(!post) {
         res.sendStatus(404).send('Not found')
     } else {
-        res.json(post)
+        res.json(post).sendStatus(200)
     }
 })
+
+// app.post('/bloggers', (req: Request, res: Response) => {
+//     const bloggerName = req.body.name;
+//     const bloggerYoutubeUrl = req.body.youtubeUrl;
+//     const newBlogger = {id: +(new Date()), name: `${bloggerName}`, youtubeUrl: `${bloggerYoutubeUrl}`}
+//     const errorsMessagesCreat = [
+//         {
+//             "message": "test01",
+//             "field": "test2"
+//         }
+//     ]
+//     if (typeof bloggerName === "string" && typeof bloggerYoutubeUrl === "string") {
+//         if (bloggerName.length <= 15 && bloggerYoutubeUrl.length <= 100) {
+//             bloggers.push(newBlogger)
+//             res.status(201).send(newBlogger)
+//         }
+//     }
+//     return errorsMessagesCreat
+// })
 
 app.delete('/posts/:id',(req: Request, res: Response)=>{
     for (let i = 0; i < posts.length; i++) {
         if (posts[i].id === +req.params.id) {
             posts.splice(i, 1);
-            res.send(204)
+            res.sendStatus(204)
         }
     }
-    res.send(404)
+    res.sendStatus(404).send('Not Found')
 })
 
 app.put('/posts/:bloggerId',(req: Request, res: Response)=>{
