@@ -110,25 +110,21 @@ app.get('/posts/:postId', (req: Request, res: Response) => {
 })
 
 app.post('/posts', (req: Request, res: Response) => {
+    const errors = []
+
     const newPost = {
-        postTitle: req.body.title,
-        postShortDescription: req.body.shortDescription,
-        postContent: req.body.content,
-        postBloggerID: req.body.bloggerId
+        title: req.body.title,
+        shortDescription: req.body.shortDescription,
+        content: req.body.content,
+        bloggerId: req.body.bloggerId
     }
-    const errorsMessagesCreat = [
-        {
-            "message": "test01",
-            "field": "test2"
-        }
-    ]
     if (typeof req.body.title === "string" && typeof req.body.shortDescription === "string" && req.body.content === "string" && +req.body.bloggerId) {
         if (req.body.title.length <= 30 && req.body.shortDescription <= 100 && req.body.content <= 1000) {
             // posts.push(newPost)
-            res.status(201).send(newPost)
+            res.sendStatus(201).json(newPost)
         }
     }
-    return errorsMessagesCreat
+
 })
 
 app.delete('/posts/:id',(req: Request, res: Response)=>{
