@@ -163,7 +163,7 @@ app.post('/posts', (req: Request, res: Response) => {
             bloggerName: blogger.name
         }
         posts.push(newPost)
-        res.sendStatus(201).json(newPost)
+        res.status(201).send(newPost)
     } else {
         res.status(400)
     }
