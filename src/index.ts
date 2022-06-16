@@ -25,7 +25,7 @@ app.get('/bloggers', (req: Request, res: Response) => {
 app.get('/bloggers/:bloggerId', (req: Request, res: Response) => {
     const id = +req.params.bloggerId;
     const blogger = bloggers.find(b => b.id === id)
-    if(!blogger) {
+    if (!blogger) {
         res.sendStatus(404).send('Not found')
     } else {
         res.json(blogger).sendStatus(200)
@@ -36,22 +36,24 @@ app.post('/bloggers', (req: Request, res: Response) => {
     const bloggerName = req.body.name;
     const bloggerYoutubeUrl = req.body.youtubeUrl;
     const newBlogger = {id: +(new Date()), name: `${bloggerName}`, youtubeUrl: `${bloggerYoutubeUrl}`}
-    const errorsMessagesCreat = [
-        {
-            "message": "test01",
-            "field": "test2"
-        }
-    ]
-    if (typeof bloggerName === "string" && typeof bloggerYoutubeUrl === "string") {
-        if (bloggerName.length <= 15 && bloggerYoutubeUrl.length <= 100) {
-            bloggers.push(newBlogger)
-            res.status(201).send(newBlogger)
-        }
+    const errors = []
+    if (typeof bloggerName === "string" || bloggerName.length <= 15) {
+        errors.push({message: 'Error name', field: 'name'})
     }
-    return errorsMessagesCreat
+    if (typeof bloggerYoutubeUrl === "string" || bloggerYoutubeUrl.length <= 100) {
+        errors.push({message: 'Error youtubeUrl', field: 'youtubeUrl'})
+    }
+    if (errors.length) {
+        res.status(400).json({
+            errorsMessages: errors
+        })
+        return
+    }
+        bloggers.push(newBlogger)
+        res.status(201).send(newBlogger)
 })
 
-app.delete('/bloggers/:id',(req: Request, res: Response)=>{
+app.delete('/bloggers/:id', (req: Request, res: Response) => {
     for (let i = 0; i < bloggers.length; i++) {
         if (bloggers[i].id === +req.params.id) {
             bloggers.splice(i, 1);
@@ -62,7 +64,7 @@ app.delete('/bloggers/:id',(req: Request, res: Response)=>{
     res.sendStatus(404)
 })
 
-app.put('/bloggers/:bloggerId',(req: Request, res: Response)=> {
+app.put('/bloggers/:bloggerId', (req: Request, res: Response) => {
     const errorsMessagesUpdate = [
         {
             "message": "test03",
@@ -103,14 +105,14 @@ app.get('/posts', (req: Request, res: Response) => {
 app.get('/posts/:postId', (req: Request, res: Response) => {
     const id = +req.params.postId;
     const post = posts.find(p => p.id === id)
-    if(!post) {
+    if (!post) {
         res.sendStatus(404).send('Not found')
     } else {
         res.json(post)
     }
 })
 
-app.delete('/posts/:id',(req: Request, res: Response)=>{
+app.delete('/posts/:id', (req: Request, res: Response) => {
     for (let i = 0; i < posts.length; i++) {
         if (posts[i].id === +req.params.id) {
             posts.splice(i, 1);
@@ -120,39 +122,73 @@ app.delete('/posts/:id',(req: Request, res: Response)=>{
     res.send(404)
 })
 
-app.put('/posts/:bloggerId',(req: Request, res: Response)=>{
-    const id = +req.params.postId;
-    const post = posts.find(p => p.id === id);
-    if(post) {
-        post.title = req.body.title,
-            post.shortDescription = req.body.shortDescription,
-            post.content = req.body.content,
-            //post.bloggerID = +req.body.bloggerId,
-            post.bloggerName = req.body.bloggerName
-        res.send(post)
+app.put('/posts/:postId', (req: Request, res: Response) => {
+    const errors = []
+    if (typeof req.body.title !== "string" || req.body.title.length > 30 || req.body.title.trim() === "") {
+        errors.push({message: 'Error title', field: 'title'})
+    }
+    if (typeof req.body.shortDescription !== "string" || req.body.shortDescription.length > 100 || req.body.shortDescription.trim() === "") {
+        errors.push({message: 'Error shortDescription', field: 'shortDescription'})
+    }
+    if (typeof req.body.content !== "string" || req.body.content.length > 1000 || req.body.content.trim() === "") {
+        errors.push({message: 'Error content', field: 'content'})
+    }
+    if (errors.length) {
+        res.status(400).json({
+            errorsMessages: errors
+        })
+        return
+    }
+    const blogger = bloggers.find(b => b.id === req.body.bloggerId)
+    if (blogger) {
+        const id = +req.params.postId;
+        const post = posts.find(p => p.id === id);
+        if (post) {
+            post.title = req.body.title,
+                post.shortDescription = req.body.shortDescription,
+                post.content = req.body.content,
+                post.bloggerId = +req.body.bloggerId,
+                res.status(204).send(post)
+        } else {
+            res.send(404)
+        }
     } else {
-        res.send(404)
+        res.status(400).send({errorsMessages: [{message: "Not Found Blogger", field: "bloggerId"}]})
     }
 })
 
 app.post('/posts', (req: Request, res: Response) => {
     const errors = []
-    const newPost = {
-        title: req.body.title,
-        shortDescription: req.body.shortDescription,
-        content: req.body.content
+    if (typeof req.body.title !== "string" || req.body.title.length > 30 || req.body.title.trim() === "") {
+        errors.push({message: 'Error title', field: 'title'})
     }
-    if (typeof req.body.title === "string" || req.body.title.length <= 30){
-        errors.push({message: 'Incorrect title', field: 'title'})
+    if (typeof req.body.shortDescription !== "string" || req.body.shortDescription.length > 100 || req.body.shortDescription.trim() === "") {
+        errors.push({message: 'Error shortDescription', field: 'shortDescription'})
     }
-    if (typeof req.body.shortDescription === "string" || req.body.shortDescription <= 100) {
-        errors.push({message: 'Incorrect shortDescription', field: 'shortDescription'})
+    if (typeof req.body.content !== "string" || req.body.content.length > 1000 || req.body.content.trim() === "") {
+        errors.push({message: 'Error content', field: 'content'})
     }
-    if (req.body.content === "string" || req.body.content <= 1000) {
-        errors.push({message: 'Incorrect content', field: 'content'})
+    if (errors.length) {
+        res.status(400).json({
+            errorsMessages: errors
+        })
+        return
     }
-    // posts.push(newPost)
-    res.sendStatus(201).json(newPost)
+    const blogger = bloggers.find(b => b.id === +req.body.bloggerId)
+    if (blogger) {
+        const newPost = {
+            id: posts.length + 1,
+            title: req.body.title,
+            shortDescription: req.body.shortDescription,
+            content: req.body.content,
+            bloggerId: +req.body.bloggerId,
+            bloggerName: blogger.name
+        }
+        posts.push(newPost)
+        res.status(201).send(newPost)
+    } else {
+        res.status(400).send({errorsMessages: [{message: "Not Found Blogger", field: "bloggerId"}]})
+    }
 })
 
 app.listen(port, () => {
