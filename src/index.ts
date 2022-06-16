@@ -49,10 +49,10 @@ app.post('/bloggers', (req: Request, res: Response) => {
             "field": "youtubeUrl"
         }
     ]
-    if (typeof bloggerName !== "string" || bloggerName.length > 15) {
+    if (typeof bloggerName !== "string" || bloggerName.length > 15 || !bloggerName) {
         errors.push({message: 'Error name', field: 'name'})
     }
-    if (bloggerYoutubeUrl.length > 100 || typeof bloggerYoutubeUrl !== "string") {
+    if (bloggerYoutubeUrl.length > 100 || typeof bloggerYoutubeUrl !== "string" || !bloggerYoutubeUrl) {
         errors.push({message: 'Error youtubeUrl', field: 'youtubeUrl'})
     }
     if (errors.length) {
