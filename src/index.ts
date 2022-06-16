@@ -50,14 +50,19 @@ app.post('/bloggers', (req: Request, res: Response) => {
         }
     ]
     if (typeof bloggerName !== "string" || bloggerName.length > 15) {
-        res.status(400).send(errorsName)
+        errors.push({message: 'Error name', field: 'name'})
     }
     if (bloggerYoutubeUrl.length > 100 || typeof bloggerYoutubeUrl !== "string") {
-        res.status(400).send(errorsYoutubeUrl)
-
+        errors.push({message: 'Error youtubeUrl', field: 'youtubeUrl'})
     }
-    bloggers.push(newBlogger)
-    res.status(201).send(newBlogger)
+    if (errors.length) {
+    res.status(400).json({
+        errorsMessages: errors
+    })
+    } else {
+        bloggers.push(newBlogger)
+        res.status(201).send(newBlogger)
+    }
     })
 
 app.delete('/bloggers/:id', (req: Request, res: Response) => {
