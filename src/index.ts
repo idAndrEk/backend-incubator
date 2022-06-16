@@ -36,23 +36,12 @@ app.post('/bloggers', (req: Request, res: Response) => {
     const bloggerName = req.body.name;
     const bloggerYoutubeUrl = req.body.youtubeUrl;
     const newBlogger = {id: +(new Date()), name: `${bloggerName}`, youtubeUrl: `${bloggerYoutubeUrl}`}
+    const reges = RegExp('^https:\/\/([a-zA-Z0-9_-]+\.)+[a-zA-Z0-9_-]+(\/[a-zA-Z0-9_-]+)*\/?$');
     const errors = [];
-    const errorsName = [
-        {
-            "message": "Error name",
-            "field": "name"
-        }
-    ]
-    const errorsYoutubeUrl = [
-        {
-            "message": "Error youtubeUrl",
-            "field": "youtubeUrl"
-        }
-    ]
-    if (typeof bloggerName !== "string" || bloggerName.length > 15 || !bloggerName) {
+     if (typeof bloggerName !== "string" || bloggerName.length > 15 || !bloggerName) {
         errors.push({message: 'Error name', field: 'name'})
     }
-    if (bloggerYoutubeUrl.length > 100 || typeof bloggerYoutubeUrl !== "string" || !bloggerYoutubeUrl) {
+    if (bloggerYoutubeUrl.length > 100 || typeof bloggerYoutubeUrl !== "string" || !bloggerYoutubeUrl || !bloggerYoutubeUrl.match(reges)) {
         errors.push({message: 'Error youtubeUrl', field: 'youtubeUrl'})
     }
     if (errors.length) {
