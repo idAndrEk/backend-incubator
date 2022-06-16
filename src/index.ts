@@ -35,20 +35,22 @@ app.get('/bloggers/:bloggerId', (req: Request, res: Response) => {
 app.post('/bloggers', (req: Request, res: Response) => {
     const bloggerName = req.body.name;
     const bloggerYoutubeUrl = req.body.youtubeUrl;
-    const newBlogger = {id: +(new Date()), name: `${bloggerName}`, youtubeUrl: `${bloggerYoutubeUrl}`}
-    const errorsMessagesCreat = [
-        {
-            "message": "test01",
-            "field": "test2"
-        }
-    ]
-    if (typeof bloggerName === "string" && typeof bloggerYoutubeUrl === "string") {
-        if (bloggerName.length <= 15 && bloggerYoutubeUrl.length <= 100) {
-            bloggers.push(newBlogger)
-            res.status(201).send(newBlogger)
-        }
+    const newBlogger = {id: +(new Date()), name: `${bloggerName}`, youtubeUrl: `${bloggerYoutubeUrl}`};
+    const errors = [];
+    if (typeof bloggerName === "string" || bloggerName.length <= 15 ) {
+        errors.push({message: 'Error name', field: 'name'})
     }
-    return errorsMessagesCreat
+    if (typeof bloggerYoutubeUrl === "string" || bloggerYoutubeUrl.length <= 100) {
+        errors.push({message: 'Error youtubeUrl', field: 'youtubeUrl'})
+        }
+        if (errors.length) {
+        res.status(400).json({
+            errorsMessages: errors
+        })
+        return
+        }
+    bloggers.push(newBlogger)
+    res.status(201).send(newBlogger)
 })
 
 app.delete('/bloggers/:id', (req: Request, res: Response) => {
@@ -145,7 +147,7 @@ app.put('/posts/:postId', (req: Request, res: Response) => {
             post.title = req.body.title,
                 post.shortDescription = req.body.shortDescription,
                 post.content = req.body.content,
-                post.bloggerId = +req.body.bloggerId,
+                post.bloggerId = +req.body.bloggerId
             res.status(204).send(post)
         } else {
             res.send(404)
