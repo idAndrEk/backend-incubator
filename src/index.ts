@@ -66,20 +66,20 @@ app.delete('/bloggers/:id', (req: Request, res: Response) => {
 })
 
 app.put('/bloggers/:bloggerId', (req: Request, res: Response) => {
-    const errorsMessagesUpdate = [
-        {
-            "message": "test03",
-            "field": "test04"
-        }
-    ]
     const nameBlogger = req.body.name;
     const youtubeUrlBlogger = req.body.youtubeUrl;
     const reges = RegExp('^https:\/\/([a-zA-Z0-9_-]+\.)+[a-zA-Z0-9_-]+(\/[a-zA-Z0-9_-]+)*\/?$');
-    if (typeof nameBlogger !== "string" || nameBlogger.length > 15) {
-        res.status(400).send(errorsMessagesUpdate)
+    const errors = [];
+    if (typeof nameBlogger !== "string" || nameBlogger.length > 15 || !nameBlogger || nameBlogger.trim() === "" ) {
+        errors.push({message: 'Error name', field: 'name'})
     }
-    if (typeof youtubeUrlBlogger !== "string" || youtubeUrlBlogger.length > 100 || !youtubeUrlBlogger.match(reges)) {
-        res.status(400).send(errorsMessagesUpdate)
+    if (youtubeUrlBlogger.length > 100 || typeof youtubeUrlBlogger !== "string" || !youtubeUrlBlogger || youtubeUrlBlogger.trim() === "" || !youtubeUrlBlogger.match(reges)) {
+        errors.push({message: 'Error youtubeUrl', field: 'youtubeUrl'})
+    }
+    if (errors.length) {
+        res.status(400).json({
+            errorsMessages: errors
+        })
     } else {
         const upBlogger = bloggers.find(b => b.id === +(req.params.bloggerId))
         if (upBlogger) {
