@@ -12,7 +12,7 @@ app.use(bodyParser.json())
 const port = process.env.PORT || 5000
 
 export const bloggers = [
-    {id: 1, name: 'IT-KAMASUTRA!!!', youtubeUrl: 'https://www.youtube.com/c/ITKAMASUTRA'},
+    {id: 1, name: 'IT-KAMASUTRA!', youtubeUrl: 'https://www.youtube.com/c/ITKAMASUTRA'},
     {id: 2, name: 'webDev', youtubeUrl: 'https://www.youtube.com/c/YauhenKavalchuk'},
     {id: 3, name: 'Egor Malkevich', youtubeUrl: 'https://www.youtube.com/c/EgorMalkevich'},
     {id: 4, name: 'Ulbi TV', youtubeUrl: 'https://www.youtube.com/c/UlbiTV'},
@@ -36,20 +36,29 @@ app.post('/bloggers', (req: Request, res: Response) => {
     const bloggerName = req.body.name;
     const bloggerYoutubeUrl = req.body.youtubeUrl;
     const newBlogger = {id: +(new Date()), name: `${bloggerName}`, youtubeUrl: `${bloggerYoutubeUrl}`}
-    const errorsMessagesCreat = [
+    const errors = [];
+    const errorsName = [
         {
-            "message": "test01",
-            "field": "test2"
+            "message": "Error name",
+            "field": "name"
         }
     ]
-    if (typeof bloggerName === "string" && typeof bloggerYoutubeUrl === "string") {
-        if (bloggerName.length <= 15 && bloggerYoutubeUrl.length <= 100) {
-            bloggers.push(newBlogger)
-            res.status(201).send(newBlogger)
+    const errorsYoutubeUrl = [
+        {
+            "message": "Error youtubeUrl",
+            "field": "youtubeUrl"
         }
+    ]
+    if (typeof bloggerName !== "string" || bloggerName.length > 15) {
+        res.status(400).send(errorsName)
     }
-    return errorsMessagesCreat
-})
+    if (bloggerYoutubeUrl.length > 100 || typeof bloggerYoutubeUrl !== "string") {
+        res.status(400).send(errorsYoutubeUrl)
+
+    }
+    bloggers.push(newBlogger)
+    res.status(201).send(newBlogger)
+    })
 
 app.delete('/bloggers/:id', (req: Request, res: Response) => {
     for (let i = 0; i < bloggers.length; i++) {
