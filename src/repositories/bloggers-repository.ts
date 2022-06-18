@@ -6,7 +6,10 @@ const bloggers = [
 ]
 
 export const bloggersRepository = {
-    // allBloggers(id: number, name: string, youtubeUrl: string) {}
+    allBloggers() {
+        return bloggers
+    },
+
     findBloggersId(id: number) {
     const blogger = bloggers.find(b => b.id === id)
     if (!blogger) {
@@ -20,21 +23,22 @@ export const bloggersRepository = {
     const newBlogger = {
         id: +(new Date()),
         name: name,
-        youtubeUrl: youtubeUrl}
-    const reges = RegExp('^https:\/\/([a-zA-Z0-9_-]+\.)+[a-zA-Z0-9_-]+(\/[a-zA-Z0-9_-]+)*\/?$');
-    const errors = [];
-    if (typeof name !== "string" || name.length > 15 || !name || name.trim() === "" ) {
-        errors.push({message: 'Error name', field: 'name'})
+        youtubeUrl: youtubeUrl
     }
-    if (youtubeUrl.length > 100 || typeof youtubeUrl !== "string" || !youtubeUrl || youtubeUrl.trim() === "" || !youtubeUrl.match(reges)) {
-        errors.push({message: 'Error youtubeUrl', field: 'youtubeUrl'})
-    }
-    if (errors.length) {
-        return({errorsMessages: errors})
-    } else {
+    // const reges = RegExp('^https:\/\/([a-zA-Z0-9_-]+\.)+[a-zA-Z0-9_-]+(\/[a-zA-Z0-9_-]+)*\/?$');
+    // const errors = [];
+    // if (typeof name !== "string" || name.length > 15 || !name || name.trim() === "" ) {
+    //     errors.push({message: 'Error name', field: 'name'})
+    // }
+    // if (youtubeUrl.length > 100 || typeof youtubeUrl !== "string" || !youtubeUrl || youtubeUrl.trim() === "" || !youtubeUrl.match(reges)) {
+    //     errors.push({message: 'Error youtubeUrl', field: 'youtubeUrl'})
+    // }
+    // if (errors.length) {
+    //     return({errorsMessages: errors})
+    // } else {
         bloggers.push(newBlogger)
         return newBlogger
-    }
+    // }
 },
 
     updateBlogger(id: number, name: string, youtubeUrl: string) {
@@ -56,6 +60,15 @@ export const bloggersRepository = {
             }
             return upBlogger
             }
+        },
+    deleteBlogger (id:number) {
+        for (let i = 0; i < bloggers.length; i++) {
+            if (bloggers[i].id === id) {
+                bloggers.splice(i, 1);
+                return true
+            }
         }
+        return false
     }
+}
 
