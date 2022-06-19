@@ -51,7 +51,7 @@ postsRouter.put('/:id',
     const updatePost = postsRepositories.updatePost(idPost, titlePost, shortDescriptionPost, contentPost, bloggerId)
         res.sendStatus(204)
         } else {
-            res.sendStatus(404)
+            res.sendStatus(400)
         }
 })
 
