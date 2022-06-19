@@ -2,7 +2,6 @@ import {Request, Response, Router} from "express";
 import {bloggersRepository} from "../repositories/bloggers-repository";
 import {allValidation} from "../middlewares/Validation";
 import {BloggerValidation} from "../middlewares/Blogger-validation";
-import {userValidation} from "../middlewares/User-validation";
 
 export const bloggersRouter = Router({})
 
@@ -22,7 +21,6 @@ bloggersRouter.get('/:id', (req: Request, res: Response) => {
 })
 
 bloggersRouter.post('/',
-    userValidation,
     BloggerValidation,
     allValidation,
     (req: Request, res: Response) => {
@@ -33,7 +31,6 @@ bloggersRouter.post('/',
     })
 
 bloggersRouter.put('/:id',
-    userValidation,
     BloggerValidation,
     allValidation,
     (req: Request, res: Response) => {
