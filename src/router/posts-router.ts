@@ -56,10 +56,11 @@ postsRouter.put('/:id',
     const updatePost = postsRepositories.updatePost(idPost, titlePost, shortDescriptionPost, contentPost, bloggerId)
         res.sendStatus(204)
         } else {
-        res.status(400).send({
+        const errorsMessages = [{
             message: 'Error bloggerId',
             field: 'bloggerId'
-        })
+        }];
+        res.status(400).send(errorsMessages)
     }
 })
 
