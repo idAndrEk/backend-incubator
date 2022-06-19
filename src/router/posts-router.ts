@@ -35,10 +35,11 @@ postsRouter.post('/',
         const newPost = postsRepositories.createPost(titlePost, shortDescriptionPost, contentPost, bloggerId, bloggerName)
         res.status(201).send(newPost)
     } else {
-        res.status(400).send({
+        const errorsMessages = [{
             message: 'Error bloggerId',
             field: 'bloggerId'
-        })
+        }];
+        res.status(400).send(errorsMessages)
     }
 })
 
