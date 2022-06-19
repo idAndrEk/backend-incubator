@@ -35,11 +35,14 @@ postsRouter.post('/',
         const newPost = postsRepositories.createPost(titlePost, shortDescriptionPost, contentPost, bloggerId, bloggerName)
         res.status(201).send(newPost)
     } else {
-        const errorsMessages = [{
-            message: 'Error bloggerId',
-            field: 'bloggerId'
-        }];
-        res.status(400).send(errorsMessages)
+        const errors = [];
+        errors.push({message: 'Error bloggerId', field: 'bloggerId'})
+        if (errors.length) {
+            res.status(400).json({
+                errorsMessages: errors
+            })
+            return
+        }
     }
 })
 
@@ -57,13 +60,16 @@ postsRouter.put('/:id',
     const updatePost = postsRepositories.updatePost(idPost, titlePost, shortDescriptionPost, contentPost, bloggerId)
         res.sendStatus(204)
         } else {
-        const errorsMessages = [{
-            message: 'Error bloggerId',
-            field: 'bloggerId'
-        }];
-        res.status(400).send(errorsMessages)
+        const errors = [];
+        errors.push({message: 'Error bloggerId', field: 'bloggerId'})
+        if (errors.length) {
+            res.status(400).json({
+                errorsMessages: errors
+            })
+            return
+        }
     }
-})
+    })
 
 postsRouter.delete('/:id', (req: Request, res: Response) => {
     const idDeletedPost = postsRepositories.deletePost(+req.params.id)
