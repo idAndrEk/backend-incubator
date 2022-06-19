@@ -3,6 +3,7 @@ import {postsRepositories} from "../repositories/posts-repository";
 import {bloggers} from "../repositories/bloggers-repository";
 import {postValidation} from "../middlewares/Post-validation";
 import {allValidation} from "../middlewares/Validation";
+import {validationResult} from "express-validator";
 export const postsRouter = Router({})
 
 postsRouter.get('/', (req: Request, res: Response) => {
@@ -24,6 +25,7 @@ postsRouter.post('/',
     allValidation,
     (req: Request, res: Response) => {
     const blogger = bloggers.find(b => b.id === req.body.bloggerId);
+    const errors = []
     if (blogger) {
         const titlePost = req.body.title;
         const shortDescriptionPost = req.body.shortDescription;
@@ -33,7 +35,10 @@ postsRouter.post('/',
         const newPost = postsRepositories.createPost(titlePost, shortDescriptionPost, contentPost, bloggerId, bloggerName)
         res.status(201).send(newPost)
     } else {
-        res.sendStatus(400)
+        res.status(400).send({
+            message: 'Error blogger',
+            field: 'blogger'
+        })
     }
 })
 
@@ -51,8 +56,11 @@ postsRouter.put('/:id',
     const updatePost = postsRepositories.updatePost(idPost, titlePost, shortDescriptionPost, contentPost, bloggerId)
         res.sendStatus(204)
         } else {
-            res.sendStatus(400)
-        }
+        res.status(400).send({
+            message: 'Error blogger',
+            field: 'blogger'
+        })
+    }
 })
 
 postsRouter.delete('/:id', (req: Request, res: Response) => {
