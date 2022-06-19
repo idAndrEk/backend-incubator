@@ -12,7 +12,7 @@ export const allValidation = (
             const errorsObject = {message: error.msg, field: error.param}
             return errorsObject
         }))
-        return res.status(400).json({errorsMassages: errs, resultCode: 1});
+        return res.status(400).json({errorsMassages: errs});
     }
     next()
 }
