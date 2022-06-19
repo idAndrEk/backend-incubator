@@ -36,8 +36,8 @@ postsRouter.post('/',
         res.status(201).send(newPost)
     } else {
         res.status(400).send({
-            message: 'Error blogger',
-            field: 'blogger'
+            message: 'Error bloggerId',
+            field: 'bloggerId'
         })
     }
 })
@@ -57,8 +57,8 @@ postsRouter.put('/:id',
         res.sendStatus(204)
         } else {
         res.status(400).send({
-            message: 'Error blogger',
-            field: 'blogger'
+            message: 'Error bloggerId',
+            field: 'bloggerId'
         })
     }
 })
