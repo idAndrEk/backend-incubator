@@ -3,7 +3,6 @@ import {postsRepositories} from "../repositories/posts-repository";
 import {bloggers} from "../repositories/bloggers-repository";
 import {postValidation} from "../middlewares/Post-validation";
 import {allValidation} from "../middlewares/Validation";
-import {validationResult} from "express-validator";
 export const postsRouter = Router({})
 
 postsRouter.get('/', (req: Request, res: Response) => {
