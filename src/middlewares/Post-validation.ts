@@ -3,12 +3,13 @@ import {body} from "express-validator";
 export const postValidation = [
     body('title')
         // .exists({checkFalsy: true})
-        // .notEmpty()
+        .notEmpty()
         .isString()
         .trim()
         .isLength({max: 30, min: 3})
         .withMessage('Error title'),
     body('shortDescription')
+        .notEmpty()
         .isString()
         .trim()
         .isLength({max: 100, min: 3})
