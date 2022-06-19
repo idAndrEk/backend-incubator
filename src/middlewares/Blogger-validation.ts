@@ -3,14 +3,13 @@ import {body} from "express-validator";
 export const BloggerValidation = [
     body('name')
         // .exists({checkFalsy: true})
-        // .notEmpty()
+        .notEmpty()
         .isString()
         .trim()
         .isLength({max: 15, min: 3})
         .withMessage('Error name'),
     body('youtubeUrl')
-        // .exists({checkFalsy: true})
-        // .notEmpty()
+        .notEmpty()
         .isString()
         .trim()
         .isLength({max: 100, min: 3})
