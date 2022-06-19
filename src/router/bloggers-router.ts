@@ -1,7 +1,7 @@
 import {Request, Response, Router} from "express";
 import {bloggersRepository} from "../repositories/bloggers-repository";
-import {nameValidation} from "../middlewares/nameValidation";
-import {shema} from "../middlewares/register-shema";
+import {allValidation} from "../middlewares/Validation";
+import {BloggerValidation} from "../middlewares/Blogger-validation";
 
 export const bloggersRouter = Router({})
 
@@ -9,7 +9,7 @@ export const bloggersRouter = Router({})
 bloggersRouter.get('/', (req: Request, res: Response) => {
     const bloggers = bloggersRepository.allBloggers()
     res.status(200).send(bloggers)
-});
+})
 
 bloggersRouter.get('/:id', (req: Request, res: Response) => {
     const bloggerId = bloggersRepository.findBloggersId(+req.params.id)
@@ -21,8 +21,8 @@ bloggersRouter.get('/:id', (req: Request, res: Response) => {
 })
 
 bloggersRouter.post('/',
-    shema,
-    nameValidation,
+    BloggerValidation,
+    allValidation,
     (req: Request, res: Response) => {
     const bloggerName = req.body.name;
     const bloggerYoutubeUrl = req.body.youtubeUrl;
@@ -30,7 +30,10 @@ bloggersRouter.post('/',
     res.status(201).send(newBlogger)
     })
 
-bloggersRouter.put('/:id', (req: Request, res: Response) => {
+bloggersRouter.put('/:id',
+    BloggerValidation,
+    allValidation,
+    (req: Request, res: Response) => {
     const idBlogger = +req.params.id;
     const nameBlogger = req.body.name;
     const youtubeUrlBlogger = req.body.youtubeUrl;
