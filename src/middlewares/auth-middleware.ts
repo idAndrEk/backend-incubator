@@ -1,14 +1,18 @@
 import {NextFunction, Request, Response} from "express";
 
-const auth = require('basic-auth')
 export const authMiddleware = (req: Request, res: Response, next: NextFunction) => {
-    const user = auth(req)
-    const username: string = 'admin'
-    const password: string = 'qwerty'
-    if(user.name === username && user.password === password){
+    const authHeader = req.headers.authorization
+    // const username: string = 'admin'
+    // const password: string = 'qwerty'
+    const str = 'admin:qwerty';
+    const buff = Buffer.from(str, 'utf-8');
+    const base64 = buff.toString('base64')
+    if(authHeader === base64){
         next()
     } else {
         res.status(401)
-        res.end('Access denied')
+        res.send('Access denied')
     }
 }
+
+
