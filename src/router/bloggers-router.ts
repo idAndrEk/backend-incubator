@@ -12,7 +12,8 @@ bloggersRouter.get('/', (req: Request, res: Response) => {
     res.status(200).send(bloggers)
 })
 
-bloggersRouter.get('/:id', (req: Request, res: Response) => {
+bloggersRouter.get('/:id',
+    (req: Request, res: Response) => {
     const bloggerId = bloggersRepository.findBloggersId(+req.params.id)
     if (!bloggerId) {
         res.status(404).send('Not found')
