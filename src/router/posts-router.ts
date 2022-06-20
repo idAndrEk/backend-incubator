@@ -69,7 +69,7 @@ postsRouter.put('/:id',
             res.status(400).json({
                 errorsMessages: errors
             })
-            return
+            res.sendStatus(404)
         }
     }
     })
