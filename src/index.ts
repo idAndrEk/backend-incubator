@@ -3,7 +3,6 @@ import cors from "cors";
 import bodyParser from "body-parser";
 import {bloggersRouter} from "./router/bloggers-router";
 import {postsRouter} from "./router/posts-router";
-import {authMiddleware} from "./middlewares/auth-middleware";
 
 const app = express()
 
