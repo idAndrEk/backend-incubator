@@ -3,6 +3,7 @@ import {postsRepositories} from "../repositories/posts-repository";
 import {bloggers} from "../repositories/bloggers-repository";
 import {postValidation} from "../middlewares/Post-validation";
 import {allValidation} from "../middlewares/Validation";
+import {authMiddleware} from "../middlewares/auth-middleware";
 export const postsRouter = Router({})
 
 postsRouter.get('/', (req: Request, res: Response) => {
@@ -20,6 +21,7 @@ postsRouter.get('/:id', (req: Request, res: Response) => {
 })
 
 postsRouter.post('/',
+    authMiddleware,
     postValidation,
     allValidation,
     (req: Request, res: Response) => {
@@ -46,6 +48,7 @@ postsRouter.post('/',
 })
 
 postsRouter.put('/:id',
+    authMiddleware,
     postValidation,
     allValidation,
     (req: Request, res: Response) => {
@@ -70,7 +73,9 @@ postsRouter.put('/:id',
     }
     })
 
-postsRouter.delete('/:id', (req: Request, res: Response) => {
+postsRouter.delete('/:id',
+    authMiddleware,
+    (req: Request, res: Response) => {
     const idDeletedPost = postsRepositories.deletePost(+req.params.id)
     if (idDeletedPost) {
         res.send(204)
