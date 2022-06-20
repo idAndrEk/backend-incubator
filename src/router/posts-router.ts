@@ -4,6 +4,7 @@ import {bloggers} from "../repositories/bloggers-repository";
 import {postValidation} from "../middlewares/Post-validation";
 import {allValidation} from "../middlewares/Validation";
 import {authMiddleware} from "../middlewares/auth-middleware";
+
 export const postsRouter = Router({})
 
 postsRouter.get('/', (req: Request, res: Response) => {

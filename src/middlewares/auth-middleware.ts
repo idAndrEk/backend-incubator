@@ -6,7 +6,8 @@ export const authMiddleware = (req: Request, res: Response, next: NextFunction) 
     const str = 'admin:qwerty';
     const buff = Buffer.from(str, 'utf-8');
     const base64 = buff.toString('base64')
-    if(authHeader == base64){
+    // const buff = Buffer.from('admin:qwerty').toString('base64');
+    if(authHeader === base64){
         next()
     } else {
         res.status(401)
