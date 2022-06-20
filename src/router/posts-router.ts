@@ -26,17 +26,48 @@ postsRouter.post('/',
     postValidation,
     allValidation,
     (req: Request, res: Response) => {
-    const blogger = bloggers.find(b => b.id === req.body.bloggerId);
-    const errors = []
-    if (blogger) {
-        const titlePost = req.body.title;
-        const shortDescriptionPost = req.body.shortDescription;
-        const contentPost = req.body.content;
-        const bloggerId = +req.body.bloggerId;
-        const bloggerName = blogger.name
-        const newPost = postsRepositories.createPost(titlePost, shortDescriptionPost, contentPost, bloggerId, bloggerName)
-        res.status(201).send(newPost)
-    } else {
+        const blogger = bloggers.find(b => b.id === req.body.bloggerId);
+        const errors = []
+        if (blogger) {
+            const titlePost = req.body.title;
+            const shortDescriptionPost = req.body.shortDescription;
+            const contentPost = req.body.content;
+            const bloggerId = +req.body.bloggerId;
+            const bloggerName = blogger.name
+            const newPost = postsRepositories.createPost(titlePost, shortDescriptionPost, contentPost, bloggerId, bloggerName)
+            res.status(201).send(newPost)
+        } else {
+            const errors = [];
+            errors.push({message: 'Error bloggerId', field: 'bloggerId'})
+            if (errors.length) {
+                res.status(400).json({
+                    errorsMessages: errors
+                })
+                return
+            }
+        }
+    })
+
+postsRouter.put('/:id',
+    authMiddleware,
+    postValidation,
+    allValidation,
+    (req: Request, res: Response) => {
+        const blogger = bloggers.find(b => b.id === req.body.bloggerId);
+        if (blogger) {
+            const idPost = +req.params.id;
+            const titlePost = req.body.title;
+            const shortDescriptionPost = req.body.shortDescription;
+            const contentPost = req.body.content;
+            const bloggerId = +req.body.bloggerId;
+            const updatedPost = postsRepositories.updatePost(idPost, titlePost, shortDescriptionPost, contentPost, bloggerId)
+            if (!updatedPost) {
+                res.sendStatus(404)
+                return;
+            }
+            res.sendStatus(204)
+            return
+        }
         const errors = [];
         errors.push({message: 'Error bloggerId', field: 'bloggerId'})
         if (errors.length) {
@@ -45,41 +76,14 @@ postsRouter.post('/',
             })
             return
         }
-    }
-})
-
-postsRouter.put('/:id',
-    authMiddleware,
-    postValidation,
-    allValidation,
-    (req: Request, res: Response) => {
-    const blogger = bloggers.find(b => b.id === req.body.bloggerId);
-    if (blogger) {
-    const idPost = +req.params.id;
-    const titlePost = req.body.title;
-    const shortDescriptionPost = req.body.shortDescription;
-    const contentPost = req.body.content;
-    const bloggerId = +req.body.bloggerId;
-    const updatePost = postsRepositories.updatePost(idPost, titlePost, shortDescriptionPost, contentPost, bloggerId)
-        res.sendStatus(204)
-        } else {
-        const errors = [];
-        errors.push({message: 'Error bloggerId', field: 'bloggerId'})
-        if (errors.length) {
-            res.status(400).json({
-                errorsMessages: errors
-            })
-            res.sendStatus(404)
-        }
-    }
     })
 
 postsRouter.delete('/:id',
     authMiddleware,
     (req: Request, res: Response) => {
-    const idDeletedPost = postsRepositories.deletePost(+req.params.id)
-    if (idDeletedPost) {
-        res.send(204)
-    }
-    res.send(404)
-})
+        const idDeletedPost = postsRepositories.deletePost(+req.params.id)
+        if (idDeletedPost) {
+            res.send(204)
+        }
+        res.send(404)
+    })
