@@ -40,7 +40,12 @@ export  const postsRepositories = {
                 upPost.shortDescription = shortDescription,
                 upPost.content = content,
                 upPost.bloggerId = bloggerId
-        } return upPost
+        }
+        if (!upPost) {
+            return false
+        } else {
+            return upPost
+        }
     },
 
     deletePost (id: number) {
