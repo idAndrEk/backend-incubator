@@ -1,5 +1,5 @@
 import {bloggersRepository} from "../repositories/bloggers-db-repository";
-import {bloggersCollection, bloggersType} from "../repositories/db";
+import {bloggersType} from "../repositories/db";
 
 export const bloggersServise = {
     async allBloggers(): Promise<bloggersType[]> {

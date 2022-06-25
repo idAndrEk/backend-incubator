@@ -2,8 +2,10 @@ import {MongoClient} from "mongodb";
 
 const mongoUri = process.env.MongoURI || "mongodb://0.0.0.0:27017";
 const client = new MongoClient(mongoUri);
-const db = client.db("home-bloggers");
-export const bloggersCollection = db.collection<bloggersType>("blogger");
+const dbBlogger = client.db("home-bloggers");
+const dbPost = client.db("Home-Post")
+export const bloggersCollection = dbBlogger.collection<bloggersType>("blogger");
+export const postCollection = dbPost.collection<postsType>("post")
 
 export type bloggersType = {
     id: number
@@ -11,10 +13,18 @@ export type bloggersType = {
     youtubeUrl: string
 }
 
+export type postsType = {
+    title: string
+    shortDescription: string
+    content: string
+    bloggerId: number
+    bloggerName: string
+}
+
 export async function runDb() {
     try {
         await client.connect();
-        await client.db("Bloggers").command({ping: 1});
+        await client.db("home-bloggers").command({ping: 1});
         console.log("Connected successfully to mongo server")
     } catch {
         console.log("Cant`t connect to db")
