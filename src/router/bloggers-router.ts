@@ -7,9 +7,10 @@ import {authMiddleware} from "../middlewares/auth-middleware";
 export const bloggersRouter = Router({})
 
 
-bloggersRouter.get('/', async (req: Request, res: Response) => {
+bloggersRouter.get('/',
+    async (req: Request, res: Response) => {
     const bloggers = await bloggersServise.allBloggers()
-    res.status(200).send(bloggers)
+        res.status(200).send(bloggers)
 })
 
 bloggersRouter.get('/:id',

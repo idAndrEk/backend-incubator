@@ -2,10 +2,10 @@ import {MongoClient} from "mongodb";
 
 const mongoUri = process.env.MongoURI || "mongodb://0.0.0.0:27017";
 const client = new MongoClient(mongoUri);
-const dbBlogger = client.db("home-bloggers");
-const dbPost = client.db("Home-Post")
-export const bloggersCollection = dbBlogger.collection<bloggersType>("blogger");
-export const postCollection = dbPost.collection<postsType>("post")
+const db = client.db("home-bloggers");
+// const dbPost = client.db("Home-Post")
+export const bloggersCollection = db.collection<bloggersType>("blogger");
+export const postCollection = db.collection<postsType>("post")
 
 export type bloggersType = {
     id: number
