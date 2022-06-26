@@ -1,4 +1,5 @@
-import 'dotenv/config'
+// import 'dotenv/config'
+require('dotenv').config()
 
 export const envSetting = {
     MongoURI: process.env.MongoURI || "mongodb://0.0.0.0:27017",

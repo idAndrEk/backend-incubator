@@ -2,6 +2,7 @@ import {MongoClient} from "mongodb";
 import {envSetting} from "../env_setting";
 
 const mongoUri = envSetting.MongoURI
+console.log(mongoUri)
 
 const client = new MongoClient(mongoUri);
 const db = client.db("home-bloggers");
