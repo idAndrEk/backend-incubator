@@ -1,6 +1,8 @@
 import {MongoClient} from "mongodb";
+import {envSetting} from "../env_setting";
 
-const mongoUri = process.env.MongoURI || "mongodb://0.0.0.0:27017";
+const mongoUri = envSetting.MongoURI
+
 const client = new MongoClient(mongoUri);
 const db = client.db("home-bloggers");
 // const dbPost = client.db("Home-Post")
