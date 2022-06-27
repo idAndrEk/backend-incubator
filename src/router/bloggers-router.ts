@@ -1,21 +1,25 @@
 import {Request, Response, Router} from "express";
-import {bloggersServise} from "../domain/blogegers-servis";
+import {bloggersService} from "../domain/blogegers-servic";
 import {allValidation} from "../middlewares/Validation";
 import {BloggerValidation} from "../middlewares/Blogger-validation";
 import {authMiddleware} from "../middlewares/auth-middleware";
 
 export const bloggersRouter = Router({})
 
-
 bloggersRouter.get('/',
     async (req: Request, res: Response) => {
-    const bloggers = await bloggersServise.allBloggers()
+        let page = req.query.pageNumber
+        let pageSize = req.query.pageSize
+        let bloggers
+        if(page && pageSize){
+            bloggers = await bloggersService.allBloggers(+page, +pageSize)
+        }
         res.status(200).send(bloggers)
-})
+    })
 
 bloggersRouter.get('/:id',
     async (req: Request, res: Response) => {
-        const bloggerId = await bloggersServise.findBloggersId(+req.params.id)
+        const bloggerId = await bloggersService.findBloggersId(+req.params.id)
         if (!bloggerId) {
             res.status(404).send('Not found')
         } else {
@@ -30,7 +34,7 @@ bloggersRouter.post('/',
     async (req: Request, res: Response) => {
         const bloggerName = req.body.name;
         const bloggerYoutubeUrl = req.body.youtubeUrl;
-        const newBlogger = await bloggersServise.createBlogger(bloggerName, bloggerYoutubeUrl)
+        const newBlogger = await bloggersService.createBlogger(bloggerName, bloggerYoutubeUrl)
         res.status(201).send(newBlogger)
     })
 
@@ -42,7 +46,7 @@ bloggersRouter.put('/:id',
         const idBlogger = +req.params.id;
         const nameBlogger = req.body.name;
         const youtubeUrlBlogger = req.body.youtubeUrl;
-        const updateBlogger = await bloggersServise.updateBlogger(idBlogger, nameBlogger, youtubeUrlBlogger)
+        const updateBlogger = await bloggersService.updateBlogger(idBlogger, nameBlogger, youtubeUrlBlogger)
         if (updateBlogger) {
             res.sendStatus(204)
         } else {
@@ -53,10 +57,15 @@ bloggersRouter.put('/:id',
 bloggersRouter.delete('/:id',
     authMiddleware,
     async (req: Request, res: Response) => {
-        const isDeleted = await bloggersServise.deleteBlogger(+req.params.id)
+        const isDeleted = await bloggersService.deleteBlogger(+req.params.id)
         if (isDeleted) {
             res.sendStatus(204)
         } else {
             res.sendStatus(404)
         }
     })
+
+
+
+
+

@@ -1,5 +1,6 @@
 import {promises} from "dns";
 import {bloggersCollection, bloggersType} from "./db";
+import { query, Request} from "express";
 
 // export const bloggers = [
 //     {id: 1, name: 'IT-KAMASUTRA!', youtubeUrl: 'https://www.youtube.com/c/ITKAMASUTRA'},
@@ -9,8 +10,19 @@ import {bloggersCollection, bloggersType} from "./db";
 // ]
 
 export const bloggersRepository = {
-    async allBloggers(): Promise<bloggersType[]> {
-        return bloggersCollection.find({}).toArray()
+    async allBloggers(page: number, pageSize: number): Promise<any> {
+        const skip = (page - 1) * pageSize
+        let allBloggers = await bloggersCollection.find({}).toArray()
+        let pagesCount = allBloggers.length / pageSize
+        let bloggers = await bloggersCollection.find({}).skip(skip).limit(pageSize).toArray()
+        let allCount = await bloggersCollection.count({})
+        return {
+            pagesCount: Math.ceil(pagesCount),
+            page: page,
+            pageSize: pageSize,
+            totalCount:	allCount,
+            items: bloggers
+        }
     },
 
     async findBloggersId(id: number): Promise<bloggersType | null> {
@@ -38,3 +50,23 @@ export const bloggersRepository = {
         return result.deletedCount === 1
     }
 }
+
+// async function getQuery() {
+//     let query = await db.collection.find({}).skip(5).limit(5);
+//     let countTotal = await query.count()
+//     let countWithConstraints = await query.count(true)
+//     return { query, countTotal }
+// }
+//
+// const page = parseInt(req.query.page);
+// const userService = new userService();
+// const users = await userService.getAll(page);
+// getAll(page = 1) {
+//     const PAGE_SIZE = 20;
+//     const skip = (page - 1) * PAGE_SIZE;
+//     return UsersModel.aggregate([
+//         { $match: {} },
+//         { $skip: (page - 1) * PAGE_SIZE },
+//         { $limit: PAGE_SIZE },
+//     ])
+// }

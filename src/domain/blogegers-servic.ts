@@ -1,13 +1,14 @@
 import {bloggersRepository} from "../repositories/bloggers-db-repository";
 import {bloggersType} from "../repositories/db";
+import {Request} from "express";
 
-export const bloggersServise = {
-    async allBloggers(): Promise<bloggersType[]> {
-        return bloggersRepository.allBloggers()
+export const bloggersService = {
+    async allBloggers(page: number, pageSize: number): Promise<bloggersType[]> {
+        return await bloggersRepository.allBloggers(page, pageSize)
     },
 
     async findBloggersId(id: number): Promise<bloggersType | null> {
-        return bloggersRepository.findBloggersId(id)
+        return await bloggersRepository.findBloggersId(id)
     },
 
     async createBlogger(name: string, youtubeUrl: string): Promise<bloggersType | undefined> {

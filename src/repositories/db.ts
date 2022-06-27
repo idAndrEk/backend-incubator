@@ -5,7 +5,7 @@ const mongoUri = envSetting.MongoURI
 console.log(mongoUri)
 
 const client = new MongoClient(mongoUri);
-const db = client.db("home-bloggers");
+export const db = client.db("home-bloggers");
 // const dbPost = client.db("Home-Post")
 export const bloggersCollection = db.collection<bloggersType>("blogger");
 export const postCollection = db.collection<postsType>("post")
