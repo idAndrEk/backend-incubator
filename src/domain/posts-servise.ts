@@ -12,7 +12,7 @@ export const postsServise = {
         return post
     },
 
-    async createPost(title: string, shortDescription: string, content: string, bloggerId: number, bloggerName: string): Promise<postsType | undefined> {
+    async createPost(title: string, shortDescription: string, content: string, bloggerId: number, bloggerName: string): Promise<postsType | null> {
         const newPost = {
             id: +(new Date()), //posts.length + 1
             title: title,
@@ -25,7 +25,7 @@ export const postsServise = {
         return createdPost
     },
 
-    async updatePost(id: number, title: string, shortDescription: string, content: string, bloggerId: number): Promise<boolean | undefined> {
+    async updatePost(id: number, title: string, shortDescription: string, content: string, bloggerId: number): Promise<boolean | null> {
         return await postsRepositories.updatePost(id, title, shortDescription, content, bloggerId)
 
     },

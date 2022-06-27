@@ -36,7 +36,7 @@ export const postsRepositories = {
         return newPost
     },
 
-    async updatePost(id: number, title: string, shortDescription: string, content: string, bloggerId: number): Promise<boolean | undefined> {
+    async updatePost(id: number, title: string, shortDescription: string, content: string, bloggerId: number): Promise<boolean | null> {
         const result = await postCollection.updateOne({id: id}, {
             $set: {
                 title: title,
