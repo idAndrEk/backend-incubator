@@ -31,7 +31,7 @@ export const postsRepositories = {
         return post
     },
 
-    async createPost(newPost: postsType): Promise<postsType | undefined> {
+    async createPost(newPost: postsType): Promise<postsType | null> {
         const result = await postCollection.insertOne(newPost)
         return newPost
     },

@@ -30,7 +30,7 @@ export const bloggersRepository = {
         return blogger
     },
 
-    async createBlogger(newBlogger: bloggersType): Promise<bloggersType | undefined> {
+    async createBlogger(newBlogger: bloggersType): Promise<bloggersType | null> {
         const result = await bloggersCollection.insertOne(newBlogger)
         return newBlogger
     },
