@@ -8,8 +8,8 @@ export const bloggersRouter = Router({})
 
 bloggersRouter.get('/',
     async (req: Request, res: Response) => {
-        let page = req.query.pageNumber
-        let pageSize = req.query.pageSize
+        let page = req.query.PageNumber || 1
+        let pageSize = req.query.PageSize || 10
         let bloggers
         if(page && pageSize){
             bloggers = await bloggersService.allBloggers(+page, +pageSize)
