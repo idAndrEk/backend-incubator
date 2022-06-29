@@ -14,7 +14,7 @@ export const bloggersRepository = {
         const skip = (page - 1) * pageSize
         let allBloggers = await bloggersCollection.find({}).toArray()
         let pagesCount = allBloggers.length / pageSize
-        let bloggers = await bloggersCollection.find({}/*, { _id:0, id:1, "name":1, "youtubeUrl":1 }*/).skip(skip).limit(pageSize).toArray()
+        let bloggers = await bloggersCollection.find({}).project({ _id:0, id:1, "name":1, "youtubeUrl":1 }).skip(skip).limit(pageSize).toArray()
         let allCount = await bloggersCollection.count({})
         return {
             pagesCount: Math.ceil(pagesCount),
@@ -26,7 +26,7 @@ export const bloggersRepository = {
     },
 
     async findBloggersName(name: string | null)/*: Promise<bloggersType | null>*/ {
-        let filter: any = {}
+        const filter = {} as {name: {$regex: string}}
         if (name) {
             filter.name = {$regex: name}
             return await bloggersCollection.findOne(filter)
