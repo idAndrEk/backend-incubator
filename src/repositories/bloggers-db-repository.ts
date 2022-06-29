@@ -1,6 +1,6 @@
 import {promises} from "dns";
 import {bloggersCollection, bloggersType} from "./db";
-import { query, Request} from "express";
+import {query, Request} from "express";
 
 // export const bloggers = [
 //     {id: 1, name: 'IT-KAMASUTRA', youtubeUrl: 'https://www.youtube.com/c/ITKAMASUTRA'},
@@ -14,16 +14,27 @@ export const bloggersRepository = {
         const skip = (page - 1) * pageSize
         let allBloggers = await bloggersCollection.find({}).toArray()
         let pagesCount = allBloggers.length / pageSize
-        let bloggers = await bloggersCollection.find({}).skip(skip).limit(pageSize).toArray()
+        let bloggers = await bloggersCollection.find({}/*, { _id:0, id:1, "name":1, "youtubeUrl":1 }*/).skip(skip).limit(pageSize).toArray()
         let allCount = await bloggersCollection.count({})
         return {
             pagesCount: Math.ceil(pagesCount),
             page: page,
             pageSize: pageSize,
-            totalCount:	allCount,
+            totalCount: allCount,
             items: bloggers
         }
     },
+
+    async findBloggersName(name: string | null)/*: Promise<bloggersType | null>*/ {
+        let filter: any = {}
+        if (name) {
+            filter.name = {$regex: name}
+            return await bloggersCollection.findOne(filter)
+        }
+        // const result: bloggersType | null = await bloggersCollection.findOne( {$regex: name});
+        // return result
+    }
+    ,
 
     async findBloggersId(id: number): Promise<bloggersType | null> {
         const blogger: bloggersType | null = await bloggersCollection.findOne({id: id})
@@ -70,3 +81,17 @@ export const bloggersRepository = {
 //         { $limit: PAGE_SIZE },
 //     ])
 // }
+
+
+// async allBloggers(page: number, pageSize: number, filter: object, idBlogger?: object): Promise<any> {
+//     let idBloggerObj = {
+//         projection: {
+//             _id: false,
+//             ...idBlogger
+//         }
+//     }
+//     const skip = (page - 1) * pageSize
+//     let allBloggers = await bloggersCollection.find({}).toArray()
+//     let pagesCount = allBloggers.length / pageSize
+//     let bloggers = await bloggersCollection.find(filter, idBloggerObj).skip(skip).limit(pageSize).toArray()
+//     let allCount = await bloggersCollection.count({})

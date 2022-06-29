@@ -7,13 +7,18 @@ export const bloggersService = {
         return await bloggersRepository.allBloggers(page, pageSize)
     },
 
+    async findBloggersName(name:string): Promise<any> {
+        return await bloggersRepository.findBloggersName(name)
+    },
+
     async findBloggersId(id: number): Promise<bloggersType | null> {
         return await bloggersRepository.findBloggersId(id)
     },
 
     async createBlogger(name: string, youtubeUrl: string): Promise<bloggersType | null> {
         const newBlogger = {
-            id: +(new Date()),
+            // _id:+(new Date()),
+            id:+(new Date()), //bloggersRepository.findBloggersId.length + 1,
             name: name,
             youtubeUrl: youtubeUrl
         }

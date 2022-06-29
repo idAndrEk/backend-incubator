@@ -3,6 +3,7 @@ import {bloggersService} from "../domain/blogegers-servic";
 import {allValidation} from "../middlewares/Validation";
 import {BloggerValidation} from "../middlewares/Blogger-validation";
 import {authMiddleware} from "../middlewares/auth-middleware";
+import {bloggersCollection} from "../repositories/db";
 
 export const bloggersRouter = Router({})
 
@@ -11,10 +12,20 @@ bloggersRouter.get('/',
         let page = req.query.PageNumber || 1
         let pageSize = req.query.PageSize || 10
         let bloggers
-        if(page && pageSize){
+        if (page && pageSize) {
             bloggers = await bloggersService.allBloggers(+page, +pageSize)
         }
         res.status(200).send(bloggers)
+    })
+
+bloggersRouter.get('/:name',
+    async (req: Request, res: Response) => {
+        const bloggerName = await bloggersService.findBloggersName(req.params.name)
+        if (!bloggerName) {
+            res.status(404).send('Not found')
+        } else {
+            res.status(404).send(bloggerName)
+        }
     })
 
 bloggersRouter.get('/:id',

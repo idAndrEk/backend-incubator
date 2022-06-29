@@ -14,7 +14,7 @@ export const postsServise = {
 
     async createPost(title: string, shortDescription: string, content: string, bloggerId: number, bloggerName: string): Promise<postsType | null> {
         const newPost = {
-            id: +(new Date()), //posts.length + 1
+            id: +(new Date()), //posts.length + 1,
             title: title,
             shortDescription: shortDescription,
             content: content,
