@@ -11,7 +11,6 @@ export const bloggersCollection = db.collection<bloggersType>("blogger");
 export const postCollection = db.collection<postsType>("post")
 
 export type bloggersType = {
-    // _id:number
     id: number
     name: string
     youtubeUrl: string

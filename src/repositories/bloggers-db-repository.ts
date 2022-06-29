@@ -11,10 +11,11 @@ import {query, Request} from "express";
 
 export const bloggersRepository = {
     async allBloggers(page: number, pageSize: number): Promise<any> {
+        const projection = { _id:0, id:1, "name":1, "youtubeUrl":1 };
         const skip = (page - 1) * pageSize
         let allBloggers = await bloggersCollection.find({}).toArray()
         let pagesCount = allBloggers.length / pageSize
-        let bloggers = await bloggersCollection.find({}).project({ _id:0, id:1, "name":1, "youtubeUrl":1 }).skip(skip).limit(pageSize).toArray()
+        let bloggers = await bloggersCollection.find({}).project(projection).skip(skip).limit(pageSize).toArray()
         let allCount = await bloggersCollection.count({})
         return {
             pagesCount: Math.ceil(pagesCount),

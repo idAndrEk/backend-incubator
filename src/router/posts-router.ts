@@ -28,7 +28,7 @@ postsRouter.post('/',
     postValidation,
     allValidation,
     async (req: Request, res: Response) => {
-        const blogger = await bloggersRepository.findBloggersId(+(req.body.bloggerId));
+        const blogger = await bloggersRepository.findBloggersId(+req.body.bloggerId);
         const errors = []
         if (blogger) {
             const titlePost = req.body.title;
