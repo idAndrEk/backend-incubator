@@ -1,4 +1,4 @@
-import {MongoClient} from "mongodb";
+import {MongoClient, ObjectId} from "mongodb";
 import {envSetting} from "../env_setting";
 
 const mongoUri = envSetting.MongoURI
@@ -11,7 +11,7 @@ export const bloggersCollection = db.collection<bloggersType>("blogger");
 export const postCollection = db.collection<postsType>("post")
 
 export type bloggersType = {
-    id: number
+    id: ObjectId
     name: string
     youtubeUrl: string
 }

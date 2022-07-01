@@ -3,6 +3,7 @@ import {bloggersService} from "../domain/blogegers-servic";
 import {allValidation} from "../middlewares/Validation";
 import {BloggerValidation} from "../middlewares/Blogger-validation";
 import {authMiddleware} from "../middlewares/auth-middleware";
+import {ObjectId} from "mongodb";
 
 export const bloggersRouter = Router({})
 
@@ -29,7 +30,7 @@ bloggersRouter.get('/:name',
 
 bloggersRouter.get('/:id',
     async (req: Request, res: Response) => {
-        const bloggerId = await bloggersService.findBloggersId(+req.params.id)
+        const bloggerId = await bloggersService.findBloggersId(new ObjectId(req.params.id))
         if (!bloggerId) {
             res.status(404).send('Not found')
         } else {
@@ -45,6 +46,7 @@ bloggersRouter.post('/',
         const bloggerName = req.body.name;
         const bloggerYoutubeUrl = req.body.youtubeUrl;
         const newBlogger = await bloggersService.createBlogger(bloggerName, bloggerYoutubeUrl)
+        console.log(newBlogger)
         res.status(201).send(newBlogger)
     })
 
@@ -53,7 +55,7 @@ bloggersRouter.put('/:id',
     BloggerValidation,
     allValidation,
     async (req: Request, res: Response) => {
-        const idBlogger = +req.params.id;
+        const idBlogger = new ObjectId(req.params.id);
         const nameBlogger = req.body.name;
         const youtubeUrlBlogger = req.body.youtubeUrl;
         const updateBlogger = await bloggersService.updateBlogger(idBlogger, nameBlogger, youtubeUrlBlogger)
@@ -67,7 +69,7 @@ bloggersRouter.put('/:id',
 bloggersRouter.delete('/:id',
     authMiddleware,
     async (req: Request, res: Response) => {
-        const isDeleted = await bloggersService.deleteBlogger(+req.params.id)
+        const isDeleted = await bloggersService.deleteBlogger(new ObjectId(req.params.id))
         if (isDeleted) {
             res.sendStatus(204)
         } else {

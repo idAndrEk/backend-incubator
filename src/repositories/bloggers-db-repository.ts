@@ -1,5 +1,6 @@
 import {promises} from "dns";
 import {bloggersCollection, bloggersType} from "./db";
+import {ObjectId} from "mongodb";
 
 export const bloggersRepository = {
     async allBloggers(page: number, pageSize: number): Promise<any> {
@@ -27,17 +28,17 @@ export const bloggersRepository = {
     }
     ,
 
-    async findBloggersId(id: number): Promise<bloggersType | null> {
+    async findBloggersId(id: ObjectId): Promise<bloggersType | null> {
         const blogger: bloggersType | null = await bloggersCollection.findOne({id: id})
         return blogger
     },
 
-    async createBlogger(newBlogger: bloggersType): Promise<bloggersType | null> {
+    async createBlogger(newBlogger: bloggersType): Promise<boolean> {
         const result = await bloggersCollection.insertOne(newBlogger)
-        return newBlogger
+        return result.acknowledged
     },
 
-    async updateBlogger(id: number, name: string, youtubeUrl: string): Promise<boolean> {
+    async updateBlogger(id: ObjectId, name: string, youtubeUrl: string): Promise<boolean> {
         const result = await bloggersCollection.updateOne({id: id}, {
             $set: {
                 name: name,
@@ -47,7 +48,7 @@ export const bloggersRepository = {
         return result.matchedCount === 1
     },
 
-    async deleteBlogger(id: number): Promise<boolean> {
+    async deleteBlogger(id: ObjectId): Promise<boolean> {
         const result = await bloggersCollection.deleteOne({id: id})
         return result.deletedCount === 1
     }
