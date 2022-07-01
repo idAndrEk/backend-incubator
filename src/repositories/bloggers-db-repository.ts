@@ -1,17 +1,9 @@
 import {promises} from "dns";
 import {bloggersCollection, bloggersType} from "./db";
-import {query, Request} from "express";
-
-// export const bloggers = [
-//     {id: 1, name: 'IT-KAMASUTRA', youtubeUrl: 'https://www.youtube.com/c/ITKAMASUTRA'},
-//     {id: 2, name: 'webDev', youtubeUrl: 'https://www.youtube.com/c/YauhenKavalchuk'},
-//     {id: 3, name: 'Egor Malkevich', youtubeUrl: 'https://www.youtube.com/c/EgorMalkevich'},
-//     {id: 4, name: 'Ulbi TV', youtubeUrl: 'https://www.youtube.com/c/UlbiTV'},
-// ]
 
 export const bloggersRepository = {
     async allBloggers(page: number, pageSize: number): Promise<any> {
-        const projection = { _id:0, id:1, "name":1, "youtubeUrl":1 };
+        const projection = {_id: 0, id: 1, "name": 1, "youtubeUrl": 1};
         const skip = (page - 1) * pageSize
         let allBloggers = await bloggersCollection.find({}).toArray()
         let pagesCount = allBloggers.length / pageSize
@@ -27,13 +19,11 @@ export const bloggersRepository = {
     },
 
     async findBloggersName(name: string | null)/*: Promise<bloggersType | null>*/ {
-        const filter = {} as {name: {$regex: string}}
+        const filter = {} as { name: { $regex: string } }
         if (name) {
             filter.name = {$regex: name}
             return await bloggersCollection.findOne(filter)
         }
-        // const result: bloggersType | null = await bloggersCollection.findOne( {$regex: name});
-        // return result
     }
     ,
 

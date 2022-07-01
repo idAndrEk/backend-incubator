@@ -3,7 +3,6 @@ import {bloggersService} from "../domain/blogegers-servic";
 import {allValidation} from "../middlewares/Validation";
 import {BloggerValidation} from "../middlewares/Blogger-validation";
 import {authMiddleware} from "../middlewares/auth-middleware";
-import {bloggersCollection} from "../repositories/db";
 
 export const bloggersRouter = Router({})
 
