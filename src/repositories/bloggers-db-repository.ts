@@ -23,7 +23,8 @@ export const bloggersRepository = {
              totalCount: allCount,
             items: bloggers.map(blogger => ({
                 youtubeUrl: blogger.youtubeUrl,
-                id: blogger._id.toString(),
+                // id: blogger._id.toString(),
+                id: blogger.id,
                 name: blogger.name
             }))
         }
@@ -45,10 +46,12 @@ export const bloggersRepository = {
             return null
         }
         
-        return {id: blogger._id.toString(), name: blogger.name, youtubeUrl: blogger.youtubeUrl}
+        // return {id: blogger._id.toString(), name: blogger.name, youtubeUrl: blogger.youtubeUrl}
+        return {id: blogger.id, name: blogger.name, youtubeUrl: blogger.youtubeUrl}
     },
 
-    async createBlogger(newBlogger: BloggerPayloadType): Promise<BloggersResponseType | null> {
+    // async createBlogger(newBlogger: BloggerPayloadType): Promise<BloggersResponseType | null> {
+    async createBlogger(newBlogger: BloggersResponseType): Promise<BloggersResponseType | null> {
         const { youtubeUrl, name } = newBlogger
         const result = await bloggersCollection.insertOne(newBlogger);
         
@@ -59,11 +62,12 @@ export const bloggersRepository = {
         return {
             name,
             youtubeUrl,
-            id: result.insertedId.toString()
+            // id: result.insertedId.toString()
+            id: newBlogger.id
         }
     },
 
-    async updateBlogger(id: ObjectId, name: string, youtubeUrl: string): Promise<boolean> {
+    async updateBlogger(id: number, name: string, youtubeUrl: string): Promise<boolean> {
         const result = await bloggersCollection.updateOne({id: id}, {
             $set: {
                 name: name,
@@ -73,7 +77,7 @@ export const bloggersRepository = {
         return result.matchedCount === 1
     },
 
-    async deleteBlogger(id: ObjectId): Promise<boolean> {
+    async deleteBlogger(id: number): Promise<boolean> {
         const result = await bloggersCollection.deleteOne({id: id})
         return result.deletedCount === 1
     }

@@ -1,5 +1,6 @@
 export type BloggersResponseType = {
-    id: string
+    id: number
+    // id: string
     name: string
     youtubeUrl: string
 }

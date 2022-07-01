@@ -18,6 +18,7 @@ export const bloggersService = {
 
     async createBlogger(name: string, youtubeUrl: string): Promise<BloggersResponseType | null> {
         const newBlogger = {
+            id: +(new Date()),
             name: name,
             youtubeUrl: youtubeUrl
         }
@@ -30,7 +31,7 @@ export const bloggersService = {
         return null
     },
 
-    async updateBlogger(id: ObjectId, name: string, youtubeUrl: string): Promise<boolean> {
+    async updateBlogger(id: number, name: string, youtubeUrl: string): Promise<boolean> {
         return await bloggersRepository.updateBlogger(id, name, youtubeUrl)
     },
 

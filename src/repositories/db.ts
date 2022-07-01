@@ -1,13 +1,14 @@
 import {MongoClient, ObjectId} from "mongodb";
 import {envSetting} from "../env_setting";
-import {BloggerPayloadType} from "../types/bloggersTypes";
+import {BloggerPayloadType, BloggersResponseType} from "../types/bloggersTypes";
 
 const mongoUri = envSetting.MongoURI
 console.log(mongoUri)
 
 const client = new MongoClient(mongoUri);
 export const db = client.db("home-bloggers");
-export const bloggersCollection = db.collection<BloggerPayloadType>("blogger");
+// export const bloggersCollection = db.collection<BloggerPayloadType>("blogger");
+export const bloggersCollection = db.collection<BloggersResponseType>("blogger");
 export const postCollection = db.collection<postsType>("post")
 
 export type postsType = {
