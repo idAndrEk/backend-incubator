@@ -17,6 +17,7 @@ export type bloggersType = {
 }
 
 export type postsType = {
+    id: ObjectId
     title: string
     shortDescription: string
     content: string

@@ -10,13 +10,18 @@ export const postsRouter = Router({})
 
 postsRouter.get('/',
     async (req: Request, res: Response) => {
-        const posts = await postsServise.allPosts()
+        let page = req.query.PageNumber || 1
+        let pageSize = req.query.PageSize || 10
+        let posts
+        if (page && pageSize) {
+            posts = await postsServise.allPosts(+page, +pageSize)
+        }
         res.status(200).send(posts)
     })
 
 postsRouter.get('/:id',
     async (req: Request, res: Response) => {
-        const post = await postsServise.findPostsId(+req.params.id)
+        const post = await postsServise.findPostsId(new ObjectId(+req.params.id));
         if (!post) {
             res.sendStatus(404).send('Not found')
         } else {
@@ -29,7 +34,7 @@ postsRouter.post('/',
     postValidation,
     allValidation,
     async (req: Request, res: Response) => {
-        const blogger = await bloggersRepository.findBloggersId(new ObjectId (+req.body.bloggerId));
+        const blogger = await bloggersRepository.findBloggersId(new ObjectId(+req.body.bloggerId));
         const errors = []
         if (blogger) {
             const titlePost = req.body.title;
@@ -59,7 +64,7 @@ postsRouter.put('/:id',
     async (req: Request, res: Response) => {
         const blogger = await bloggersRepository.findBloggersId(new ObjectId(+req.body.bloggerId));
         if (blogger) {
-            const idPost = +req.params.id;
+            const idPost = new ObjectId(req.params.id);
             const titlePost = req.body.title;
             const shortDescriptionPost = req.body.shortDescription;
             const contentPost = req.body.content;
@@ -85,7 +90,7 @@ postsRouter.put('/:id',
 postsRouter.delete('/:id',
     authMiddleware,
     async (req: Request, res: Response) => {
-        const idDeletedPost = await postsServise.deletePost(+req.params.id)
+        const idDeletedPost = await postsServise.deletePost(new ObjectId(req.params.id))
         if (idDeletedPost) {
             res.sendStatus(204)
         } else {
