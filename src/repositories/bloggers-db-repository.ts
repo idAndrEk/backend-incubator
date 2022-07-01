@@ -1,25 +1,35 @@
 import {promises} from "dns";
-import {bloggersCollection, bloggersType} from "./db";
+import {bloggersCollection} from "./db";
 import {ObjectId} from "mongodb";
+import {BloggerPayloadType, BloggersResponseType, PaginationType} from "../types/bloggersTypes";
 
 export const bloggersRepository = {
-    async allBloggers(page: number, pageSize: number): Promise<any> {
-        const projection = {_id: 0, id: 1, "name": 1, "youtubeUrl": 1};
+    async allBloggers(page: number, pageSize: number, name?: string): Promise<PaginationType<BloggersResponseType>> {
+        let filter = {}
+
+        if(name) {
+            filter = {$regexp: {name}}
+        }
+
         const skip = (page - 1) * pageSize
-        let allBloggers = await bloggersCollection.find({}).toArray()
-        let pagesCount = allBloggers.length / pageSize
-        let bloggers = await bloggersCollection.find({}).project(projection).skip(skip).limit(pageSize).toArray()
-        let allCount = await bloggersCollection.count({})
+        let allBloggersCount = await bloggersCollection.countDocuments()
+        let pagesCount = allBloggersCount / pageSize
+        let bloggers = await bloggersCollection.find(filter).skip(skip).limit(pageSize).toArray()
+        let allCount = await bloggersCollection.count(filter)
         return {
             pagesCount: Math.ceil(pagesCount),
-            page: page,
-            pageSize: pageSize,
-            totalCount: allCount,
-            items: bloggers
+             page: page,
+             pageSize: pageSize,
+             totalCount: allCount,
+            items: bloggers.map(blogger => ({
+                youtubeUrl: blogger.youtubeUrl,
+                id: blogger._id.toString(),
+                name: blogger.name
+            }))
         }
     },
 
-    async findBloggersName(name: string | null)/*: Promise<bloggersType | null>*/ {
+    async findBloggersName(name: string | null)/*: Promise<BloggersType | null>*/ {
         const filter = {} as { name: { $regex: string } }
         if (name) {
             filter.name = {$regex: name}
@@ -28,14 +38,29 @@ export const bloggersRepository = {
     }
     ,
 
-    async findBloggersId(id: ObjectId): Promise<bloggersType | null> {
-        const blogger: bloggersType | null = await bloggersCollection.findOne({id: id})
-        return blogger
+    async findBloggerById(id: string): Promise<BloggersResponseType | null> {
+        const blogger = await bloggersCollection.findOne({ _id: new ObjectId(id) });
+        
+        if(!blogger) {
+            return null
+        }
+        
+        return {id: blogger._id.toString(), name: blogger.name, youtubeUrl: blogger.youtubeUrl}
     },
 
-    async createBlogger(newBlogger: bloggersType): Promise<boolean> {
-        const result = await bloggersCollection.insertOne(newBlogger)
-        return result.acknowledged
+    async createBlogger(newBlogger: BloggerPayloadType): Promise<BloggersResponseType | null> {
+        const { youtubeUrl, name } = newBlogger
+        const result = await bloggersCollection.insertOne(newBlogger);
+        
+        if(!result.acknowledged) {
+            return null
+        }
+        
+        return {
+            name,
+            youtubeUrl,
+            id: result.insertedId.toString()
+        }
     },
 
     async updateBlogger(id: ObjectId, name: string, youtubeUrl: string): Promise<boolean> {

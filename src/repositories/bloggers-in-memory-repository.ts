@@ -7,18 +7,18 @@ export const bloggers = [
     {id: 4, name: 'Ulbi TV', youtubeUrl: 'https://www.youtube.com/c/UlbiTV'},
 ]
 
-export type bloggersType = {
+export type BloggersType = {
     id: number
     name: string
     youtubeUrl: string
 }
 
 export const bloggersRepository = {
-    async allBloggers(): Promise<bloggersType[]> {
+    async allBloggers(): Promise<BloggersType[]> {
         return bloggers
     },
 
-    async findBloggersId(id: number): Promise<bloggersType | null> {
+    async findBloggerById(id: number): Promise<BloggersType | null> {
         const blogger = bloggers.find(b => b.id === id)
         if (!blogger) {
             return null
@@ -27,7 +27,7 @@ export const bloggersRepository = {
         }
     },
 
-    async createBlogger(name: string, youtubeUrl: string): Promise<bloggersType | undefined> {
+    async createBlogger(name: string, youtubeUrl: string): Promise<BloggersType | undefined> {
         const newBlogger = {
             id: +(new Date()),
             name: name,

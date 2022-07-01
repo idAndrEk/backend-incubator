@@ -5,7 +5,7 @@ import {ObjectId} from "mongodb";
 
 export const postsServise = {
     async allPosts(page: number, pageSize: number): Promise<postsType[]> {
-        return postsRepositories.allPosts(page, pageSize)
+        return await postsRepositories.allPosts(page, pageSize)
     },
 
     async findPostsId(id: ObjectId): Promise<postsType | null> {

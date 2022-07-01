@@ -21,7 +21,7 @@ postsRouter.get('/',
 
 postsRouter.get('/:id',
     async (req: Request, res: Response) => {
-        const post = await postsServise.findPostsId(new ObjectId(+req.params.id));
+        const post = await postsServise.findPostsId(new ObjectId(req.params.id));
         if (!post) {
             res.sendStatus(404).send('Not found')
         } else {
@@ -34,7 +34,8 @@ postsRouter.post('/',
     postValidation,
     allValidation,
     async (req: Request, res: Response) => {
-        const blogger = await bloggersRepository.findBloggersId(new ObjectId(+req.body.bloggerId));
+        // console.log('ROUTER')
+        const blogger = await bloggersRepository.findBloggerById(req.body.bloggerId);
         const errors = []
         if (blogger) {
             const titlePost = req.body.title;
@@ -62,7 +63,7 @@ postsRouter.put('/:id',
     postValidation,
     allValidation,
     async (req: Request, res: Response) => {
-        const blogger = await bloggersRepository.findBloggersId(new ObjectId(+req.body.bloggerId));
+        const blogger = await bloggersRepository.findBloggerById(req.body.bloggerId);
         if (blogger) {
             const idPost = new ObjectId(req.params.id);
             const titlePost = req.body.title;
