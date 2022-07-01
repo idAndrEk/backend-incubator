@@ -12,7 +12,8 @@ export const bloggersCollection = db.collection<BloggersResponseType>("blogger")
 export const postCollection = db.collection<postsType>("post")
 
 export type postsType = {
-    id: ObjectId
+    // id: ObjectId
+    id: number
     title: string
     shortDescription: string
     content: string

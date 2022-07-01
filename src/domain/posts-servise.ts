@@ -8,14 +8,14 @@ export const postsServise = {
         return await postsRepositories.allPosts(page, pageSize)
     },
 
-    async findPostsId(id: ObjectId): Promise<postsType | null> {
+    async findPostsId(id: number): Promise<postsType | null> {
         const post: postsType | null = await postCollection.findOne({id: id})
         return post
     },
 
     async createPost(title: string, shortDescription: string, content: string, bloggerId: number, bloggerName: string): Promise<postsType | null> {
         const newPost = {
-            id: new ObjectId(), //+(new Date()), //posts.length + 1,
+            id: +(new Date()), //posts.length + 1, //new ObjectId()
             title: title,
             shortDescription: shortDescription,
             content: content,
@@ -26,11 +26,11 @@ export const postsServise = {
         return createdPost
     },
 
-    async updatePost(id: ObjectId, title: string, shortDescription: string, content: string, bloggerId: number): Promise<boolean | null> {
+    async updatePost(id: number, title: string, shortDescription: string, content: string, bloggerId: number): Promise<boolean | null> {
         return await postsRepositories.updatePost(id, title, shortDescription, content, bloggerId)
 
     },
-    async deletePost(id: ObjectId): Promise<boolean> {
+    async deletePost(id: number): Promise<boolean> {
         return await postsRepositories.deletePost(id)
     }
 }

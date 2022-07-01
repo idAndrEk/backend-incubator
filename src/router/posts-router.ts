@@ -21,7 +21,8 @@ postsRouter.get('/',
 
 postsRouter.get('/:id',
     async (req: Request, res: Response) => {
-        const post = await postsServise.findPostsId(new ObjectId(req.params.id));
+        // const post = await postsServise.findPostsId(new ObjectId(req.params.id));
+        const post = await postsServise.findPostsId(+req.params.id);
         if (!post) {
             res.sendStatus(404).send('Not found')
         } else {
@@ -65,7 +66,7 @@ postsRouter.put('/:id',
     async (req: Request, res: Response) => {
         const blogger = await bloggersRepository.findBloggerById(req.body.bloggerId);
         if (blogger) {
-            const idPost = new ObjectId(req.params.id);
+            const idPost = +req.params.id;
             const titlePost = req.body.title;
             const shortDescriptionPost = req.body.shortDescription;
             const contentPost = req.body.content;
@@ -91,7 +92,7 @@ postsRouter.put('/:id',
 postsRouter.delete('/:id',
     authMiddleware,
     async (req: Request, res: Response) => {
-        const idDeletedPost = await postsServise.deletePost(new ObjectId(req.params.id))
+        const idDeletedPost = await postsServise.deletePost(+req.params.id)
         if (idDeletedPost) {
             res.sendStatus(204)
         } else {
