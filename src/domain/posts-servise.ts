@@ -1,19 +1,20 @@
 import {postsRepositories} from "../repositories/posts-db-repository";
 import {posts} from "../repositories/posts-im-memory-repository";
-import {postCollection, postsType} from "../repositories/db";
+import {postCollection} from "../repositories/db";
 import {ObjectId} from "mongodb";
+import {PostsType} from "../types/postsTypes";
 
 export const postsServise = {
-    async allPosts(page: number, pageSize: number): Promise<postsType[]> {
+    async allPosts(page: number, pageSize: number): Promise<PostsType[]> {
         return await postsRepositories.allPosts(page, pageSize)
     },
 
-    async findPostsId(id: number): Promise<postsType | null> {
-        const post: postsType | null = await postCollection.findOne({id: id})
+    async findPostsId(id: number): Promise<PostsType | null> {
+        const post: PostsType | null = await postCollection.findOne({id: id})
         return post
     },
 
-    async createPost(title: string, shortDescription: string, content: string, bloggerId: number, bloggerName: string): Promise<postsType | null> {
+    async createPost(title: string, shortDescription: string, content: string, bloggerId: number, bloggerName: string): Promise<PostsType | null> {
         const newPost = {
             id: +(new Date()), //posts.length + 1, //new ObjectId()
             title: title,

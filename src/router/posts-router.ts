@@ -4,7 +4,6 @@ import {allValidation} from "../middlewares/Validation";
 import {authMiddleware} from "../middlewares/auth-middleware";
 import {postsServise} from "../domain/posts-servise";
 import {bloggersRepository} from "../repositories/bloggers-db-repository";
-import {ObjectId} from "mongodb";
 
 export const postsRouter = Router({})
 
@@ -17,6 +16,7 @@ postsRouter.get('/',
             posts = await postsServise.allPosts(+page, +pageSize)
         }
         res.status(200).send(posts)
+        return
     })
 
 postsRouter.get('/:id',
@@ -36,7 +36,7 @@ postsRouter.post('/',
     allValidation,
     async (req: Request, res: Response) => {
         // console.log('ROUTER')
-        const blogger = await bloggersRepository.findBloggerById(req.body.bloggerId);
+        const blogger = await bloggersRepository.findBloggerById(+req.body.bloggerId);
         const errors = []
         if (blogger) {
             const titlePost = req.body.title;
