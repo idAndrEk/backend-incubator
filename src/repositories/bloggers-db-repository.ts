@@ -6,7 +6,6 @@ import {BloggerPayloadType, BloggersResponseType, PaginationType} from "../types
 export const bloggersRepository = {
     async allBloggers(page: number, pageSize: number, name?: string): Promise<PaginationType<BloggersResponseType>> {
         let filter = {}
-
         if(name) {
             filter = {$regexp: {name}}
         }
@@ -30,19 +29,18 @@ export const bloggersRepository = {
         }
     },
 
-    async findBloggersName(name: string | null)/*: Promise<BloggersType | null>*/ {
-        const filter = {} as { name: { $regex: string } }
-        if (name) {
-            filter.name = {$regex: name}
-            return await bloggersCollection.findOne(filter)
-        }
-    }
-    ,
+    // async findBloggersName(name: string | null)/*: Promise<BloggersType | null>*/ {
+    //     const filter = {} as { name: { $regex: string } }
+    //     if (name) {
+    //         filter.name = {$regex: name}
+    //         return await bloggersCollection.findOne(filter)
+    //     }
+    // },
 
-    async findBloggerById(id: string): Promise<BloggersResponseType | null> {
-        const blogger = await bloggersCollection.findOne({ _id: new ObjectId(id) });
-        
-        if(!blogger) {
+    async findBloggerById(id: number): Promise<BloggersResponseType | null> {
+        // const blogger = await bloggersCollection.findOne({ _id: new ObjectId(id) });
+        const blogger = await bloggersCollection.findOne({id: id});
+                if(!blogger) {
             return null
         }
         
