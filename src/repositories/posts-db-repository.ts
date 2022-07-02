@@ -7,8 +7,8 @@ export const postsRepositories = {
     async allPosts(page: number, pageSize: number): Promise<any> {
         // const projection = {_id: 0, id: 1, "title": 1, "shortDescription": 1, "content": 1, "bloggerId": 1, "bloggerName": 1};
         const skip = (page - 1) * pageSize
-        let allPosts = await postCollection.find().toArray()
-        let pagesCount = allPosts.length / pageSize
+        let allPostsCount = await postCollection.countDocuments()
+        let pagesCount = allPostsCount / pageSize
         // let posts = await postCollection.find({}).project(projection).skip(skip).limit(pageSize).toArray()
         let posts = await postCollection.find({}).skip(skip).limit(pageSize).toArray()
         let allCount = await postCollection.count({})
