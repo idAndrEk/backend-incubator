@@ -1,12 +1,13 @@
 import {promises} from "dns";
-import {bloggersCollection} from "./db";
+import {bloggersCollection, postCollection} from "./db";
 import {ObjectId} from "mongodb";
 import {BloggerPayloadType, BloggersResponseType, PaginationType} from "../types/bloggersTypes";
+import {PostsType} from "../types/postsTypes";
 
 export const bloggersRepository = {
     async allBloggers(page: number, pageSize: number, name?: string): Promise<PaginationType<BloggersResponseType>> {
         let filter = {}
-        if(name) {
+        if (name) {
             filter = {$regexp: {name}}
         }
 
@@ -17,9 +18,9 @@ export const bloggersRepository = {
         let allCount = await bloggersCollection.count(filter)
         return {
             pagesCount: Math.ceil(pagesCount),
-             page: page,
-             pageSize: pageSize,
-             totalCount: allCount,
+            page: page,
+            pageSize: pageSize,
+            totalCount: allCount,
             items: bloggers.map(blogger => ({
                 youtubeUrl: blogger.youtubeUrl,
                 // id: blogger._id.toString(),
@@ -40,23 +41,23 @@ export const bloggersRepository = {
     async findBloggerById(id: number): Promise<BloggersResponseType | null> {
         // const blogger = await bloggersCollection.findOne({ _id: new ObjectId(id) });
         const blogger = await bloggersCollection.findOne({id: id});
-                if(!blogger) {
+        if (!blogger) {
             return null
         }
-        
+
         // return {id: blogger._id.toString(), name: blogger.name, youtubeUrl: blogger.youtubeUrl}
         return {id: blogger.id, name: blogger.name, youtubeUrl: blogger.youtubeUrl}
     },
 
     // async createBlogger(newBlogger: BloggerPayloadType): Promise<BloggersResponseType | null> {
     async createBlogger(newBlogger: BloggersResponseType): Promise<BloggersResponseType | null> {
-        const { youtubeUrl, name } = newBlogger
+        const {youtubeUrl, name} = newBlogger
         const result = await bloggersCollection.insertOne(newBlogger);
-        
-        if(!result.acknowledged) {
+
+        if (!result.acknowledged) {
             return null
         }
-        
+
         return {
             name,
             youtubeUrl,
@@ -79,6 +80,11 @@ export const bloggersRepository = {
         const result = await bloggersCollection.deleteOne({id: id})
         return result.deletedCount === 1
     }
+
+    // async findBloggerPosts(id: number): Promise<PostsType | null> {
+    //     const post: PostsType | null = await postCollection.findOne({id: id})
+    //     return post
+    // }
 }
 
 // async function getQuery() {
