@@ -43,9 +43,10 @@ bloggersRouter.post('/',
     async (req: Request, res: Response) => {
         const bloggerName = req.body.name;
         const bloggerYoutubeUrl = req.body.youtubeUrl;
-        const newBlogger = await bloggersService.createBlogger(bloggerName, bloggerYoutubeUrl)
+        const newBlogger = await bloggersService.createBlogger(bloggerName, bloggerYoutubeUrl);
         if (!newBlogger) {
             res.status(500).send('something went wrong')
+            return
         }
         console.log(newBlogger)
         res.status(201).send(newBlogger)
