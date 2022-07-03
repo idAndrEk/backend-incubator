@@ -93,12 +93,13 @@ bloggersRouter.get('/:bloggerId/posts',
         const bloggerId = +req.params.bloggerId
         const isBlogger = await bloggersRepository.findBloggerById(bloggerId)
         if (isBlogger) {
-            // if (page && pageSize) {
-            const bloggerPosts = await bloggersService.findBloggerPosts(bloggerId, +page, +pageSize)
-            res.status(200).send(bloggerPosts)
-        } else {
-            res.sendStatus(404).send('Not found')
+            if (page && pageSize) {
+                const bloggerPosts = await bloggersService.findBloggerPosts(bloggerId, +page, +pageSize)
+                res.status(200).send(bloggerPosts)
+                return
+            }
         }
+        res.status(404).send('Not found')
     })
 
 bloggersRouter.post('/:bloggerId/posts',
@@ -119,7 +120,7 @@ bloggersRouter.post('/:bloggerId/posts',
             const errors = [];
             errors.push({message: 'Error bloggerId', field: 'bloggerId'})
             if (errors.length) {
-                res.status(400).json({
+                res.status(404).json({
                     errorsMessages: errors
                 })
                 return
