@@ -4,10 +4,9 @@ import {allValidation} from "../middlewares/Validation";
 import {BloggerValidation} from "../middlewares/Blogger-validation";
 import {authMiddleware} from "../middlewares/auth-middleware";
 import {ObjectId} from "mongodb";
-import {postCollection} from "../repositories/db";
 import {postsServise} from "../domain/posts-servise";
-import {postsRouter} from "./posts-router";
 import {bloggersRepository} from "../repositories/bloggers-db-repository";
+import {postValidation} from "../middlewares/Post-validation";
 
 export const bloggersRouter = Router({})
 
@@ -103,6 +102,9 @@ bloggersRouter.get('/:bloggerId/posts',
     })
 
 bloggersRouter.post('/:bloggerId/posts',
+    authMiddleware,
+    postValidation,
+    allValidation,
     async (req: Request, res: Response) => {
         const titlePost = req.body.title;
         const shortDescriptionPost = req.body.shortDescription;
