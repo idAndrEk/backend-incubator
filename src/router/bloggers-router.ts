@@ -106,18 +106,24 @@ bloggersRouter.post('/:bloggerId/posts',
     postValidation,
     allValidation,
     async (req: Request, res: Response) => {
-        const titlePost = req.body.title;
-        const shortDescriptionPost = req.body.shortDescription;
-        const contentPost = req.body.content;
         const bloggerId = +req.body.bloggerId;
-        const bloggerName = req.body.bloggerName;
         const isBloggerId = await bloggersRepository.findBloggerById(bloggerId);
-        if (!isBloggerId) {
-            res.status(404).send("test")
-            return
-        } else {
+        if (isBloggerId) {
+            const titlePost = req.body.title;
+            const shortDescriptionPost = req.body.shortDescription;
+            const contentPost = req.body.content;
+            const bloggerName = req.body.bloggerName;
             const newPostBlogger = await postsServise.createPost(titlePost, shortDescriptionPost, contentPost, bloggerId, bloggerName)
             res.status(201).send(newPostBlogger)
+        } else {
+            const errors = [];
+            errors.push({message: 'Error bloggerId', field: 'bloggerId'})
+            if (errors.length) {
+                res.status(400).json({
+                    errorsMessages: errors
+                })
+                return
+            }
         }
     })
 
