@@ -8,7 +8,7 @@ export const bloggersRepository = {
     async allBloggers(page: number, pageSize: number, name?: string): Promise<PaginationType<BloggersResponseType>> {
         let filter = {}
         if (name) {
-            filter = {$regexp: {name}}
+            filter = {$regex: {name}}
         }
 
         const skip = (page - 1) * pageSize
@@ -79,12 +79,33 @@ export const bloggersRepository = {
     async deleteBlogger(id: number): Promise<boolean> {
         const result = await bloggersCollection.deleteOne({id: id})
         return result.deletedCount === 1
-    }
+    },
 
-    // async findBloggerPosts(id: number): Promise<PostsType | null> {
-    //     const post: PostsType | null = await postCollection.findOne({id: id})
-    //     return post
-    // }
+    async findBloggerPosts(bloggerId: number | null, page: number, pageSize: number): Promise<any> {
+        let filter = {}
+        if (bloggerId) {
+            filter =  {bloggerId}
+        }
+        const skip = (page - 1) * pageSize
+        let allPostsCount = await postCollection.countDocuments()
+        let pagesCount = allPostsCount / pageSize
+        let posts = await postCollection.find(filter).skip(skip).limit(pageSize).toArray()
+        let allCount = await postCollection.count({})
+        return {
+            pagesCount: Math.ceil(pagesCount),
+            page: page,
+            pageSize: pageSize,
+            totalCount: allCount,
+            items: posts.map(post => ({
+                id: post.id,
+                title: post.title,
+                shortDescription: post.shortDescription,
+                content: post.content,
+                bloggerId: post.bloggerId,
+                bloggerName: post.bloggerName
+            }))
+        }
+    }
 }
 
 // async function getQuery() {

@@ -89,12 +89,13 @@ bloggersRouter.delete('/:id',
 
 bloggersRouter.get('/:bloggerId/posts',
     async (req: Request, res: Response) => {
-        // let page = req.query.PageNumber || 1
-        // let pageSize = req.query.PageSize || 10
-        const isBlogger = await bloggersService.findBloggerById(+req.params.id)
+        let page = req.query.PageNumber || 1
+        let pageSize = req.query.PageSize || 10
+        const bloggerId = +req.params.bloggerId
+        const isBlogger = await bloggersRepository.findBloggerById(bloggerId)
         if (isBlogger) {
             // if (page && pageSize) {
-            const bloggerPosts = await postsServise.findPostsId(+req.params.id)
+            const bloggerPosts = await bloggersService.findBloggerPosts(bloggerId, +page, +pageSize)
             res.status(200).send(bloggerPosts)
         } else {
             res.sendStatus(404).send('Not found')

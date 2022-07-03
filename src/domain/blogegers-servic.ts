@@ -37,11 +37,11 @@ export const bloggersService = {
 
     async deleteBlogger(id: number): Promise<boolean> {
         return await bloggersRepository.deleteBlogger(id)
-    }
+    },
 
-    // async findBloggerPosts(id: number) {
-    //     const post: PostsType | null = await bloggersRepository.findBloggerPosts({id: id})
-    //     return post
-    // }
+    async findBloggerPosts(bloggerId: number, page: number, pageSize: number) {
+        const post = await bloggersRepository.findBloggerPosts(bloggerId, page, pageSize)
+        return post
+    }
 
 }
