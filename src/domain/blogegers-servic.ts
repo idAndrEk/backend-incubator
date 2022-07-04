@@ -1,13 +1,10 @@
 import {bloggersRepository} from "../repositories/bloggers-db-repository";
 import {ObjectId} from "mongodb";
 import {BloggersResponseType, PaginationType} from "../types/bloggersTypes";
-import {PostsType} from "../types/postsTypes";
-import {postCollection} from "../repositories/db";
-import {postsRepositories} from "../repositories/posts-db-repository";
 
 export const bloggersService = {
-    async allBloggers(page: number, pageSize: number, name?: string): Promise<PaginationType<BloggersResponseType>> {
-        return await bloggersRepository.allBloggers(page, pageSize)
+    async allBloggers(page: number, pageSize: number, name: string | null): Promise<PaginationType<BloggersResponseType> | null> {
+        return await bloggersRepository.allBloggers(page, pageSize, name)
     },
 
     // async findBloggersName(name: string): Promise<any> {

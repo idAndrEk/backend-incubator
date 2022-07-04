@@ -5,7 +5,7 @@ export type BloggersResponseType = {
     youtubeUrl: string
 }
 
-export type BloggerPayloadType = Omit<BloggersResponseType, 'id'>
+export type BloggerPayloadType<T> = Omit<BloggersResponseType, '_id'>
 
 export type PaginationType<T> = {
     pagesCount: number

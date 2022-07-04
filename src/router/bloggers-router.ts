@@ -12,26 +12,20 @@ export const bloggersRouter = Router({})
 
 bloggersRouter.get('/',
     async (req: Request, res: Response) => {
-        let page = req.query.PageNumber || 1
-        let pageSize = req.query.PageSize || 10
-        let bloggers
-        if (page && pageSize) {
-            bloggers = await bloggersService.allBloggers(+page, +pageSize)
-        }
+        const page = req.query.PageNumber || 1
+        const pageSize = req.query.PageSize || 10
+        const name = req.query.SearchNameTerm || null
+        console.log(name)
+        const bloggers = await bloggersService.allBloggers(+page, +pageSize, name ? name.toString() : null)
+        // let bloggers
+        // if (page && pageSize) {
+        //     bloggers = await bloggersService.allBloggers(+page, +pageSize, searchNameTerm)
+        // }
         res.status(200).send(bloggers)
         return
     })
 
-
-// bloggersRouter.get('/:name',
-//     async (req: Request, res: Response) => {
-//         const bloggerName = await bloggersService.findBloggersName(req.params.name)
-//         if (!bloggerName) {
-//             res.status(404).send('Not found')
-//         } else {
-//             res.status(404).send(bloggerName)
-//         }
-//     })
+    // ?PageSize=1&PageNumber=1&SearchNameTerm=Tim
 
 bloggersRouter.get('/:id',
     async (req: Request, res: Response) => {

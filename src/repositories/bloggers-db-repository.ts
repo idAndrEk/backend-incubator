@@ -1,21 +1,32 @@
 import {promises} from "dns";
 import {bloggersCollection, postCollection} from "./db";
-import {ObjectId} from "mongodb";
+import {Filter, ObjectId} from "mongodb";
 import {BloggerPayloadType, BloggersResponseType, PaginationType} from "../types/bloggersTypes";
 import {PostsType} from "../types/postsTypes";
 
 export const bloggersRepository = {
-    async allBloggers(page: number, pageSize: number, name?: string): Promise<PaginationType<BloggersResponseType>> {
-        let filter = {}
-        if (name) {
-            filter = {$regex: {name}}
-        }
+    // async forCount(name: string | null): Promise<number> {
+    //     let filter: Filter<BloggersResponseType> = {}
+    //     if (name) {
+    //         filter = {$regex: {name}}
+    //     }
+    //     return bloggersCollection.count(filter)
+    // },
 
+    async allBloggers(page: number, pageSize: number, name: string | null): Promise<PaginationType<BloggersResponseType> | null> {
+         let filter = {}
+        if (name) {
+            console.log(name, 'name')
+            filter = {name: {$regex: `.*${name}.*`}}
+        }
         const skip = (page - 1) * pageSize
         let allBloggersCount = await bloggersCollection.countDocuments()
+
         let pagesCount = allBloggersCount / pageSize
+
         let bloggers = await bloggersCollection.find(filter).skip(skip).limit(pageSize).toArray()
         let allCount = await bloggersCollection.count(filter)
+
         return {
             pagesCount: Math.ceil(pagesCount),
             page: page,
@@ -84,7 +95,7 @@ export const bloggersRepository = {
     async findBloggerPosts(bloggerId: number | null, page: number, pageSize: number): Promise<any> {
         let filter = {}
         if (bloggerId) {
-            filter =  {bloggerId}
+            filter = {bloggerId}
         }
         const skip = (page - 1) * pageSize
         let allPostsCount = await postCollection.countDocuments()
