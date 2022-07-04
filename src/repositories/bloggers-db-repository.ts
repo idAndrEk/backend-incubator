@@ -94,7 +94,7 @@ export const bloggersRepository = {
             filter = {bloggerId}
         }
         const skip = (page - 1) * pageSize
-        let allPostsCount = await postCollection.countDocuments()
+        let allPostsCount = await postCollection.countDocuments(filter)
         let pagesCount = allPostsCount / pageSize
         let posts = await postCollection.find(filter).skip(skip).limit(pageSize).toArray()
         let allCount = await postCollection.count({})
