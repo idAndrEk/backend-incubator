@@ -20,7 +20,7 @@ export const bloggersRepository = {
             filter = {name: {$regex: `.*${name}.*`}}
         }
         const skip = (page - 1) * pageSize
-        let allBloggersCount = await bloggersCollection.countDocuments()
+        let allBloggersCount = await bloggersCollection.count(filter)
 
         let pagesCount = allBloggersCount / pageSize
 
