@@ -7,15 +7,15 @@ import {PaginationType} from "../types/bloggersTypes";
 export const postsRepositories = {
     async allPosts(page: number, pageSize: number): Promise<PaginationType<PostsType>> {
         const skip = (page - 1) * pageSize
-        let allPostsCount = await postCollection.countDocuments()
+        let allPostsCount = await postCollection.count({})
         let pagesCount = allPostsCount / pageSize
         let posts = await postCollection.find({}).skip(skip).limit(pageSize).toArray()
-        let allCount = await postCollection.count({})
+        // let allCount = await postCollection.count({})
         return {
             pagesCount: Math.ceil(pagesCount),
             page: page,
             pageSize: pageSize,
-            totalCount: allCount,
+            totalCount: allPostsCount,
             items: posts.map(post => ({
                 id: post.id,
                 title: post.title,
