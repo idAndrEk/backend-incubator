@@ -2,7 +2,6 @@ import {promises} from "dns";
 import {bloggersCollection, postCollection} from "./db";
 import {Filter, ObjectId} from "mongodb";
 import {BloggerPayloadType, BloggersResponseType, PaginationType} from "../types/bloggersTypes";
-import {PostsType} from "../types/postsTypes";
 
 export const bloggersRepository = {
     // async forCount(name: string | null): Promise<number> {

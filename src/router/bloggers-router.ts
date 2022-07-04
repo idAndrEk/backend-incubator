@@ -1,5 +1,5 @@
 import {Request, Response, Router} from "express";
-import {bloggersService} from "../domain/blogegers-servic";
+import {bloggersService} from "../domain/bloggers-servise";
 import {allValidation} from "../middlewares/Validation";
 import {BloggerValidation} from "../middlewares/Blogger-validation";
 import {authMiddleware} from "../middlewares/auth-middleware";

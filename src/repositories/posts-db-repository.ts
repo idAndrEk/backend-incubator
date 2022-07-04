@@ -1,7 +1,7 @@
 import {postCollection} from "./db";
 import {ObjectId} from "mongodb";
 import {PostsType} from "../types/postsTypes";
-import {bloggersService} from "../domain/blogegers-servic";
+import {bloggersService} from "../domain/bloggers-servise";
 
 export const postsRepositories = {
     async allPosts(page: number, pageSize: number): Promise<any> {
