@@ -33,28 +33,28 @@ export const postsRepositories = {
     },
 
     async createPost(newPost: PostsType): Promise<PostsType | null> {
-        const result = await postCollection.insertOne(newPost)
-        return newPost
+        // const result = await postCollection.insertOne(newPost)
+        // return newPost
 
-        // const {
-        //     title,
-        //     shortDescription,
-        //     content,
-        //     bloggerId,
-        //     bloggerName
-        // } = newPost
-        // const result = await postCollection.insertOne(newPost);
-        // if (!result.acknowledged) {
-        //     return null
-        // }
-        // return {
-        //     title,
-        //     shortDescription,
-        //     content,
-        //     bloggerId,
-        //     bloggerName,
-        //     id: newPost.id
-        // }
+        const {
+            title,
+            shortDescription,
+            content,
+            bloggerId,
+            bloggerName
+        } = newPost
+        const result = await postCollection.insertOne(newPost);
+        if (!result.acknowledged) {
+            return null
+        }
+        return {
+            title,
+            shortDescription,
+            content,
+            bloggerId,
+            bloggerName,
+            id: newPost.id
+        }
     },
 
     async updatePost(id: number, title: string, shortDescription: string, content: string, bloggerId: number): Promise<boolean | null> {
