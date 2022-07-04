@@ -7,8 +7,7 @@ export const authMiddleware = (req: Request, res: Response, next: NextFunction) 
     if(authHeader === encode){
         next()
     } else {
-        res.status(401)
-        res.send('Access denied')
+        res.status(401).send('Access denied')
     }
 }
 

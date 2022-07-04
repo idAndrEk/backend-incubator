@@ -24,7 +24,7 @@ postsRouter.get('/:id',
         // const post = await postsServise.findPostsId(new ObjectId(req.params.id));
         const post = await postsServise.findPostsId(+req.params.id);
         if (!post) {
-            res.sendStatus(404).send('Not found')
+            res.status(404).send('Not found')
         } else {
             res.status(200).send(post)
         }
