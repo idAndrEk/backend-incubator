@@ -2,9 +2,10 @@ import {postCollection} from "./db";
 import {ObjectId} from "mongodb";
 import {PostsType} from "../types/postsTypes";
 import {bloggersService} from "../domain/bloggers-servise";
+import {PaginationType} from "../types/bloggersTypes";
 
 export const postsRepositories = {
-    async allPosts(page: number, pageSize: number): Promise<any> {
+    async allPosts(page: number, pageSize: number): Promise<PaginationType<PostsType>> {
         const skip = (page - 1) * pageSize
         let allPostsCount = await postCollection.countDocuments()
         let pagesCount = allPostsCount / pageSize

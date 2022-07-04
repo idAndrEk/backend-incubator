@@ -3,9 +3,10 @@ import {posts} from "../repositories/posts-im-memory-repository";
 import {postCollection} from "../repositories/db";
 import {ObjectId} from "mongodb";
 import {PostsType} from "../types/postsTypes";
+import {PaginationType} from "../types/bloggersTypes";
 
 export const postsServise = {
-    async allPosts(page: number, pageSize: number): Promise<PostsType[]> {
+    async allPosts(page: number, pageSize: number): Promise<PaginationType<PostsType>> {
         return await postsRepositories.allPosts(page, pageSize)
     },
 
