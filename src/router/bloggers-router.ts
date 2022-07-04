@@ -87,7 +87,7 @@ bloggersRouter.get('/:bloggerId/posts',
         const bloggerId = +req.params.bloggerId
         const isBlogger = await bloggersRepository.findBloggerById(bloggerId)
         if (isBlogger) {
-            if (page && pageSize) {
+            if (page && pageSize) { // clear
                 const bloggerPosts = await bloggersService.findBloggerPosts(bloggerId, +page, +pageSize)
                 res.status(200).send(bloggerPosts)
                 return
@@ -101,9 +101,9 @@ bloggersRouter.post('/:bloggerId/posts',
     postValidation,
     allValidation,
     async (req: Request, res: Response) => {
-        const bloggerId = +req.body.bloggerId;
-        const isBloggerId = await bloggersRepository.findBloggerById(bloggerId);
-        if (isBloggerId) {
+        const bloggerId = +req.params.bloggerId;
+        const blogger = await bloggersRepository.findBloggerById(bloggerId);
+        if (blogger) {
             const titlePost = req.body.title;
             const shortDescriptionPost = req.body.shortDescription;
             const contentPost = req.body.content;
@@ -114,7 +114,7 @@ bloggersRouter.post('/:bloggerId/posts',
             const errors = [];
             errors.push({message: 'Error bloggerId', field: 'bloggerId'})
             if (errors.length) {
-                res.status(404).json({
+                res.status(400).json({
                     errorsMessages: errors
                 })
                 return
