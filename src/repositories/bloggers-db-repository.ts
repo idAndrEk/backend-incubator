@@ -22,7 +22,6 @@ export const bloggersRepository = {
         let allBloggersCount = await bloggersCollection.count(filter)
         let pagesCount = allBloggersCount / pageSize
         let bloggers = await bloggersCollection.find(filter).skip(skip).limit(pageSize).toArray()
-        // let allCount = await bloggersCollection.count(filter)
         return {
             pagesCount: Math.ceil(pagesCount),
             page: page,
@@ -58,13 +57,14 @@ export const bloggersRepository = {
 
     // async createBlogger(newBlogger: BloggerPayloadType): Promise<BloggersResponseType | null> {
     async createBlogger(newBlogger: BloggersResponseType): Promise<BloggersResponseType | null> {
-        const {youtubeUrl, name} = newBlogger
+        const {
+            youtubeUrl,
+            name
+        } = newBlogger
         const result = await bloggersCollection.insertOne(newBlogger);
-
         if (!result.acknowledged) {
             return null
         }
-
         return {
             name,
             youtubeUrl,
