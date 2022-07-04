@@ -14,24 +14,21 @@ export const bloggersRepository = {
     // },
 
     async allBloggers(page: number, pageSize: number, name: string | null): Promise<PaginationType<BloggersResponseType> | null> {
-         let filter = {}
+        let filter = {}
         if (name) {
             console.log(name, 'name')
             filter = {name: {$regex: `.*${name}.*`}}
         }
         const skip = (page - 1) * pageSize
         let allBloggersCount = await bloggersCollection.count(filter)
-
         let pagesCount = allBloggersCount / pageSize
-
         let bloggers = await bloggersCollection.find(filter).skip(skip).limit(pageSize).toArray()
-        let allCount = await bloggersCollection.count(filter)
-
+        // let allCount = await bloggersCollection.count(filter)
         return {
             pagesCount: Math.ceil(pagesCount),
             page: page,
             pageSize: pageSize,
-            totalCount: allCount,
+            totalCount: allBloggersCount,
             items: bloggers.map(blogger => ({
                 youtubeUrl: blogger.youtubeUrl,
                 // id: blogger._id.toString(),
