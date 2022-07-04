@@ -107,7 +107,7 @@ bloggersRouter.post('/:bloggerId/posts',
             const titlePost = req.body.title;
             const shortDescriptionPost = req.body.shortDescription;
             const contentPost = req.body.content;
-            const bloggerName = req.body.bloggerName;
+            const bloggerName = blogger.name;
             const newPostBlogger = await postsServise.createPost(titlePost, shortDescriptionPost, contentPost, bloggerId, bloggerName)
             res.status(201).send(newPostBlogger)
         } else {
