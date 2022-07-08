@@ -15,7 +15,7 @@ export const bloggersRepository = {
     async allBloggers(page: number, pageSize: number, name: string | null): Promise<PaginationType<BloggersResponseType> | null> {
         let filter = {}
         if (name) {
-            console.log(name, 'name')
+            // console.log(name, 'name')
             filter = {name: {$regex: `.*${name}.*`}}
         }
         const skip = (page - 1) * pageSize
@@ -55,7 +55,6 @@ export const bloggersRepository = {
         return {id: blogger.id, name: blogger.name, youtubeUrl: blogger.youtubeUrl}
     },
 
-    // async createBlogger(newBlogger: BloggerPayloadType): Promise<BloggersResponseType | null> {
     async createBlogger(newBlogger: BloggersResponseType): Promise<BloggersResponseType | null> {
         const {
             youtubeUrl,

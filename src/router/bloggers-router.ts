@@ -1,5 +1,5 @@
 import {Request, Response, Router} from "express";
-import {bloggersService} from "../domain/bloggers-servise";
+import {bloggersService} from "../domain/bloggers-service";
 import {allValidation} from "../middlewares/Validation";
 import {BloggerValidation} from "../middlewares/Blogger-validation";
 import {authMiddleware} from "../middlewares/auth-middleware";
@@ -15,7 +15,7 @@ bloggersRouter.get('/',
         const page = req.query.PageNumber || 1
         const pageSize = req.query.PageSize || 10
         const name = req.query.SearchNameTerm || null
-        console.log(name)
+        // console.log(name)
         const bloggers = await bloggersService.allBloggers(+page, +pageSize, name ? name.toString() : null)
         // let bloggers
         // if (page && pageSize) {
@@ -49,7 +49,7 @@ bloggersRouter.post('/',
             res.status(500).send('something went wrong')
             return
         }
-        console.log(newBlogger)
+        // console.log(newBlogger)
         res.status(201).send(newBlogger)
     })
 

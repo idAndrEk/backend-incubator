@@ -1,7 +1,7 @@
 import {postCollection} from "./db";
 import {ObjectId} from "mongodb";
 import {PostsType} from "../types/postsTypes";
-import {bloggersService} from "../domain/bloggers-servise";
+import {bloggersService} from "../domain/bloggers-service";
 import {PaginationType} from "../types/bloggersTypes";
 
 export const postsRepositories = {
