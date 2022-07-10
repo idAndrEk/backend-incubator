@@ -1,10 +1,10 @@
-import {UsersTypes, UsersTypesPassword} from "../types/UsersTypes";
+import {UserDBType, UserResponseType} from "../types/UsersTypes";
 import {usersCollection} from "./db";
 import {PaginationType} from "../types/bloggersTypes";
 
 
 export const usersRepository = {
-    async getAllUsers(page: number, pageSize: number): Promise<PaginationType<UsersTypesPassword>> {
+    async getAllUsers(page: number, pageSize: number): Promise<PaginationType<UserResponseType> | null> {
         const skip = (page - 1) * pageSize
         let allPostsCount = await usersCollection.countDocuments()
         let pagesCount = allPostsCount / pageSize
@@ -22,16 +22,15 @@ export const usersRepository = {
         }
     },
 
-    async createUser(newUser: UsersTypes): Promise<UsersTypes | null> {
-        const {login, passwordHash} = newUser
-        const result = await usersCollection.insertOne(newUser)
-        if (!result.acknowledged) {
+    async createUser(newUser: UserDBType): Promise<UserResponseType | null> {
+        const {login} = newUser
+        const createUser = await usersCollection.insertOne(newUser)
+        if (!createUser.acknowledged) {
             return null
         }
         return {
             id: newUser.id,
-            login,
-            passwordHash
+            login
         }
     }
 }

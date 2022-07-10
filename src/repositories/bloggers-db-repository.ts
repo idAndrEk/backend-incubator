@@ -4,13 +4,6 @@ import {Filter, ObjectId} from "mongodb";
 import {BloggerPayloadType, BloggersResponseType, PaginationType} from "../types/bloggersTypes";
 
 export const bloggersRepository = {
-    // async forCount(name: string | null): Promise<number> {
-    //     let filter: Filter<BloggersResponseType> = {}
-    //     if (name) {
-    //         filter = {$regex: {name}}
-    //     }
-    //     return bloggersCollection.count(filter)
-    // },
 
     async allBloggers(page: number, pageSize: number, name: string | null): Promise<PaginationType<BloggersResponseType> | null> {
         let filter = {}

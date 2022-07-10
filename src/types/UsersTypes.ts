@@ -1,12 +1,12 @@
 import {ObjectId} from "mongodb";
 
-export type UsersTypes = {
+export type UserDBType = {
     id: ObjectId
     login: string
     passwordHash: string
 }
 
-export type UsersTypesPassword = {
+export type UserResponseType = {
     id: ObjectId
     login: string
 }
