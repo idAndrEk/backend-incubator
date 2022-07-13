@@ -1,9 +1,8 @@
-import {UserDBType, UserResponseType} from "../types/UsersTypes";
+import {UserDBType, UserPayloadType, UserResponseType} from "../types/UsersTypes";
 import {ObjectId} from "mongodb";
 import {usersRepository} from "../repositories/users-repository";
 import {authService} from "./auth-service";
 import {PaginationType} from "../types/bloggersTypes";
-
 
 export const usersService = {
 
@@ -12,9 +11,9 @@ export const usersService = {
         return users
     },
 
-    // async findUserById(id: ObjectId): Promise<UserDBType | null> {
-    //     return usersRepository.findUserById(id)
-    // },
+    async findUserById(id: string): Promise<UserResponseType | null> {
+        return await usersRepository.findUserById(id)
+    },
 
     async createUser(login: string, password: string): Promise<UserResponseType | null> {
         const passwordHash = await authService._generateHash(password)
@@ -27,18 +26,9 @@ export const usersService = {
         return result
     },
 
-    // async deleteUserById(id: number): Promise<boolean> {
-    //     return await usersRepository.deleteUser(id)
-    // }
-
-    // async checkCredentials(login: string, password: string) {
-    //     const user = await usersRepository.getAllUsers(login)
-    //     if (!user) {
-    //         return false
-    //     }
-    //     const passwordHash = await authService._generateHash(password)
-    //     return user.passwordHash === passwordHash
-    // }
+    async deleteUserById(id: string): Promise<boolean> {
+        return await usersRepository.deleteUserById(id)
+    }
 
 }
 

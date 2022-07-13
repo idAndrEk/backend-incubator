@@ -1,6 +1,7 @@
-import {UserDBType, UserResponseType} from "../types/UsersTypes";
+import {UserDBType, UserPayloadType, UserResponseType} from "../types/UsersTypes";
 import {usersCollection} from "./db";
 import {PaginationType} from "../types/bloggersTypes";
+import {ObjectId} from "mongodb";
 
 
 export const usersRepository = {
@@ -8,18 +9,32 @@ export const usersRepository = {
         const skip = (page - 1) * pageSize
         let allPostsCount = await usersCollection.countDocuments()
         let pagesCount = allPostsCount / pageSize
-        let posts = await usersCollection.find({}).skip(skip).limit(pageSize).toArray()
+        let users = await usersCollection
+            .find({})
+            .project<UserResponseType>({_id: 0})
+            .skip(skip)
+            .limit(pageSize)
+            .toArray()    //User
         let allCount = await usersCollection.count({})
         return {
             pagesCount: Math.ceil(pagesCount),
             page: page,
             pageSize: pageSize,
             totalCount: allCount,
-            items: posts.map(users => ({
-                id: users.id,
-                login: users.login
-            }))
+            items: users
+            // items: users.map(users => ({
+            //     id: users.id,
+            //     login: users.login
+            // }))
         }
+    },
+
+    async findUserById(id: string): Promise<UserPayloadType | null> {
+        const user = await usersCollection.findOne({id: new ObjectId(id)})
+        if (!user) {
+            return null
+        }
+        return {id: user.id, login: user.login}
     },
 
     async createUser(newUser: UserDBType): Promise<UserResponseType | null> {
@@ -32,5 +47,18 @@ export const usersRepository = {
             id: newUser.id,
             login
         }
+    },
+
+    async deleteUserById(id: string): Promise<boolean> {
+        const result = await usersCollection.deleteOne(new ObjectId)
+        return result.deletedCount === 1
+    },
+
+    async findUserByLogin(login: string): Promise<UserDBType | null> {
+        const user = usersCollection.findOne({login})
+        if (!user) {
+            return null
+        }
+        return user
     }
 }

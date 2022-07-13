@@ -1,6 +1,5 @@
 import {Router, Request, Response} from "express";
 import {usersService} from "../domain/users-service";
-import {jwtService} from "../application/jwt-service";
 
 export const usersRouter = Router({})
 
@@ -12,11 +11,21 @@ usersRouter.get('/',
         res.send(users)
     })
 
+usersRouter.get('/:id',
+    async (req: Request, res: Response) => {
+        const user = await usersService.findUserById(req.params.id)
+        if (user) {
+            res.status(200).send(user)
+        } else {
+            res.status(404).send('Not found')
+        }
+    })
+
 usersRouter.post('/',
     async (req: Request, res: Response) => {
         const user = await usersService.createUser(req.body.login, req.body.password)
         if (user) {
-            const token = await jwtService.createJWT(user)
+            // const token = await jwtService.createJWT(user)
             res.status(201).send(user)
             return
         } else {
@@ -24,4 +33,13 @@ usersRouter.post('/',
         }
     })
 
+usersRouter.delete('/:id',
+    async (req: Request, res: Response) => {
+        const idDeletedUser = await usersService.deleteUserById(req.params.id) // AWAIT
+        if (!idDeletedUser) {
+            res.sendStatus(404)
+        } else {
+            res.sendStatus(204)
+        }
+    })
 

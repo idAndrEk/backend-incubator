@@ -12,16 +12,11 @@ export const postsServise = {
 
     async findPostsId(postId: number): Promise<PostsType | null> {
         const post: PostsType | null = await postCollection.findOne({id: postId})
-
         if (!post) {
             return null
         }
-
         const {title, shortDescription, content, bloggerId, bloggerName, id} = post
-
-        return {
-            title, shortDescription, content, bloggerId, bloggerName, id
-        }
+        return {title, shortDescription, content, bloggerId, bloggerName, id}
     },
 
     async createPost(title: string, shortDescription: string, content: string, bloggerId: number, bloggerName: string): Promise<PostsType | null> {

@@ -1,23 +1,31 @@
-// import {jwtService} from "../application/jwt-service";
-// import {usersService} from "../domain/users-service";
-// import {Router} from "express";
-// import {Request, Response} from "express";
-//
-//
-// export const authRouter = Router({})
-//
-//
-// authRouter.post('/login',
-//     async (req: Request, res: Response) => {
-//         const checkResult = await usersService.checkCredentials(req.body.login, req.body.password)
-//         if (checkResult) {
-//             // const token = await jwtService.createJWT(checkResult)
-//             // res.status(201).send(token)
-//             res.status(201).send(checkResult)
-//         } else {
-//             res.status(401)
-//         }
-//     })
+import {jwtService} from "../application/jwt-service";
+import {Router} from "express";
+import {Request, Response} from "express";
+import {authService} from "../domain/auth-service";
+
+
+export const authRouter = Router({})
+
+
+authRouter.post('/login',
+    async (req: Request, res: Response) => {
+        const user = await authService.validatePassword(req.body.login, req.body.password)
+        if (user) {
+            const token = await jwtService.createJWT(user)
+            res.status(201).send(token)
+        } else {
+            res.status(401)
+        }
+    })
+
+
+
+
+
+// VALIDATER ID ROUTER    FOR OBJECTID      COUNT      LENGTH     !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+
+
 
 
 
