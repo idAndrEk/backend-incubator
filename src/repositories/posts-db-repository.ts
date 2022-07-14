@@ -27,8 +27,8 @@ export const postsRepositories = {
     },
 
     async findPostsId(id: string): Promise<PostPayloadType | null> {
-        const post = await postCollection.findOne(new Object())
-        // const post = await postCollection.findOne({id: new ObjectId(id)})
+        // const post = await postCollection.findOne(new Object())
+        const post = await postCollection.findOne({id: new ObjectId(id)})
         // console.log(new ObjectId())
         if(!post) {
             return null

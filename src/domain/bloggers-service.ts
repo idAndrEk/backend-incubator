@@ -17,13 +17,14 @@ export const bloggersService = {
 
     async createBlogger(name: string, youtubeUrl: string): Promise<BloggersResponseType | null> {
         const newBlogger = {
-            id: new ObjectId(),//+(new Date()),
             name: name,
             youtubeUrl: youtubeUrl
         }
         const createdBlogger = await bloggersRepository.createBlogger(newBlogger)
         if (createdBlogger) {
-            return createdBlogger
+            return {
+                ...createdBlogger
+            }
         }
         return null
     },

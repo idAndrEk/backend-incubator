@@ -44,31 +44,31 @@ export const bloggersRepository = {
     // },
 
     async findBloggerById(id: string): Promise<BloggersResponseType | null> {
-        const blogger = await bloggersCollection.findOne(new Object());
-        // const blogger = await bloggersCollection.findOne({id: new ObjectId(id)});
+        // const blogger = await bloggersCollection.findOne(new Object());
+        const blogger = await bloggersCollection.findOne({_id: new ObjectId(id)});
         if (!blogger) {
             return null
         }
+
+        console.log(blogger, 'blogger')
         // return {id: blogger._id.toString(), name: blogger.name, youtubeUrl: blogger.youtubeUrl}
-        return {id: blogger.id,
+        return {
+            id: blogger._id,
             name: blogger.name,
-            youtubeUrl: blogger.youtubeUrl}
+            youtubeUrl: blogger.youtubeUrl
+        }
     },
 
-    async createBlogger(newBlogger: BloggersResponseType): Promise<BloggersResponseType | null> {
-        const {
-            youtubeUrl,
-            name
-        } = newBlogger
+    async createBlogger(newBlogger: any): Promise<BloggersResponseType | null> {
         const result = await bloggersCollection.insertOne(newBlogger);
+        console.log(result, 'result')
         if (!result.acknowledged) {
             return null
         }
         return {
-            name,
-            youtubeUrl,
-            // id: result.insertedId.toString()
-            id: newBlogger.id
+            name: newBlogger.name,
+            youtubeUrl: newBlogger.youtubeUrl,
+            id: result.insertedId
         }
     },
 
