@@ -49,7 +49,6 @@ export const bloggersRepository = {
         if (!blogger) {
             return null
         }
-
         // return {id: blogger._id.toString(), name: blogger.name, youtubeUrl: blogger.youtubeUrl}
         return {id: blogger.id,
             name: blogger.name,
@@ -85,6 +84,7 @@ export const bloggersRepository = {
 
     async deleteBlogger(id: string): Promise<boolean> {
         const result = await bloggersCollection.deleteOne({id: new ObjectId(id)})
+        // const result = await bloggersCollection.deleteOne({id: new ObjectId(id)})
         return result.deletedCount === 1
     },
 
