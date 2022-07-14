@@ -14,18 +14,24 @@ export const bloggersRepository = {
         const skip = (page - 1) * pageSize
         let allBloggersCount = await bloggersCollection.count(filter)
         let pagesCount = allBloggersCount / pageSize
-        let bloggers = await bloggersCollection.find(filter).skip(skip).limit(pageSize).toArray()
+        let bloggers = await bloggersCollection
+            .find(filter)
+            .project<BloggersResponseType>({_id: 0})
+            .skip(skip)
+            .limit(pageSize)
+            .toArray()
         return {
             pagesCount: Math.ceil(pagesCount),
             page: page,
             pageSize: pageSize,
             totalCount: allBloggersCount,
-            items: bloggers.map(blogger => ({
-                youtubeUrl: blogger.youtubeUrl,
-                // id: blogger._id.toString(),
-                id: blogger.id,
-                name: blogger.name
-            }))
+            items: bloggers
+            // items: bloggers.map(blogger => ({
+            //     youtubeUrl: blogger.youtubeUrl,
+            //     // id: blogger._id.toString(),
+            //     id: blogger.id,
+            //     name: blogger.name
+        //     }))
         }
     },
 
