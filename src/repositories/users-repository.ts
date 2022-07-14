@@ -34,7 +34,8 @@ export const usersRepository = {
         if (!user) {
             return null
         }
-        return {id: user.id, login: user.login}
+        return {id: user.id,
+            login: user.login}
     },
 
     async createUser(newUser: UserDBType): Promise<UserResponseType | null> {
@@ -50,7 +51,7 @@ export const usersRepository = {
     },
 
     async deleteUserById(id: string): Promise<boolean> {
-        const result = await usersCollection.deleteOne(new ObjectId)
+        const result = await usersCollection.deleteOne({id: new ObjectId(id)})
         return result.deletedCount === 1
     },
 

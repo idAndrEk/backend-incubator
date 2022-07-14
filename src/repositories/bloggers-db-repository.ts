@@ -37,15 +37,16 @@ export const bloggersRepository = {
     //     }
     // },
 
-    async findBloggerById(id: number): Promise<BloggersResponseType | null> {
-        // const blogger = await bloggersCollection.findOne({ _id: new ObjectId(id) });
-        const blogger = await bloggersCollection.findOne({id: id});
+    async findBloggerById(id: string): Promise<BloggersResponseType | null> {
+        const blogger = await bloggersCollection.findOne({id: new ObjectId(id)});
         if (!blogger) {
             return null
         }
 
         // return {id: blogger._id.toString(), name: blogger.name, youtubeUrl: blogger.youtubeUrl}
-        return {id: blogger.id, name: blogger.name, youtubeUrl: blogger.youtubeUrl}
+        return {id: blogger.id,
+            name: blogger.name,
+            youtubeUrl: blogger.youtubeUrl}
     },
 
     async createBlogger(newBlogger: BloggersResponseType): Promise<BloggersResponseType | null> {
@@ -65,8 +66,8 @@ export const bloggersRepository = {
         }
     },
 
-    async updateBlogger(id: number, name: string, youtubeUrl: string): Promise<boolean> {
-        const result = await bloggersCollection.updateOne({id: id}, {
+    async updateBlogger(id: string, name: string, youtubeUrl: string): Promise<boolean> {
+        const result = await bloggersCollection.updateOne({id: new ObjectId(id)}, {
             $set: {
                 name: name,
                 youtubeUrl: youtubeUrl
@@ -75,12 +76,13 @@ export const bloggersRepository = {
         return result.matchedCount === 1
     },
 
-    async deleteBlogger(id: number): Promise<boolean> {
-        const result = await bloggersCollection.deleteOne({id: id})
+    async deleteBlogger(id: string): Promise<boolean> {
+        const result = await bloggersCollection.deleteOne({id: new ObjectId(id)})
         return result.deletedCount === 1
     },
 
-    async findBloggerPosts(bloggerId: number | null, page: number, pageSize: number): Promise<any> {
+    // async findBloggerPosts(bloggerId: string | null, page: number, pageSize: number): Promise<any> {
+    async findBloggerPosts(bloggerId: string | null, page: number, pageSize: number): Promise<any> {
         let filter = {}
         if (bloggerId) {
             filter = {bloggerId}
