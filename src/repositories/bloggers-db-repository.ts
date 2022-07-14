@@ -73,7 +73,7 @@ export const bloggersRepository = {
     },
 
     async updateBlogger(id: string, name: string, youtubeUrl: string): Promise<boolean> {
-        const result = await bloggersCollection.updateOne({id: new ObjectId(id)}, {
+        const result = await bloggersCollection.updateOne({_id: new ObjectId(id)}, {
             $set: {
                 name: name,
                 youtubeUrl: youtubeUrl
@@ -83,7 +83,7 @@ export const bloggersRepository = {
     },
 
     async deleteBlogger(id: string): Promise<boolean> {
-        const result = await bloggersCollection.deleteOne({id: new ObjectId(id)})
+        const result = await bloggersCollection.deleteOne({_id: new ObjectId(id)})
         // const result = await bloggersCollection.deleteOne({id: new ObjectId(id)})
         return result.deletedCount === 1
     },
