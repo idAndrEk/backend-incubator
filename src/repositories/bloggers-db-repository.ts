@@ -38,7 +38,8 @@ export const bloggersRepository = {
     // },
 
     async findBloggerById(id: string): Promise<BloggersResponseType | null> {
-        const blogger = await bloggersCollection.findOne({id: new ObjectId(id)});
+        const blogger = await bloggersCollection.findOne(new Object());
+        // const blogger = await bloggersCollection.findOne({id: new ObjectId(id)});
         if (!blogger) {
             return null
         }

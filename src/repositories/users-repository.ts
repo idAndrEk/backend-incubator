@@ -34,8 +34,10 @@ export const usersRepository = {
         if (!user) {
             return null
         }
-        return {id: user.id,
-            login: user.login}
+        return {
+            id: user.id,
+            login: user.login
+        }
     },
 
     async createUser(newUser: UserDBType): Promise<UserResponseType | null> {

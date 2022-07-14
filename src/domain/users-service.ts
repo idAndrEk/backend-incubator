@@ -11,7 +11,7 @@ export const usersService = {
         return users
     },
 
-    async findUserById(id: string): Promise<UserResponseType | null> {
+    async findUserById(id: string): Promise<UserPayloadType | null> {
         return await usersRepository.findUserById(id)
     },
 

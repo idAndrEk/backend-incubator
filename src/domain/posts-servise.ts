@@ -2,7 +2,7 @@ import {postsRepositories} from "../repositories/posts-db-repository";
 import {posts} from "../repositories/posts-im-memory-repository";
 import {postCollection} from "../repositories/db";
 import {ObjectId} from "mongodb";
-import {PostsType} from "../types/postsTypes";
+import {PostPayloadType, PostsType} from "../types/postsTypes";
 import {PaginationType} from "../types/bloggersTypes";
 
 export const postsServise = {
@@ -10,7 +10,7 @@ export const postsServise = {
         return await postsRepositories.allPosts(page, pageSize)
     },
 
-    async findPostsId(id: string): Promise<PostsType | null> {
+    async findPostsId(id: string): Promise<PostPayloadType | null> {
         return await postsRepositories.findPostsId(id)
     },
 

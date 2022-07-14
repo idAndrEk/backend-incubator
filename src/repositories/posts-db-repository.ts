@@ -27,16 +27,20 @@ export const postsRepositories = {
     },
 
     async findPostsId(id: string): Promise<PostPayloadType | null> {
-        const post = await postCollection.findOne({id: new ObjectId(id)})
+        const post = await postCollection.findOne(new Object())
+        // const post = await postCollection.findOne({id: new ObjectId(id)})
+        // console.log(new ObjectId())
         if(!post) {
             return null
         }
-        return {id: post.id,
+        return {
+            id: post.id,
             title: post.title,
             shortDescription: post.shortDescription,
             content: post.content,
             bloggerId: post.bloggerId,
-            bloggerName: post.bloggerName}
+            bloggerName: post.bloggerName
+        }
     },
 
     async createPost(newPost: PostsType): Promise<PostsType | null> {
