@@ -22,8 +22,8 @@ export const bloggersRepository = {
             totalCount: allBloggersCount,
             items: bloggers.map(blogger => ({
                 youtubeUrl: blogger.youtubeUrl,
-                // id: blogger._id.toString(),
-                id: blogger.id,
+                 id: blogger._id.toString(),
+                //id: blogger._id,
                 name: blogger.name
             }))
         }
@@ -38,22 +38,20 @@ export const bloggersRepository = {
     // },
 
     async findBloggerById(id: string): Promise<BloggersResponseType | null> {
-        // const blogger = await bloggersCollection.findOne({ _id: new ObjectId(id) });
-        const blogger = await bloggersCollection.findOne({id: id});
+         const blogger = await bloggersCollection.findOne({ _id: new ObjectId(id) });
         if (!blogger) {
             return null
         }
-
-        // return {id: blogger._id.toString(), name: blogger.name, youtubeUrl: blogger.youtubeUrl}
-        return {id: blogger.id, name: blogger.name, youtubeUrl: blogger.youtubeUrl}
+        return {id: blogger._id.toString(), name: blogger.name, youtubeUrl: blogger.youtubeUrl}
     },
 
-    async createBlogger(newBlogger: any): Promise<BloggersResponseType | null> {
+    async createBlogger(newBlogger: BloggerPayloadType): Promise<BloggersResponseType | null> {
     // async createBlogger(newBlogger: BloggersResponseType): Promise<BloggersResponseType | null> {
         const {
             youtubeUrl,
             name
         } = newBlogger
+
         const result = await bloggersCollection.insertOne(newBlogger);
         if (!result.acknowledged) {
             return null
@@ -61,13 +59,12 @@ export const bloggersRepository = {
         return {
             name,
             youtubeUrl,
-            // id: result.insertedId.toString()
-            id: newBlogger.id
+            id: result.insertedId.toString()
         }
     },
 
     async updateBlogger(id: string, name: string, youtubeUrl: string): Promise<boolean> {
-        const result = await bloggersCollection.updateOne({id: id}, {
+        const result = await bloggersCollection.updateOne({_id: new ObjectId(id)}, {
             $set: {
                 name: name,
                 youtubeUrl: youtubeUrl
@@ -77,7 +74,7 @@ export const bloggersRepository = {
     },
 
     async deleteBlogger(id: string): Promise<boolean> {
-        const result = await bloggersCollection.deleteOne({id: id})
+        const result = await bloggersCollection.deleteOne({_id: new ObjectId(id)})
         return result.deletedCount === 1
     },
 
@@ -97,7 +94,7 @@ export const bloggersRepository = {
             pageSize: pageSize,
             totalCount: allPostsCount,
             items: posts.map(post => ({
-                id: post.id,
+                id: post._id.toString(),
                 title: post.title,
                 shortDescription: post.shortDescription,
                 content: post.content,

@@ -36,18 +36,15 @@ postsRouter.post('/',
     allValidation,
     async (req: Request, res: Response) => {
         // console.log('ROUTER')
-        const blogger = await bloggersRepository.findBloggerById(req.body.bloggerId);
-        const errors = []
-        if (blogger) {
+
             const titlePost = req.body.title;
             const shortDescriptionPost = req.body.shortDescription;
             const contentPost = req.body.content;
             const bloggerId = req.body.bloggerId;
-            const bloggerName = blogger.name
-            const newPost = await postsServise.createPost(titlePost, shortDescriptionPost, contentPost, bloggerId, bloggerName)
-            res.status(201).send(newPost)
+            const newPost = await postsServise.createPost(titlePost, shortDescriptionPost, contentPost, bloggerId)
 
-        } else {
+
+       if (!newPost) {
             const errors = [];
             errors.push({message: 'Error bloggerId', field: 'bloggerId'})
             if (errors.length) {
@@ -57,6 +54,8 @@ postsRouter.post('/',
                 return
             }
         }
+
+        res.status(201).send(newPost)
     })
 
 postsRouter.put('/:id',

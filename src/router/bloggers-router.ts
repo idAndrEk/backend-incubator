@@ -81,9 +81,9 @@ bloggersRouter.get('/:bloggerId/posts',
         const bloggerId = req.params.bloggerId
         const blogger = await bloggersRepository.findBloggerById(bloggerId)
         if (blogger) {
-                const bloggerPosts = await bloggersService.findBloggerPosts(bloggerId, +page, +pageSize)
-                res.status(200).send(bloggerPosts)
-                return
+            const bloggerPosts = await bloggersService.findBloggerPosts(bloggerId, +page, +pageSize)
+            res.status(200).send(bloggerPosts)
+            return
         }
         res.status(404).send('Not found')
     })
@@ -94,24 +94,26 @@ bloggersRouter.post('/:bloggerId/posts',
     allValidation,
     async (req: Request, res: Response) => {
         const bloggerId = req.params.bloggerId;
-        const blogger = await bloggersRepository.findBloggerById(bloggerId);
-        if (blogger) {
-            const titlePost = req.body.title;
-            const shortDescriptionPost = req.body.shortDescription;
-            const contentPost = req.body.content;
-            const bloggerName = blogger.name;
-            const newPostBlogger = await postsServise.createPost(titlePost, shortDescriptionPost, contentPost, bloggerId, bloggerName)
-            res.status(201).send(newPostBlogger)
-        } else {
+        const titlePost = req.body.title;
+        const shortDescriptionPost = req.body.shortDescription;
+        const contentPost = req.body.content;
+        const newPostBlogger = await postsServise.createPost(
+            titlePost,
+            shortDescriptionPost,
+            contentPost,
+            bloggerId,
+        )
+        if (!newPostBlogger) {
             const errors = [];
             errors.push({message: 'Error bloggerId', field: 'bloggerId'})
             if (errors.length) {
-                res.status(404).json({
+                res.status(400).json({
                     errorsMessages: errors
                 })
                 return
             }
         }
+        res.status(201).send(newPostBlogger)
     })
 
 

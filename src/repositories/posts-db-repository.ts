@@ -1,11 +1,10 @@
 import {postCollection} from "./db";
 import {ObjectId} from "mongodb";
-import {PostsType} from "../types/postsTypes";
-import {bloggersService} from "../domain/bloggers-service";
+import {PostPayloadType, PostResponseType } from "../types/postsTypes";
 import {PaginationType} from "../types/bloggersTypes";
 
 export const postsRepositories = {
-    async allPosts(page: number, pageSize: number): Promise<PaginationType<PostsType>> {
+    async allPosts(page: number, pageSize: number): Promise<PaginationType<PostResponseType>> {
         const skip = (page - 1) * pageSize
         let allPostsCount = await postCollection.countDocuments()
         let pagesCount = allPostsCount / pageSize
@@ -17,7 +16,7 @@ export const postsRepositories = {
             pageSize: pageSize,
             totalCount: allCount,
             items: posts.map(post => ({
-                id: post.id,
+                id: post._id.toString(),
                 title: post.title,
                 shortDescription: post.shortDescription,
                 content: post.content,
@@ -27,15 +26,25 @@ export const postsRepositories = {
         }
     },
 
-    async findPostsId(id: string): Promise<PostsType | null> {
-        const post: PostsType | null = await postCollection.findOne({id: id})
-        return post
+    async findPostsId(id: string): Promise<PostResponseType | null> {
+        const post = await postCollection.findOne({_id: new ObjectId(id)})
+
+        if (!post) {
+            return null
+        }
+
+        return {
+            bloggerId: post.bloggerId,
+            content: post.content,
+            shortDescription: post.shortDescription,
+            title: post.title,
+            bloggerName: post.bloggerName,
+            id: post._id.toString()
+
+        }
     },
 
-    async createPost(newPost: any): Promise<PostsType | null> {
-        // const result = await postCollection.insertOne(newPost)
-        // return newPost
-
+    async createPost(newPost: PostPayloadType): Promise<PostResponseType | null> {
         const {
             title,
             shortDescription,
@@ -48,12 +57,12 @@ export const postsRepositories = {
             return null
         }
         return {
+            bloggerName,
             title,
             shortDescription,
             content,
             bloggerId,
-            bloggerName,
-            id: newPost.id
+            id: result.insertedId.toString()
         }
     },
 

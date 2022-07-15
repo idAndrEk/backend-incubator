@@ -1,39 +1,47 @@
 import {postsRepositories} from "../repositories/posts-db-repository";
-import {posts} from "../repositories/posts-im-memory-repository";
 import {postCollection} from "../repositories/db";
 import {ObjectId} from "mongodb";
-import {PostsType} from "../types/postsTypes";
-import {PaginationType} from "../types/bloggersTypes";
+import {PostPayloadType, PostResponseType} from "../types/postsTypes";
+import {BloggerPayloadType, PaginationType} from "../types/bloggersTypes";
+import {bloggersRepository} from "../repositories/bloggers-db-repository";
 
 export const postsServise = {
-    async allPosts(page: number, pageSize: number): Promise<PaginationType<PostsType>> {
+    async allPosts(page: number, pageSize: number): Promise<PaginationType<PostResponseType>> {
         return await postsRepositories.allPosts(page, pageSize)
     },
 
-    async findPostsId(postId: string): Promise<PostsType | null> {
-        const post: PostsType | null = await postCollection.findOne({id: postId})
+    async findPostsId(postId: string): Promise<PostResponseType | null> {
+        const post = await postCollection.findOne({_id: new ObjectId(postId)})
+
         if (!post) {
             return null
         }
-        const {title, shortDescription, content, bloggerId, bloggerName, id} = post
-        return {title, shortDescription, content, bloggerId, bloggerName, id}
+
+        const {title, shortDescription, content, bloggerId, bloggerName} = post
+        return {title, shortDescription, content, bloggerId, bloggerName, id: post._id.toString()}
     },
 
-    async createPost(title: string, shortDescription: string, content: string, bloggerId: string, bloggerName: string): Promise<PostsType | null> {
-        const newPost = {
+    async createPost(title: string, shortDescription: string, content: string, bloggerId: string): Promise<PostResponseType | null> {
+        const blogger = await bloggersRepository.findBloggerById(bloggerId);
+
+        if (!blogger) {
+            return null
+        }
+        const newPost: PostPayloadType = {
             // id: new Date(), //posts.length + 1, //new ObjectId()
             title: title,
+            bloggerName: blogger.name,
             shortDescription: shortDescription,
             content: content,
             bloggerId: bloggerId,
-            bloggerName: bloggerName
         }
+
         const createdPost = await postsRepositories.createPost(newPost)
+
         if (createdPost) {
-            return {
-                ...createdPost
-            }
+            return createdPost
         }
+
         return null
     },
 

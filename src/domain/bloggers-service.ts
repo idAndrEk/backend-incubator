@@ -23,10 +23,7 @@ export const bloggersService = {
         }
         const createdBlogger = await bloggersRepository.createBlogger(newBlogger)
         if (createdBlogger) {
-            return {
-                ...createdBlogger
-            }
-            // return createdBlogger
+            return createdBlogger
         }
         return null
     },
