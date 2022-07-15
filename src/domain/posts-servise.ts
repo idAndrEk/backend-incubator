@@ -10,7 +10,7 @@ export const postsServise = {
         return await postsRepositories.allPosts(page, pageSize)
     },
 
-    async findPostsId(postId: number): Promise<PostsType | null> {
+    async findPostsId(postId: string): Promise<PostsType | null> {
         const post: PostsType | null = await postCollection.findOne({id: postId})
         if (!post) {
             return null
@@ -19,9 +19,9 @@ export const postsServise = {
         return {title, shortDescription, content, bloggerId, bloggerName, id}
     },
 
-    async createPost(title: string, shortDescription: string, content: string, bloggerId: number, bloggerName: string): Promise<PostsType | null> {
+    async createPost(title: string, shortDescription: string, content: string, bloggerId: string, bloggerName: string): Promise<PostsType | null> {
         const newPost = {
-            id: +(new Date()), //posts.length + 1, //new ObjectId()
+            // id: new Date(), //posts.length + 1, //new ObjectId()
             title: title,
             shortDescription: shortDescription,
             content: content,
@@ -29,14 +29,19 @@ export const postsServise = {
             bloggerName: bloggerName
         }
         const createdPost = await postsRepositories.createPost(newPost)
-        return createdPost
+        if (createdPost) {
+            return {
+                ...createdPost
+            }
+        }
+        return null
     },
 
-    async updatePost(id: number, title: string, shortDescription: string, content: string, bloggerId: number): Promise<boolean | null> {
+    async updatePost(id: string, title: string, shortDescription: string, content: string, bloggerId: string): Promise<boolean | null> {
         return await postsRepositories.updatePost(id, title, shortDescription, content, bloggerId)
 
     },
-    async deletePost(id: number): Promise<boolean> {
+    async deletePost(id: string): Promise<boolean> {
         return await postsRepositories.deletePost(id)
     }
 }

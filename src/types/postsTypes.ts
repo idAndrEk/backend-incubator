@@ -1,10 +1,10 @@
 export type PostsType = {
     // id: ObjectId
-    id: number
+    id: string
     title: string
     shortDescription: string
     content: string
-    bloggerId: number
+    bloggerId: string
     bloggerName: string
 }
 

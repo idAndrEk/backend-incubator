@@ -11,7 +11,7 @@ export const bloggersService = {
     //     return await bloggersRepository.findBloggersName(name)
     // },
 
-    async findBloggerById(id: number): Promise<BloggersResponseType | null> {
+    async findBloggerById(id: string): Promise<BloggersResponseType | null> {
         return await bloggersRepository.findBloggerById(id);
     },
 
@@ -31,15 +31,15 @@ export const bloggersService = {
         return null
     },
 
-    async updateBlogger(id: number, name: string, youtubeUrl: string): Promise<boolean> {
+    async updateBlogger(id: string, name: string, youtubeUrl: string): Promise<boolean> {
         return await bloggersRepository.updateBlogger(id, name, youtubeUrl)
     },
 
-    async deleteBlogger(id: number): Promise<boolean> {
+    async deleteBlogger(id: string): Promise<boolean> {
         return await bloggersRepository.deleteBlogger(id)
     },
 
-    async findBloggerPosts(bloggerId: number, page: number, pageSize: number) {
+    async findBloggerPosts(bloggerId: string, page: number, pageSize: number) {
         const post = await bloggersRepository.findBloggerPosts(bloggerId, page, pageSize)
         return post
     }

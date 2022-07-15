@@ -27,12 +27,12 @@ export const postsRepositories = {
         }
     },
 
-    async findPostsId(id: number): Promise<PostsType | null> {
+    async findPostsId(id: string): Promise<PostsType | null> {
         const post: PostsType | null = await postCollection.findOne({id: id})
         return post
     },
 
-    async createPost(newPost: PostsType): Promise<PostsType | null> {
+    async createPost(newPost: any): Promise<PostsType | null> {
         // const result = await postCollection.insertOne(newPost)
         // return newPost
 
@@ -57,7 +57,7 @@ export const postsRepositories = {
         }
     },
 
-    async updatePost(id: number, title: string, shortDescription: string, content: string, bloggerId: number): Promise<boolean | null> {
+    async updatePost(id: string, title: string, shortDescription: string, content: string, bloggerId: string): Promise<boolean | null> {
         const result = await postCollection.updateOne({id: id}, {
             $set: {
                 title: title,
@@ -69,7 +69,7 @@ export const postsRepositories = {
         return result.matchedCount === 1
     },
 
-    async deletePost(id: number): Promise<boolean> {
+    async deletePost(id: string): Promise<boolean> {
         const result = await postCollection.deleteOne({id: id})
         return result.deletedCount === 1
     }

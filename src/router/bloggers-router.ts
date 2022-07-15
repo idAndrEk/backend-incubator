@@ -23,7 +23,7 @@ bloggersRouter.get('/',
 
 bloggersRouter.get('/:id',
     async (req: Request, res: Response) => {
-        const blogger = await bloggersService.findBloggerById(+req.params.id)
+        const blogger = await bloggersService.findBloggerById(req.params.id)
         if (!blogger) {
             res.status(404).send('Not found')
         } else {
@@ -52,7 +52,7 @@ bloggersRouter.put('/:id',
     BloggerValidation,
     allValidation,
     async (req: Request, res: Response) => {
-        const idBlogger = +req.params.id;
+        const idBlogger = req.params.id;
         const nameBlogger = req.body.name;
         const youtubeUrlBlogger = req.body.youtubeUrl;
         const updateBlogger = await bloggersService.updateBlogger(idBlogger, nameBlogger, youtubeUrlBlogger)
@@ -66,7 +66,7 @@ bloggersRouter.put('/:id',
 bloggersRouter.delete('/:id',
     authMiddleware,
     async (req: Request, res: Response) => {
-        const isDeleted = await bloggersService.deleteBlogger(+req.params.id)
+        const isDeleted = await bloggersService.deleteBlogger(req.params.id)
         if (isDeleted) {
             res.sendStatus(204)
         } else {
@@ -78,7 +78,7 @@ bloggersRouter.get('/:bloggerId/posts',
     async (req: Request, res: Response) => {
         let page = req.query.PageNumber || 1
         let pageSize = req.query.PageSize || 10
-        const bloggerId = +req.params.bloggerId
+        const bloggerId = req.params.bloggerId
         const blogger = await bloggersRepository.findBloggerById(bloggerId)
         if (blogger) {
                 const bloggerPosts = await bloggersService.findBloggerPosts(bloggerId, +page, +pageSize)
@@ -93,7 +93,7 @@ bloggersRouter.post('/:bloggerId/posts',
     postValidation,
     allValidation,
     async (req: Request, res: Response) => {
-        const bloggerId = +req.params.bloggerId;
+        const bloggerId = req.params.bloggerId;
         const blogger = await bloggersRepository.findBloggerById(bloggerId);
         if (blogger) {
             const titlePost = req.body.title;

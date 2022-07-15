@@ -37,7 +37,7 @@ export const bloggersRepository = {
     //     }
     // },
 
-    async findBloggerById(id: number): Promise<BloggersResponseType | null> {
+    async findBloggerById(id: string): Promise<BloggersResponseType | null> {
         // const blogger = await bloggersCollection.findOne({ _id: new ObjectId(id) });
         const blogger = await bloggersCollection.findOne({id: id});
         if (!blogger) {
@@ -66,7 +66,7 @@ export const bloggersRepository = {
         }
     },
 
-    async updateBlogger(id: number, name: string, youtubeUrl: string): Promise<boolean> {
+    async updateBlogger(id: string, name: string, youtubeUrl: string): Promise<boolean> {
         const result = await bloggersCollection.updateOne({id: id}, {
             $set: {
                 name: name,
@@ -76,12 +76,12 @@ export const bloggersRepository = {
         return result.matchedCount === 1
     },
 
-    async deleteBlogger(id: number): Promise<boolean> {
+    async deleteBlogger(id: string): Promise<boolean> {
         const result = await bloggersCollection.deleteOne({id: id})
         return result.deletedCount === 1
     },
 
-    async findBloggerPosts(bloggerId: number | null, page: number, pageSize: number): Promise<any> {
+    async findBloggerPosts(bloggerId: string | null, page: number, pageSize: number): Promise<any> {
         let filter = {}
         if (bloggerId) {
             filter = {bloggerId}
