@@ -1,12 +1,11 @@
-import {ObjectId} from "mongodb";
-
 export type BloggersResponseType = {
-    id: ObjectId
+    id: number
+    // id: string
     name: string
     youtubeUrl: string
 }
 
-export type BloggerPayloadType = Omit<BloggersResponseType, '_id'>
+export type BloggerPayloadType<T> = Omit<BloggersResponseType, '_id'>
 
 export type PaginationType<T> = {
     pagesCount: number

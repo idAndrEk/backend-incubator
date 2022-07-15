@@ -1,13 +1,11 @@
-import {ObjectId} from "mongodb";
-
 export type PostsType = {
-    id: ObjectId
+    // id: ObjectId
+    id: number
     title: string
     shortDescription: string
     content: string
-    bloggerId: string
+    bloggerId: number
     bloggerName: string
 }
 
-export type PostPayloadType = Omit<PostsType, '_id'>
 
