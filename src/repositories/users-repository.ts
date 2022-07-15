@@ -29,8 +29,10 @@ export const usersRepository = {
         }
     },
 
+    // async findUserById(id: ObjectId): Promise<UserPayloadType | null> {
     async findUserById(id: string): Promise<UserPayloadType | null> {
         const user = await usersCollection.findOne({id: new ObjectId(id)})
+        // const user = await usersCollection.findOne({_id: id})
         if (!user) {
             return null
         }
@@ -48,12 +50,14 @@ export const usersRepository = {
         }
         return {
             id: newUser.id,
-            login
+            login: newUser.login
         }
     },
 
+    // async deleteUserById(id: ObjectId): Promise<boolean> {
     async deleteUserById(id: string): Promise<boolean> {
         const result = await usersCollection.deleteOne({id: new ObjectId(id)})
+        //     const result = await usersCollection.deleteOne({_id: id})
         return result.deletedCount === 1
     },
 

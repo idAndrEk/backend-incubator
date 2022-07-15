@@ -11,6 +11,7 @@ export const usersService = {
         return users
     },
 
+    // async findUserById(id: ObjectId): Promise<UserPayloadType | null> {
     async findUserById(id: string): Promise<UserPayloadType | null> {
         return await usersRepository.findUserById(id)
     },
@@ -26,6 +27,7 @@ export const usersService = {
         return result
     },
 
+    // async deleteUserById(id: ObjectId): Promise<boolean> {
     async deleteUserById(id: string): Promise<boolean> {
         return await usersRepository.deleteUserById(id)
     }

@@ -48,7 +48,8 @@ export const bloggersRepository = {
         return {id: blogger.id, name: blogger.name, youtubeUrl: blogger.youtubeUrl}
     },
 
-    async createBlogger(newBlogger: BloggersResponseType): Promise<BloggersResponseType | null> {
+    async createBlogger(newBlogger: any): Promise<BloggersResponseType | null> {
+    // async createBlogger(newBlogger: BloggersResponseType): Promise<BloggersResponseType | null> {
         const {
             youtubeUrl,
             name

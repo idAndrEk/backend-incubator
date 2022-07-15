@@ -17,15 +17,9 @@ bloggersRouter.get('/',
         const name = req.query.SearchNameTerm || null
         // console.log(name)
         const bloggers = await bloggersService.allBloggers(+page, +pageSize, name ? name.toString() : null)
-        // let bloggers
-        // if (page && pageSize) {
-        //     bloggers = await bloggersService.allBloggers(+page, +pageSize, searchNameTerm)
-        // }
         res.status(200).send(bloggers)
         return
     })
-
-    // ?PageSize=1&PageNumber=1&SearchNameTerm=Tim
 
 bloggersRouter.get('/:id',
     async (req: Request, res: Response) => {
