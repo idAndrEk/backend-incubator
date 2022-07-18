@@ -1,4 +1,4 @@
-import {CommentResponseType} from "../types/CommentsTypes";
+import {CommentPayloadType, CommentResponseType} from "../types/CommentsTypes";
 import {commentCollection} from "./db";
 import {ObjectId} from "mongodb";
 
@@ -15,6 +15,26 @@ export const commentsRepository = {
             userId: comment.userId,
             userLogin: comment.userLogin,
             addedAt: new Date().toString(),
+        }
+    },
+
+    async creteComment(newComment: any /*CommentPayloadType*/): Promise<CommentResponseType | null> {
+        const {
+            content,
+            userId,
+            userLogin,
+            addedAt
+        } = newComment
+        const result = await commentCollection.insertOne(newComment);
+        if (!result.acknowledged) {
+            return null
+        }
+        return {
+            content,
+            userId,
+            userLogin,
+            addedAt: new Date().toString(),
+            id: result.insertedId.toString()
         }
     },
 

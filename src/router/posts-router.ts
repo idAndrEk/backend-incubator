@@ -4,6 +4,8 @@ import {allValidation} from "../middlewares/Validation";
 import {authMiddleware} from "../middlewares/auth-middleware";
 import {postsServise} from "../domain/posts-servise";
 import {bloggersRepository} from "../repositories/bloggers-db-repository";
+import {postsRepositories} from "../repositories/posts-db-repository";
+import {commentsService} from "../domain/comments-service";
 
 export const postsRouter = Router({})
 
@@ -37,14 +39,12 @@ postsRouter.post('/',
     async (req: Request, res: Response) => {
         // console.log('ROUTER')
 
-            const titlePost = req.body.title;
-            const shortDescriptionPost = req.body.shortDescription;
-            const contentPost = req.body.content;
-            const bloggerId = req.body.bloggerId;
-            const newPost = await postsServise.createPost(titlePost, shortDescriptionPost, contentPost, bloggerId)
-
-
-       if (!newPost) {
+        const titlePost = req.body.title;
+        const shortDescriptionPost = req.body.shortDescription;
+        const contentPost = req.body.content;
+        const bloggerId = req.body.bloggerId;
+        const newPost = await postsServise.createPost(titlePost, shortDescriptionPost, contentPost, bloggerId)
+        if (!newPost) {
             const errors = [];
             errors.push({message: 'Error bloggerId', field: 'bloggerId'})
             if (errors.length) {
@@ -54,7 +54,6 @@ postsRouter.post('/',
                 return
             }
         }
-
         res.status(201).send(newPost)
     })
 
@@ -97,4 +96,41 @@ postsRouter.delete('/:id',
         } else {
             res.sendStatus(404)
         }
+    })
+
+postsRouter.get('/:postId/comments',
+    async (req: Request, res: Response) => {
+        let page = req.query.PageNumber || 1
+        let pageSize = req.query.PageSize || 10
+        const postId = req.params.postId
+        const post = await postsRepositories.findPostsId(postId)
+        if (post) {
+            const postComment = await postsServise.findPostComment(postId, +page, +pageSize)
+            res.status(200).send(postComment)
+            return
+        }
+        res.status(404).send('Not found')
+    })
+
+postsRouter.post('/:postId/comments',
+    authMiddleware,
+    postValidation,
+    allValidation,
+    async (req: Request, res: Response) => {
+        // const id = req.params.postId;
+        const content = req.body.content;
+        const userId = req.body.userId;
+        const userLogin = req.body.userLogin
+        const newCommentPost = await commentsService.createComment(content, userId, userLogin)
+        if (!newCommentPost) {
+            const errors = [];
+            errors.push({message: 'Error postId', field: 'postId'})
+            if (errors.length) {
+                res.status(400).json({
+                    errorsMessages: errors
+                })
+                return
+            }
+        }
+        res.status(201).send(newCommentPost)
     })

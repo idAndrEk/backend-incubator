@@ -1,4 +1,4 @@
-import {postCollection} from "./db";
+import {commentCollection, postCollection} from "./db";
 import {ObjectId} from "mongodb";
 import {PostPayloadType, PostResponseType} from "../types/postsTypes";
 import {PaginationType} from "../types/bloggersTypes";
@@ -78,5 +78,30 @@ export const postsRepositories = {
     async deletePost(id: string): Promise<boolean> {
         const result = await postCollection.deleteOne({_id: new ObjectId(id)})
         return result.deletedCount === 1
+    },
+
+    async findPostComment(postId: string, page: number, pageSize: number): Promise<any> {
+        let filter = {}
+        if (postId) {
+            filter = {postId}
+        }
+        const skip = (page - 1) * pageSize
+        let allCommentCount = await commentCollection.count(filter)
+        let pagesCount = allCommentCount / pageSize
+        let comment = await commentCollection.find(filter).skip(skip).limit(pageSize).toArray()
+        return {
+            pagesCount: Math.ceil(pagesCount),
+            page: page,
+            pageSize: pageSize,
+            totalCount: allCommentCount,
+            items: comment.map(comment => ({
+                id: comment._id.toString(),
+                content: comment.content,
+                userId: comment.userId,
+                userLogin: comment.userLogin,
+                addedAt: new Date().toString()
+            }))
+        }
     }
 }
+

@@ -37,13 +37,11 @@ export const postsServise = {
             content: content,
             bloggerId: bloggerId,
         }
-
         const createdPost = await postsRepositories.createPost(newPost)
 
         if (createdPost) {
             return createdPost
         }
-
         return null
     },
 
@@ -53,5 +51,10 @@ export const postsServise = {
     },
     async deletePost(id: string): Promise<boolean> {
         return await postsRepositories.deletePost(id)
+    },
+
+    async findPostComment(postId: string, page: number, pageSize: number) {
+        const comment = await postsRepositories.findPostComment(postId, page, pageSize)
     }
+
 }
