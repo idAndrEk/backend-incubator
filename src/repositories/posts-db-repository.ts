@@ -38,7 +38,6 @@ export const postsRepositories = {
             title: post.title,
             bloggerName: post.bloggerName,
             id: post._id.toString()
-
         }
     },
 

@@ -3,6 +3,7 @@ import {envSetting} from "../env_setting";
 import {BloggerPayloadType} from "../types/bloggersTypes";
 import {PostPayloadType } from "../types/postsTypes";
 import {UserDBType} from "../types/UsersTypes";
+import {CommentPayloadType} from "../types/CommentsTypes";
 
 const mongoUri = envSetting.MongoURI
 console.log(mongoUri)
@@ -11,7 +12,9 @@ const client = new MongoClient(mongoUri);
 export const db = client.db("home-bloggers");
 export const bloggersCollection = db.collection<BloggerPayloadType>("blogger");
 export const postCollection = db.collection<PostPayloadType>("post");
-export const usersCollection = db.collection<UserDBType>("user")
+export const commentCollection = db.collection<CommentPayloadType>("comment");
+export const usersCollection = db.collection<UserDBType>("user");
+
 
 
 

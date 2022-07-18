@@ -10,16 +10,18 @@ export const postsServise = {
         return await postsRepositories.allPosts(page, pageSize)
     },
 
-    async findPostsId(postId: string): Promise<PostResponseType | null> {
-        const post = await postCollection.findOne({_id: new ObjectId(postId)})
-
-        if (!post) {
-            return null
-        }
-
-        const {title, shortDescription, content, bloggerId, bloggerName} = post
-        return {title, shortDescription, content, bloggerId, bloggerName, id: post._id.toString()}
+    async findPostsId(id: string): Promise<PostResponseType | null> {
+        return await postsRepositories.findPostsId(id)
     },
+
+    // const post = await postCollection.findOne(id)
+    // if (!post) {
+    //     return null
+    // }
+    //
+    // const {title, shortDescription, content, bloggerId, bloggerName} = post
+    // return {title, shortDescription, content, bloggerId, bloggerName, id: post._id.toString()}
+
 
     async createPost(title: string, shortDescription: string, content: string, bloggerId: string): Promise<PostResponseType | null> {
         const blogger = await bloggersRepository.findBloggerById(bloggerId);
