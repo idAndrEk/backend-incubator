@@ -22,7 +22,7 @@ export const bloggersRepository = {
             totalCount: allBloggersCount,
             items: bloggers.map(blogger => ({
                 youtubeUrl: blogger.youtubeUrl,
-                 id: blogger._id.toString(),
+                id: blogger._id.toString(),
                 //id: blogger._id,
                 name: blogger.name
             }))
@@ -38,15 +38,19 @@ export const bloggersRepository = {
     // },
 
     async findBloggerById(id: string): Promise<BloggersResponseType | null> {
-         const blogger = await bloggersCollection.findOne({ _id: new ObjectId(id) });
+        const blogger = await bloggersCollection.findOne({_id: new ObjectId(id)});
         if (!blogger) {
             return null
         }
-        return {id: blogger._id.toString(), name: blogger.name, youtubeUrl: blogger.youtubeUrl}
+        return {
+            id: blogger._id.toString(),
+            name: blogger.name,
+            youtubeUrl: blogger.youtubeUrl
+        }
     },
 
     async createBlogger(newBlogger: BloggerPayloadType): Promise<BloggersResponseType | null> {
-    // async createBlogger(newBlogger: BloggersResponseType): Promise<BloggersResponseType | null> {
+        // async createBlogger(newBlogger: BloggersResponseType): Promise<BloggersResponseType | null> {
         const {
             youtubeUrl,
             name

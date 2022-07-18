@@ -1,6 +1,6 @@
 import {postCollection} from "./db";
 import {ObjectId} from "mongodb";
-import {PostPayloadType, PostResponseType } from "../types/postsTypes";
+import {PostPayloadType, PostResponseType} from "../types/postsTypes";
 import {PaginationType} from "../types/bloggersTypes";
 
 export const postsRepositories = {
@@ -28,11 +28,9 @@ export const postsRepositories = {
 
     async findPostsId(id: string): Promise<PostResponseType | null> {
         const post = await postCollection.findOne({_id: new ObjectId(id)})
-
         if (!post) {
             return null
         }
-
         return {
             bloggerId: post.bloggerId,
             content: post.content,
@@ -67,7 +65,7 @@ export const postsRepositories = {
     },
 
     async updatePost(id: string, title: string, shortDescription: string, content: string, bloggerId: string): Promise<boolean | null> {
-        const result = await postCollection.updateOne({id: id}, {
+        const result = await postCollection.updateOne({_id: new ObjectId(id)}, { //new object
             $set: {
                 title: title,
                 shortDescription: shortDescription,
@@ -79,7 +77,7 @@ export const postsRepositories = {
     },
 
     async deletePost(id: string): Promise<boolean> {
-        const result = await postCollection.deleteOne({id: id})
+        const result = await postCollection.deleteOne({_id: new ObjectId(id)})
         return result.deletedCount === 1
     }
 }
