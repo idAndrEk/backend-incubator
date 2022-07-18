@@ -16,5 +16,10 @@ export const commentsRepository = {
             userLogin: comment.userLogin,
             addedAt: new Date().toString(),
         }
+    },
+
+    async deleteComment(id: string): Promise<boolean> {
+        const result = await commentCollection.deleteOne({_id: new ObjectId(id)})
+        return result.deletedCount === 1
     }
 }

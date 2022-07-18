@@ -13,3 +13,13 @@ commentsRouter.get('/:id',
             res.status(200).send(comment)
         }
     })
+
+commentsRouter.delete('/:commentId',
+    async (req: Request, res: Response) => {
+        const deleteCommentId = await commentsService.deleteComment(req.params.id)
+        if (deleteCommentId) {
+            res.sendStatus(204)
+        } else {
+            res.sendStatus(404)
+        }
+    })
