@@ -20,7 +20,8 @@ bloggersRouter.get('/',
         return
     })
 
-bloggersRouter.get('/:id', checkIdParamMiddleware,
+bloggersRouter.get('/:id',
+    checkIdParamMiddleware,
     async (req: Request, res: Response) => {
         const blogger = await bloggersService.findBloggerById(req.params.id)
         if (!blogger) {
@@ -74,6 +75,7 @@ bloggersRouter.delete('/:id',
     })
 
 bloggersRouter.get('/:bloggerId/posts',
+    checkIdParamMiddleware,
     async (req: Request, res: Response) => {
         let page = req.query.PageNumber || 1
         let pageSize = req.query.PageSize || 10
