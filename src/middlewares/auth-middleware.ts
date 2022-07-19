@@ -7,7 +7,7 @@ export const authMiddleware = (req: Request, res: Response, next: NextFunction) 
     const authHeader = req.headers.authorization
     const base64 = Buffer.from('admin:qwerty').toString('base64');
     const encode = `Basic ${base64}`;
-    if(authHeader === encode){
+    if (authHeader === encode) {
         next()
     } else {
         res.status(401).send('Access denied')
@@ -20,10 +20,19 @@ export const checkIdParamMiddleware = (req: Request, res: Response, next: NextFu
         new ObjectId(id)
     } catch (error) {
         res.send(404)
-
         return
     }
+    next()
+}
 
+export const checkBloggerIdParamMiddleware = (req: Request, res: Response, next: NextFunction) => {
+    const bloggerId = req.params.bloggerId;
+    try {
+        new ObjectId(bloggerId)
+    } catch (error) {
+        res.send(404)
+        return
+    }
     next()
 }
 
@@ -40,7 +49,6 @@ export const checkIdParamMiddleware = (req: Request, res: Response, next: NextFu
 //     }
 //     res.send(401)
 // }
-
 
 
 // const str = 'admin:qwerty';

@@ -1,7 +1,7 @@
 import {Request, Response, Router} from "express";
 import {postValidation} from "../middlewares/Post-validation";
 import {allValidation} from "../middlewares/Validation";
-import {authMiddleware} from "../middlewares/auth-middleware";
+import {authMiddleware, checkIdParamMiddleware} from "../middlewares/auth-middleware";
 import {postsServise} from "../domain/posts-servise";
 import {bloggersRepository} from "../repositories/bloggers-db-repository";
 import {postsRepositories} from "../repositories/posts-db-repository";
@@ -22,6 +22,7 @@ postsRouter.get('/',
     })
 
 postsRouter.get('/:id',
+    checkIdParamMiddleware,
     async (req: Request, res: Response) => {
         const post = await postsServise.findPostsId(req.params.id);
         if (!post) {

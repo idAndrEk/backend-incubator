@@ -2,7 +2,7 @@ import {Request, Response, Router} from "express";
 import {bloggersService} from "../domain/bloggers-service";
 import {allValidation} from "../middlewares/Validation";
 import {BloggerValidation} from "../middlewares/Blogger-validation";
-import {authMiddleware, checkIdParamMiddleware} from "../middlewares/auth-middleware";
+import {authMiddleware, checkBloggerIdParamMiddleware, checkIdParamMiddleware} from "../middlewares/auth-middleware";
 import {postsServise} from "../domain/posts-servise";
 import {bloggersRepository} from "../repositories/bloggers-db-repository";
 import {postValidation} from "../middlewares/Post-validation";
@@ -75,7 +75,7 @@ bloggersRouter.delete('/:id',
     })
 
 bloggersRouter.get('/:bloggerId/posts',
-    checkIdParamMiddleware,
+    checkBloggerIdParamMiddleware,
     async (req: Request, res: Response) => {
         let page = req.query.PageNumber || 1
         let pageSize = req.query.PageSize || 10
