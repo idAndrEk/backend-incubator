@@ -25,7 +25,6 @@ export const postsServise = {
 
     async createPost(title: string, shortDescription: string, content: string, bloggerId: string): Promise<PostResponseType | null> {
         const blogger = await bloggersRepository.findBloggerById(bloggerId);
-
         if (!blogger) {
             return null
         }

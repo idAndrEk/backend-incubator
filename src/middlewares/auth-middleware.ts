@@ -1,6 +1,7 @@
 import {NextFunction, Request, Response} from "express";
 import {jwtService} from "../application/jwt-service";
 import {usersService} from "../domain/users-service";
+import {ObjectId} from "mongodb";
 
 export const authMiddleware = (req: Request, res: Response, next: NextFunction) => {
     const authHeader = req.headers.authorization
@@ -11,6 +12,19 @@ export const authMiddleware = (req: Request, res: Response, next: NextFunction) 
     } else {
         res.status(401).send('Access denied')
     }
+}
+
+export const checkIdParamMiddleware = (req: Request, res: Response, next: NextFunction) => {
+    const id = req.params.id;
+    try {
+        new ObjectId(id)
+    } catch (error) {
+        res.send(404)
+
+        return
+    }
+
+    next()
 }
 
 // export const authMiddlewareUser = async (req: Request, res: Response, next: NextFunction) => {

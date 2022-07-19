@@ -23,7 +23,6 @@ postsRouter.get('/',
 
 postsRouter.get('/:id',
     async (req: Request, res: Response) => {
-        // const post = await postsServise.findPostsId(new ObjectId(req.params.id));
         const post = await postsServise.findPostsId(req.params.id);
         if (!post) {
             res.status(404).send('Not found')
@@ -113,16 +112,16 @@ postsRouter.get('/:postId/comments',
     })
 
 postsRouter.post('/:postId/comments',
-    authMiddleware,
-    postValidation,
-    allValidation,
     async (req: Request, res: Response) => {
-        // const id = req.params.postId;
+        const id = req.params.postId;
         const content = req.body.content;
         const userId = req.body.userId;
         const userLogin = req.body.userLogin
-        const newCommentPost = await commentsService.createComment(content, userId, userLogin)
-        if (!newCommentPost) {
+        const comment = await postsRepositories.findPostsId(id)
+        if (comment) {
+            const newCommentPost = await commentsService.createComment(content, userId, userLogin)
+            res.status(200).send(newCommentPost)
+        } else {
             const errors = [];
             errors.push({message: 'Error postId', field: 'postId'})
             if (errors.length) {
@@ -132,5 +131,4 @@ postsRouter.post('/:postId/comments',
                 return
             }
         }
-        res.status(201).send(newCommentPost)
     })

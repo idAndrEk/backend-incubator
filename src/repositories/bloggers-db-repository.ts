@@ -29,14 +29,6 @@ export const bloggersRepository = {
         }
     },
 
-    // async findBloggersName(name: string | null)/*: Promise<BloggersType | null>*/ {
-    //     const filter = {} as { name: { $regex: string } }
-    //     if (name) {
-    //         filter.name = {$regex: name}
-    //         return await bloggersCollection.findOne(filter)
-    //     }
-    // },
-
     async findBloggerById(id: string): Promise<BloggersResponseType | null> {
         const blogger = await bloggersCollection.findOne({_id: new ObjectId(id)});
         if (!blogger) {
