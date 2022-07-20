@@ -109,6 +109,7 @@ bloggersRouter.post('/:bloggerId/posts',
     authMiddleware,
     postValidation,
     allValidation,
+    checkIdParamMiddleware,
     async (req: Request, res: Response) => {
         const bloggerId = req.params.bloggerId;
         const titlePost = req.body.title;
