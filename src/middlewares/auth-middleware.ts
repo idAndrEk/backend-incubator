@@ -36,6 +36,17 @@ export const checkBloggerIdParamMiddleware = (req: Request, res: Response, next:
     next()
 }
 
+export const checkPostIdParamMiddleware = (req: Request, res: Response, next: NextFunction) => {
+    const postId = req.params.postId;
+    try {
+        new ObjectId(postId)
+    } catch (error) {
+        res.send(404)
+        return
+    }
+    next()
+}
+
 // export const authMiddlewareUser = async (req: Request, res: Response, next: NextFunction) => {
 //     if (!req.headers.authorization) {
 //         res.send(401)

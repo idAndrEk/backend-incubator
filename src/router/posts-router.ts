@@ -1,7 +1,7 @@
 import {Request, Response, Router} from "express";
 import {postValidation} from "../middlewares/Post-validation";
 import {allValidation} from "../middlewares/Validation";
-import {authMiddleware, checkIdParamMiddleware} from "../middlewares/auth-middleware";
+import {authMiddleware, checkIdParamMiddleware, checkPostIdParamMiddleware} from "../middlewares/auth-middleware";
 import {postsServise} from "../domain/posts-servise";
 import {bloggersRepository} from "../repositories/bloggers-db-repository";
 import {postsRepositories} from "../repositories/posts-db-repository";
@@ -61,6 +61,7 @@ postsRouter.put('/:id',
     authMiddleware,
     postValidation,
     allValidation,
+    checkIdParamMiddleware,
     async (req: Request, res: Response) => {
         const blogger = await bloggersRepository.findBloggerById(req.body.bloggerId);
         if (blogger) {
@@ -89,6 +90,7 @@ postsRouter.put('/:id',
 
 postsRouter.delete('/:id',
     authMiddleware,
+    checkIdParamMiddleware,
     async (req: Request, res: Response) => {
         const idDeletedPost = await postsServise.deletePost(req.params.id)
         if (idDeletedPost) {
@@ -99,6 +101,7 @@ postsRouter.delete('/:id',
     })
 
 postsRouter.get('/:postId/comments',
+    checkPostIdParamMiddleware,
     async (req: Request, res: Response) => {
         let page = req.query.PageNumber || 1
         let pageSize = req.query.PageSize || 10
@@ -113,6 +116,7 @@ postsRouter.get('/:postId/comments',
     })
 
 postsRouter.post('/:postId/comments',
+    checkPostIdParamMiddleware,
     async (req: Request, res: Response) => {
         const id = req.params.postId;
         const content = req.body.content;

@@ -51,6 +51,7 @@ bloggersRouter.put('/:id',
     authMiddleware,
     BloggerValidation,
     allValidation,
+    checkIdParamMiddleware,
     async (req: Request, res: Response) => {
         const idBlogger = req.params.id;
         const nameBlogger = req.body.name;
@@ -65,6 +66,7 @@ bloggersRouter.put('/:id',
 
 bloggersRouter.delete('/:id',
     authMiddleware,
+    checkIdParamMiddleware,
     async (req: Request, res: Response) => {
         const isDeleted = await bloggersService.deleteBlogger(req.params.id)
         if (isDeleted) {
@@ -109,7 +111,7 @@ bloggersRouter.post('/:bloggerId/posts',
     authMiddleware,
     postValidation,
     allValidation,
-    checkIdParamMiddleware,
+    checkBloggerIdParamMiddleware,
     async (req: Request, res: Response) => {
         const bloggerId = req.params.bloggerId;
         const titlePost = req.body.title;

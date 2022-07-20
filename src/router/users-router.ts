@@ -1,5 +1,6 @@
 import {Router, Request, Response} from "express";
 import {usersService} from "../domain/users-service";
+import {checkIdParamMiddleware} from "../middlewares/auth-middleware";
 
 export const usersRouter = Router({})
 
@@ -12,6 +13,7 @@ usersRouter.get('/',
     })
 
 usersRouter.get('/:id',
+    checkIdParamMiddleware,
     async (req: Request, res: Response) => {
         const user = await usersService.findUserById(req.params.id)
         if (user) {
@@ -34,6 +36,7 @@ usersRouter.post('/',
     })
 
 usersRouter.delete('/:id',
+    checkIdParamMiddleware,
     async (req: Request, res: Response) => {
         const idDeletedUser = await usersService.deleteUserById(req.params.id) // AWAIT
         if (!idDeletedUser) {
