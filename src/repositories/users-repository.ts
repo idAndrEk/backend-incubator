@@ -1,4 +1,4 @@
-import {UserDBType, UserPayloadType, UserResponseType} from "../types/UsersTypes";
+import {UserDBType, UserPayloadDbType, UserPayloadType, UserResponseType} from "../types/UsersTypes";
 import {usersCollection} from "./db";
 import {PaginationType} from "../types/bloggersTypes";
 import {ObjectId} from "mongodb";
@@ -23,7 +23,7 @@ export const usersRepository = {
             totalCount: allCount,
             // items: users
             items: users.map(users => ({
-                id: users.id,
+                id: users._id.toString(),
                 login: users.login
             }))
         }
@@ -41,15 +41,15 @@ export const usersRepository = {
         }
     },
 
-    async createUser(newUser: UserDBType): Promise<UserResponseType | null> {
+    async createUser(newUser: UserPayloadDbType): Promise<UserResponseType| null> {
         const {login} = newUser
         const createUser = await usersCollection.insertOne(newUser)
         if (!createUser.acknowledged) {
             return null
         }
         return {
-            id: newUser.id,
-            // id: createUser.insertedId.toString(),
+            // id: newUser.id,
+            id: createUser.insertedId.toString(),
             // login: newUser.login
             login
         }

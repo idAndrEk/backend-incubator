@@ -1,4 +1,4 @@
-import {UserDBType, UserPayloadType, UserResponseType} from "../types/UsersTypes";
+import {UserDBType, UserPayloadDbType, UserPayloadType, UserResponseType} from "../types/UsersTypes";
 import {ObjectId} from "mongodb";
 import {usersRepository} from "../repositories/users-repository";
 import {authService} from "./auth-service";
@@ -17,13 +17,16 @@ export const usersService = {
 
     async createUser(login: string, password: string): Promise<UserResponseType | null> {
         const passwordHash = await authService._generateHash(password)
-        const newUser: UserDBType = {
-            id: new ObjectId(),
+        const newUser: any = { //!!!!!!!!!!!!!!!!!!
+            // id: new ObjectId(),
             login: login,
             passwordHash
         }
-        const result = await usersRepository.createUser(newUser)
-        return result
+        const createdUser = await usersRepository.createUser(newUser)
+        if (createdUser) {
+            return createdUser
+        }
+        return null
     },
 
     async deleteUserById(id: string): Promise<boolean> {
