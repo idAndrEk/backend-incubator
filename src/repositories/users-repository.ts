@@ -11,7 +11,7 @@ export const usersRepository = {
         let pagesCount = allPostsCount / pageSize
         let users = await usersCollection
             .find({})
-            .project<UserResponseType>({_id: 0})
+            // .project<UserResponseType>({_id: 0})
             .skip(skip)
             .limit(pageSize)
             .toArray()    //User
@@ -21,15 +21,14 @@ export const usersRepository = {
             page: page,
             pageSize: pageSize,
             totalCount: allCount,
-            items: users
-            // items: users.map(users => ({
-            //     id: users.id,
-            //     login: users.login
-            // }))
+            // items: users
+            items: users.map(users => ({
+                id: users.id,
+                login: users.login
+            }))
         }
     },
 
-    // async findUserById(id: ObjectId): Promise<UserPayloadType | null> {
     async findUserById(id: string): Promise<UserPayloadType | null> {
         const user = await usersCollection.findOne({_id: new ObjectId(id)})
         // const user = await usersCollection.findOne({_id: id})
