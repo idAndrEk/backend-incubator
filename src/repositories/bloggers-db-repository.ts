@@ -47,7 +47,6 @@ export const bloggersRepository = {
             youtubeUrl,
             name
         } = newBlogger
-
         const result = await bloggersCollection.insertOne(newBlogger);
         if (!result.acknowledged) {
             return null

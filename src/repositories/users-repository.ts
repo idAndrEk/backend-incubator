@@ -49,14 +49,14 @@ export const usersRepository = {
         }
         return {
             id: newUser.id,
-            login: newUser.login
+            // id: createUser.insertedId.toString(),
+            // login: newUser.login
+            login
         }
     },
 
-    // async deleteUserById(id: ObjectId): Promise<boolean> {
     async deleteUserById(id: string): Promise<boolean> {
         const result = await usersCollection.deleteOne({_id: new ObjectId(id)})
-        //     const result = await usersCollection.deleteOne({_id: id})
         return result.deletedCount === 1
     },
 
