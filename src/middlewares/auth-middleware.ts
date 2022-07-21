@@ -48,9 +48,9 @@ export const checkPostIdParamMiddleware = (req: Request, res: Response, next: Ne
 }
 
 export const checkCommentIdParamMiddleware = (req: Request, res: Response, next: NextFunction) => {
-    const bloggerId = req.params.bloggerId;
+    const commentId = req.params.commentId;
     try {
-        new ObjectId(bloggerId)
+        new ObjectId(commentId)
     } catch (error) {
         res.send(404)
         return

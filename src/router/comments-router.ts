@@ -29,6 +29,8 @@ commentsRouter.post('/',
         }
     })
 
+// commentsRouter.put('/:commentId',
+
 commentsRouter.delete('/:commentId',
     checkCommentIdParamMiddleware,
     async (req: Request, res: Response) => {
