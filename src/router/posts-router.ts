@@ -100,7 +100,7 @@ postsRouter.delete('/:id',
         }
     })
 
-postsRouter.get('/:postId/comments',
+postsRouter.get('/:id/comments',
     checkPostIdParamMiddleware,
     async (req: Request, res: Response) => {
         let page = req.query.PageNumber || 1
@@ -115,7 +115,7 @@ postsRouter.get('/:postId/comments',
         res.status(404).send('Not found')
     })
 
-postsRouter.post('/:postId/comments',
+postsRouter.post('/:id/comments',
     checkPostIdParamMiddleware,
     async (req: Request, res: Response) => {
         const id = req.params.postId;

@@ -31,9 +31,9 @@ commentsRouter.post('/',
 
 // commentsRouter.put('/:commentId',
 
-commentsRouter.delete('/:commentId',
+commentsRouter.delete('/:id',
     checkCommentIdParamMiddleware,
-    async (req: Request, res: Response) => {
+    async (req: Request<{id: string}>, res: Response) => {
         const deleteCommentId = await commentsService.deleteComment(req.params.id)
         if (deleteCommentId) {
             res.sendStatus(204)

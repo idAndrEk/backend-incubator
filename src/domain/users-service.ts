@@ -17,9 +17,10 @@ export const usersService = {
 
     async createUser(login: string, password: string): Promise<UserResponseType | null> {
         const passwordHash = await authService._generateHash(password)
-        const newUser: any = { //!!!!!!!!!!!!!!!!!!
+        const newUser: UserPayloadDbType = {
             // id: new ObjectId(),
-            login: login,
+            // login: login,
+            login,
             passwordHash
         }
         const createdUser = await usersRepository.createUser(newUser)
@@ -27,12 +28,11 @@ export const usersService = {
             return createdUser
         }
         return null
-    }, //!!!!!!!!!
+    },
 
     async deleteUserById(id: string): Promise<boolean> {
         return await usersRepository.deleteUserById(id)
     }
-
 }
 
 

@@ -19,7 +19,7 @@ export const authService = {
         if (!user) {
             return null
         }
-        const result = await bcrypt.compare(password, user.passwordHash)
+        const result: boolean = await bcrypt.compare(password, user.passwordHash)
         if (result) {
             return user
         }

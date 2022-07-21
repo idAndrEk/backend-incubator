@@ -14,5 +14,5 @@ export type UserResponseType = {
 }
 
 export type UserPayloadType = Omit<UserResponseType, '_id'>
-export type UserPayloadDbType = Omit<UserDBType, '_id'>
+export type UserPayloadDbType = Omit<UserDBType, 'id'>
 

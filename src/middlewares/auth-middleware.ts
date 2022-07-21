@@ -26,7 +26,7 @@ export const checkIdParamMiddleware = (req: Request, res: Response, next: NextFu
 }
 
 export const checkBloggerIdParamMiddleware = (req: Request, res: Response, next: NextFunction) => {
-    const bloggerId = req.params.bloggerId;
+    const bloggerId = req.params.bloggerId; // ID
     try {
         new ObjectId(bloggerId)
     } catch (error) {
@@ -63,13 +63,19 @@ export const checkCommentIdParamMiddleware = (req: Request, res: Response, next:
 //         res.send(401)
 //         return
 //     }
+//
+//     // Bearer adrgethtrhrthstrhsrth
 //     const token = req.headers.authorization.split(' ')[1]
 //     const userId = await jwtService.getUserIdByToken(token);
 //     if (userId) {
 //         // req.user = await usersService.findUserById(userId)
-//         return await usersService.findUserById(userId)
+//         const user = await usersService.findUserById(userId)
+//
+//         req.user = user;
+//
 //         next()
 //     }
+//
 //     res.send(401)
 // }
 

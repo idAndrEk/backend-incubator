@@ -12,7 +12,7 @@ export const bloggersService = {
     // },
 
     async findBloggerById(id: string): Promise<BloggersResponseType | null> {
-        return await bloggersRepository.findBloggerById(id)
+        return bloggersRepository.findBloggerById(id)
     },
 
     async createBlogger(name: string, youtubeUrl: string): Promise<BloggersResponseType | null> {
