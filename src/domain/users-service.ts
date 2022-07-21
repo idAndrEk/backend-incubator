@@ -27,7 +27,7 @@ export const usersService = {
             return createdUser
         }
         return null
-    },
+    }, //!!!!!!!!!
 
     async deleteUserById(id: string): Promise<boolean> {
         return await usersRepository.deleteUserById(id)

@@ -22,7 +22,6 @@ export const postsServise = {
     // const {title, shortDescription, content, bloggerId, bloggerName} = post
     // return {title, shortDescription, content, bloggerId, bloggerName, id: post._id.toString()}
 
-
     async createPost(title: string, shortDescription: string, content: string, bloggerId: string): Promise<PostResponseType | null> {
         const blogger = await bloggersRepository.findBloggerById(bloggerId);
         if (!blogger) {

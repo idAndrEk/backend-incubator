@@ -1,9 +1,11 @@
 import {Request, Response, Router} from "express";
 import {commentsService} from "../domain/comments-service";
+import {checkCommentIdParamMiddleware, checkIdParamMiddleware} from "../middlewares/auth-middleware";
 
 export const commentsRouter = Router({})
 
 commentsRouter.get('/:id',
+    checkIdParamMiddleware,
     async (req: Request, res: Response) => {
         const comment = await commentsService.findCommentId(req.params.id);
         if (!comment) {
@@ -28,6 +30,7 @@ commentsRouter.post('/',
     })
 
 commentsRouter.delete('/:commentId',
+    checkCommentIdParamMiddleware,
     async (req: Request, res: Response) => {
         const deleteCommentId = await commentsService.deleteComment(req.params.id)
         if (deleteCommentId) {
