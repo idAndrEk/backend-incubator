@@ -1,6 +1,10 @@
 import {Request, Response, Router} from "express";
 import {commentsService} from "../domain/comments-service";
-import {checkCommentIdParamMiddleware, checkIdParamMiddleware} from "../middlewares/auth-middleware";
+import {
+    authMiddlewareUser,
+    checkCommentIdParamMiddleware,
+    checkIdParamMiddleware
+} from "../middlewares/auth-middleware";
 
 export const commentsRouter = Router({})
 
@@ -16,6 +20,7 @@ commentsRouter.get('/:id',
     })
 
 commentsRouter.post('/',
+    authMiddlewareUser,
     async (req: Request, res: Response) => {
         const content = req.body.content;
         const userId = req.body.userId;
@@ -32,7 +37,8 @@ commentsRouter.post('/',
 // commentsRouter.put('/:commentId',
 
 commentsRouter.delete('/:id',
-    checkCommentIdParamMiddleware,
+    authMiddlewareUser,
+    checkIdParamMiddleware,
     async (req: Request<{id: string}>, res: Response) => {
         const deleteCommentId = await commentsService.deleteComment(req.params.id)
         if (deleteCommentId) {

@@ -41,7 +41,7 @@ export const usersRepository = {
         }
     },
 
-    async createUser(newUser: UserPayloadDbType): Promise<UserResponseType| null> {
+    async createUser(newUser: any): Promise<UserResponseType| null> { //!!!
         const {login} = newUser
         const createUser = await usersCollection.insertOne(newUser)
         if (!createUser.acknowledged) {
