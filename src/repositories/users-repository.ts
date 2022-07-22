@@ -1,10 +1,17 @@
-import {UserDBType, UserPayloadDbType, UserPayloadType, UserResponseType} from "../types/UsersTypes";
+import {
+    UserDBPayloadType,
+    UserRepositoryResponseType,
+    UserResponseType
+} from "../types/UsersTypes";
 import {usersCollection} from "./db";
 import {PaginationType} from "../types/bloggersTypes";
 import {ObjectId} from "mongodb";
 
 
 export const usersRepository = {
+    // async getCountDocument(): Promise<number> {
+    //   //  usersCollection.countDocuments()
+    // },
     async getAllUsers(page: number, pageSize: number): Promise<PaginationType<UserResponseType> | null> {
         const skip = (page - 1) * pageSize
         let allPostsCount = await usersCollection.countDocuments()
@@ -29,29 +36,30 @@ export const usersRepository = {
         }
     },
 
-    async findUserById(id: string): Promise<UserPayloadType | null> {
+    async findUserById(id: string): Promise<UserRepositoryResponseType | null> {
         const user = await usersCollection.findOne({_id: new ObjectId(id)})
         // const user = await usersCollection.findOne({_id: id})
         if (!user) {
             return null
         }
         return {
-            id: user.id,
-            login: user.login
+            id: user._id.toString(),
+            login: user.login,
+            passwordHash: user.passwordHash
         }
     },
 
-    async createUser(newUser: any): Promise<UserResponseType| null> { //!!!
-        const {login} = newUser
-        const createUser = await usersCollection.insertOne(newUser)
-        if (!createUser.acknowledged) {
+    async createUser(newUser: UserDBPayloadType): Promise<UserResponseType | null> { //!!!
+        const { login, passwordHash } = newUser
+        const createdUser = await usersCollection.insertOne(newUser)
+        if (!createdUser.acknowledged) {
             return null
         }
         return {
             // id: newUser.id,
-            id: createUser.insertedId.toString(),
-            // login: newUser.login
-            login
+            id: createdUser.insertedId.toString(),
+            login,
+            // passwordHash
         }
     },
 
@@ -60,11 +68,16 @@ export const usersRepository = {
         return result.deletedCount === 1
     },
 
-    async findUserByLogin(login: string): Promise<UserDBType | null> {
-        const user = usersCollection.findOne({login})
+    async findUserByLogin(login: string): Promise<UserRepositoryResponseType | null> {
+        const user = await usersCollection.findOne({login})
         if (!user) {
             return null
         }
-        return user
+
+        return {
+            login: user.login,
+            id: user._id.toString(),
+            passwordHash: user.passwordHash
+        }
     }
 }

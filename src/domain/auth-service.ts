@@ -1,5 +1,5 @@
 import bcrypt from "bcrypt";
-import {UserDBType} from "../types/UsersTypes";
+import {UserDBPayloadType, UserResponseType} from "../types/UsersTypes";
 import {usersRepository} from "../repositories/users-repository";
 
 export const authService = {
@@ -14,14 +14,17 @@ export const authService = {
     //     return isValide
     // },
 
-    async validatePassword(login: string, password: string): Promise<UserDBType | null> {
+    async checkCredentials(login: string, password: string): Promise<UserResponseType | null> {
         const user = await usersRepository.findUserByLogin(login) // LOGIN
         if (!user) {
             return null
         }
         const result: boolean = await bcrypt.compare(password, user.passwordHash)
         if (result) {
-            return user
+            return {
+                id: user.id,
+                login: user.login
+            }
         }
         return null
     }

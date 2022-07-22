@@ -9,7 +9,7 @@ export const authRouter = Router({})
 
 authRouter.post('/login',
     async (req: Request, res: Response) => {
-        const user = await authService.validatePassword(req.body.login, req.body.password) // NAME
+        const user = await authService.checkCredentials(req.body.login, req.body.password) // NAME
         if (user) {
             const token = await jwtService.createJWT(user)
             res.status(201).send({ token })
