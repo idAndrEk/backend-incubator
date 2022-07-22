@@ -1,7 +1,12 @@
 import {Request, Response, Router} from "express";
 import {postValidation} from "../middlewares/Post-validation";
 import {allValidation} from "../middlewares/Validation";
-import {authMiddleware, checkIdParamMiddleware, checkPostIdParamMiddleware} from "../middlewares/auth-middleware";
+import {
+    authMiddleware,
+    authMiddlewareUser,
+    checkIdParamMiddleware,
+    checkPostIdParamMiddleware
+} from "../middlewares/auth-middleware";
 import {postsServise} from "../domain/posts-servise";
 import {bloggersRepository} from "../repositories/bloggers-db-repository";
 import {postsRepositories} from "../repositories/posts-db-repository";
@@ -101,14 +106,14 @@ postsRouter.delete('/:id',
     })
 
 postsRouter.get('/:id/comments',
-    checkPostIdParamMiddleware,
+    checkIdParamMiddleware,
     async (req: Request, res: Response) => {
         let page = req.query.PageNumber || 1
         let pageSize = req.query.PageSize || 10
-        const postId = req.params.postId
-        const post = await postsRepositories.findPostsId(postId)
+        const id = req.params.id
+        const post = await postsRepositories.findPostsId(id)
         if (post) {
-            const postComment = await postsServise.findPostComment(postId, +page, +pageSize)
+            const postComment = await postsServise.findPostComment(id, +page, +pageSize)
             res.status(200).send(postComment)
             return
         }
@@ -116,9 +121,10 @@ postsRouter.get('/:id/comments',
     })
 
 postsRouter.post('/:id/comments',
-    checkPostIdParamMiddleware,
+    checkIdParamMiddleware,
+    authMiddlewareUser,
     async (req: Request, res: Response) => {
-        const id = req.params.postId;
+        const id = req.params.id;
         const content = req.body.content;
         const userId = req.body.userId;
         const userLogin = req.body.userLogin

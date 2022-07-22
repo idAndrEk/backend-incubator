@@ -18,7 +18,7 @@ export const commentsRepository = {
         }
     },
 
-    async creteComment(newComment: any /*CommentPayloadType*/): Promise<CommentResponseType | null> {
+    async creteComment(newComment: any /*CommentPayloadType*/): Promise<CommentResponseType | null> { //!!!!!!!!!!!
         const {
             content,
             userId,
