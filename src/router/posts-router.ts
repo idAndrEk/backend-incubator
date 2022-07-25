@@ -10,6 +10,7 @@ import {postsServise} from "../domain/posts-servise";
 import {bloggersRepository} from "../repositories/bloggers-db-repository";
 import {postsRepositories} from "../repositories/posts-db-repository";
 import {commentsService} from "../domain/comments-service";
+import {usersRepository} from "../repositories/users-repository";
 
 export const postsRouter = Router({})
 
@@ -127,8 +128,8 @@ postsRouter.post('/:id/comments',
         const content = req.body.content;
         const userId = req.body.userId;
         const userLogin = req.body.userLogin
-        const comment = await postsRepositories.findPostsId(id)
-        if (comment) {
+        const post = await postsRepositories.findPostsId(id)
+        if (post) {
             const newCommentPost = await commentsService.createComment(content, userId, userLogin)
             res.status(200).send(newCommentPost)
         } else {
