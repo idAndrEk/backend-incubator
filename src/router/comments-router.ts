@@ -2,7 +2,6 @@ import {Request, Response, Router} from "express";
 import {commentsService} from "../domain/comments-service";
 import {
     authMiddlewareUser,
-    checkCommentIdParamMiddleware,
     checkIdParamMiddleware
 } from "../middlewares/auth-middleware";
 

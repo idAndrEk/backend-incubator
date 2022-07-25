@@ -5,7 +5,6 @@ import {
     authMiddleware,
     authMiddlewareUser,
     checkIdParamMiddleware,
-    checkPostIdParamMiddleware
 } from "../middlewares/auth-middleware";
 import {postsServise} from "../domain/posts-servise";
 import {bloggersRepository} from "../repositories/bloggers-db-repository";

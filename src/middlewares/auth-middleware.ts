@@ -25,57 +25,21 @@ export const checkIdParamMiddleware = (req: Request, res: Response, next: NextFu
     next()
 }
 
-export const checkBloggerIdParamMiddleware = (req: Request, res: Response, next: NextFunction) => {
-    const bloggerId = req.params.bloggerId; // ID
-    try {
-        new ObjectId(bloggerId)
-    } catch (error) {
-        res.send(404)
-        return
-    }
-    next()
-}
-
-export const checkPostIdParamMiddleware = (req: Request, res: Response, next: NextFunction) => {
-    const postId = req.params.postId;
-    try {
-        new ObjectId(postId)
-    } catch (error) {
-        res.send(404)
-        return
-    }
-    next()
-}
-
-export const checkCommentIdParamMiddleware = (req: Request, res: Response, next: NextFunction) => {
-    const commentId = req.params.commentId;
-    try {
-        new ObjectId(commentId)
-    } catch (error) {
-        res.send(404)
-        return
-    }
-    next()
-}
-
 export const authMiddlewareUser = async (req: Request, res: Response, next: NextFunction) => {
     if (!req.headers.authorization) {
         res.send(401)
         return
     }
-
     // Bearer adrgethtrhrthstrhsrth
     const token = req.headers.authorization.split(' ')[1]
-    const userId: any = await jwtService.getUserIdByToken(token);
+    const userId: any = await jwtService.getUserIdByToken(token);// ANY!!!
     if (userId) {
-        // req.user = await usersService.findUserById(userId)
-        const user = await usersService.findUserById(userId)
-        return user
+        req.user = await usersService.findUserById(userId)
+        // const user = await usersService.findUserById(userId)
+        // return user
         // req.user = user;
-
         next()
     }
-
     res.send(401)
 }
 

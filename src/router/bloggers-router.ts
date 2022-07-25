@@ -2,7 +2,7 @@ import {Request, Response, Router} from "express";
 import {bloggersService} from "../domain/bloggers-service";
 import {allValidation} from "../middlewares/Validation";
 import {BloggerValidation} from "../middlewares/Blogger-validation";
-import {authMiddleware, checkBloggerIdParamMiddleware, checkIdParamMiddleware} from "../middlewares/auth-middleware";
+import {authMiddleware, checkIdParamMiddleware} from "../middlewares/auth-middleware";
 import {postsServise} from "../domain/posts-servise";
 import {bloggersRepository} from "../repositories/bloggers-db-repository";
 import {postValidation} from "../middlewares/Post-validation";
@@ -76,12 +76,12 @@ bloggersRouter.delete('/:id',
         }
     })
 
-bloggersRouter.get('/:bloggerId/posts',
-    checkBloggerIdParamMiddleware,
+bloggersRouter.get('/:id/posts',
+    checkIdParamMiddleware,
     async (req: Request, res: Response) => {
         let page = req.query.PageNumber || 1
         let pageSize = req.query.PageSize || 10
-        const bloggerId = req.params.bloggerId
+        const bloggerId = req.params.id
         const blogger = await bloggersRepository.findBloggerById(bloggerId)
         if (blogger) {
             const bloggerPosts = await bloggersService.findBloggerPosts(bloggerId, +page, +pageSize)
@@ -107,13 +107,13 @@ bloggersRouter.get('/:bloggerId/posts',
 //     res.status(404).send('Not found')
 // })
 
-bloggersRouter.post('/:bloggerId/posts',
+bloggersRouter.post('/:id/posts',
     authMiddleware,
     postValidation,
     allValidation,
-    checkBloggerIdParamMiddleware,
+    checkIdParamMiddleware,
     async (req: Request, res: Response) => {
-        const bloggerId = req.params.bloggerId;
+        const bloggerId = req.params.id;
         const titlePost = req.body.title;
         const shortDescriptionPost = req.body.shortDescription;
         const contentPost = req.body.content;

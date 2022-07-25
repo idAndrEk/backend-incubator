@@ -11,8 +11,8 @@ export const commentsService = {
         const newComment = {
             content: content,
             userId: userId,
-            userLogin: userLogin
-            // addedAt: new Date().toString()
+            userLogin: userLogin,
+            addedAt: new Date().toString()
         }
         const createComment = await commentsRepository.creteComment(newComment)
         if (createComment) {
