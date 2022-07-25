@@ -1,4 +1,4 @@
-import {UserRepositoryResponseType, UserResponseType} from "./UsersTypes";
+import {UserResponseType} from "./UsersTypes";
 
 declare global {
     declare namespace Express {

@@ -43,7 +43,3 @@ export const authMiddlewareUser = async (req: Request, res: Response, next: Next
     res.send(401)
 }
 
-
-// const str = 'admin:qwerty';
-// const buff = Buffer.from(str, 'utf-8');
-// const base64 = buff.toString('base64')

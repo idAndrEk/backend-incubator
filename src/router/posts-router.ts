@@ -11,6 +11,7 @@ import {bloggersRepository} from "../repositories/bloggers-db-repository";
 import {postsRepositories} from "../repositories/posts-db-repository";
 import {commentsService} from "../domain/comments-service";
 import {usersRepository} from "../repositories/users-repository";
+import {commentValidation} from "../middlewares/comments-validation";
 
 export const postsRouter = Router({})
 
@@ -123,6 +124,7 @@ postsRouter.get('/:id/comments',
 postsRouter.post('/:id/comments',
     checkIdParamMiddleware,
     authMiddlewareUser,
+    commentValidation,
     async (req: Request, res: Response) => {
         const id = req.params.id;
         const content = req.body.content;

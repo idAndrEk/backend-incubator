@@ -9,11 +9,6 @@ export const authService = {
         return hash
     },
 
-    // async validatePassrowd(password: string, hash: string) {
-    //     const isValide =  await bcrypt.compare(password, hash)
-    //     return isValide
-    // },
-
     async checkCredentials(login: string, password: string): Promise<UserResponseType | null> {
         const user = await usersRepository.findUserByLogin(login) // LOGIN
         if (!user) {
