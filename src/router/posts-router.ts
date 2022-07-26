@@ -124,6 +124,7 @@ postsRouter.post('/:id/comments',
     checkIdParamMiddleware,
     authMiddlewareUser,
     commentValidation,
+    allValidation,
     async (req: Request, res: Response) => {
         const id = req.params.id;
         const content = req.body.content;
