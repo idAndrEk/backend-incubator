@@ -126,12 +126,10 @@ bloggersRouter.post('/:id/posts',
         if (!newPostBlogger) {
             const errors = [];
             errors.push({message: 'Error bloggerId', field: 'bloggerId'})
-            if (errors.length) {
-                res.status(400).json({
-                    errorsMessages: errors
-                })
-                return
-            }
+            res.status(404).json({
+                errorsMessages: errors
+            })
+            return
         }
         res.status(201).send(newPostBlogger)
     })

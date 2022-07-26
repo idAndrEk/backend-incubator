@@ -2,6 +2,7 @@ import {NextFunction, Request, Response} from "express";
 import {ObjectId} from "mongodb";
 import {jwtService} from "../application/jwt-service";
 import {usersService} from "../domain/users-service";
+import {UserDBPayloadType, UserRepositoryResponseType, UserResponseType} from "../types/UsersTypes";
 
 export const authMiddleware = (req: Request, res: Response, next: NextFunction) => {
     const authHeader = req.headers.authorization

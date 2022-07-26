@@ -136,7 +136,7 @@ postsRouter.post('/:id/comments',
         } else {
             const errors = [];
             errors.push({message: 'Error postId', field: 'postId'});
-            res.status(400).json({
+            res.status(404).json({
                 errorsMessages: errors
             })
             return
