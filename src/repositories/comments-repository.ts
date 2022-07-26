@@ -38,6 +38,15 @@ export const commentsRepository = {
         }
     },
 
+    async updateComment(id: string, content: string): Promise<boolean | null> {
+        const result = await commentCollection.updateOne({_id: new ObjectId(id)}, {
+            $set: {
+                content: content
+            }
+        })
+        return result.matchedCount === 1
+    },
+
     async deleteComment(id: string): Promise<boolean> {
         const result = await commentCollection.deleteOne({_id: new ObjectId(id)})
         return result.deletedCount === 1

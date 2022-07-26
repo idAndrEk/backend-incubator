@@ -4,6 +4,9 @@ import {
     authMiddlewareUser,
     checkIdParamMiddleware
 } from "../middlewares/auth-middleware";
+import {commentValidation} from "../middlewares/comments-validation";
+import {allValidation} from "../middlewares/Validation";
+import {commentsRepository} from "../repositories/comments-repository";
 
 export const commentsRouter = Router({})
 
@@ -15,6 +18,45 @@ commentsRouter.get('/:id',
             res.status(404).send('Not found')
         } else {
             res.status(200).send(comment)
+        }
+    })
+
+commentsRouter.put('/:id',
+    checkIdParamMiddleware,
+    authMiddlewareUser,
+    commentValidation,
+    allValidation,
+    async (req: Request<{ id: string }>, res: Response) => {
+        const comment = await commentsRepository.findCommentId(req.body.id)
+        if (comment) {
+            const id = req.params.id;
+            const content = req.body.content;
+            const result = await commentsService.updateComment(id, content);
+            if (result) {
+                res.sendStatus(204)
+                return;
+            }
+            res.sendStatus(404)
+            return
+        }
+        const errors = [];
+        errors.push({message: 'Error commentId', field: 'commentId'})
+        if (errors.length) {
+            res.status(400).json({
+                errorsMessages: errors
+            })
+        }
+    })
+
+commentsRouter.delete('/:id',
+    checkIdParamMiddleware,
+    authMiddlewareUser,
+    async (req: Request<{ id: string }>, res: Response) => {
+        const deleteCommentId = await commentsService.deleteComment(req.params.id)
+        if (deleteCommentId) {
+            res.sendStatus(204)
+        } else {
+            res.sendStatus(404)
         }
     })
 
@@ -32,18 +74,3 @@ commentsRouter.get('/:id',
 //             res.status(201).send(newComment)
 //         }
 //     })
-
-// commentsRouter.put('/:commentId',
-
-commentsRouter.delete('/:id',
-    checkIdParamMiddleware,
-    authMiddlewareUser,
-    async (req: Request<{id: string}>, res: Response) => {
-        const deleteCommentId = await commentsService.deleteComment(req.params.id)
-        if (deleteCommentId) {
-            res.sendStatus(204)
-        } else {
-            res.sendStatus(404)
-        }
-    })
-
