@@ -19,7 +19,7 @@ export const checkIdParamMiddleware = (req: Request, res: Response, next: NextFu
     try {
         new ObjectId(id)
     } catch (error) {
-        res.send(404)
+        res.sendStatus(400)
         return
     }
     next()
@@ -33,13 +33,13 @@ export const authMiddlewareUser = async (req: Request, res: Response, next: Next
     // Bearer adrgethtrhrthstrhsrth
     const token = req.headers.authorization.split(' ')[1]
     const userId: any = await jwtService.getUserIdByToken(token);// ANY!!!
+    console.log(token)
+    console.log(userId)
     if (userId) {
-        req.user = await usersService.findUserById(userId)
-        // const user = await usersService.findUserById(userId)
-        // return user
-        // req.user = user;
-        next()
+        const user = await usersService.findUserById(userId)
+        req.user = user;
+        return next()
     }
-    res.send(401)
+    res.sendStatus(401)
 }
 

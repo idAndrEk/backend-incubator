@@ -22,9 +22,9 @@ export async function runDb() {
     try {
         await client.connect();
         await client.db("home-bloggers").command({ping: 1});
-        console.log("Connected successfully to mongo server")
+        console.log("Connected successfully to mongo server");
     } catch {
-        console.log("Cant`t connect to db!")
+        console.log("Cant`t connect to db!");
         await client.close();
     }
 }

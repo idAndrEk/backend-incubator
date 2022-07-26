@@ -10,7 +10,6 @@ import {postsServise} from "../domain/posts-servise";
 import {bloggersRepository} from "../repositories/bloggers-db-repository";
 import {postsRepositories} from "../repositories/posts-db-repository";
 import {commentsService} from "../domain/comments-service";
-import {usersRepository} from "../repositories/users-repository";
 import {commentValidation} from "../middlewares/comments-validation";
 
 export const postsRouter = Router({})
@@ -128,20 +127,18 @@ postsRouter.post('/:id/comments',
     async (req: Request, res: Response) => {
         const id = req.params.id;
         const content = req.body.content;
-        const userId = req.body.userId;
-        const userLogin = req.body.userLogin
-        const post = await postsRepositories.findPostsId(id)
+        const userLogin = req.user?.login as string;
+        const userId = req.user?.id as string;
+        const post = await postsRepositories.findPostsId(id);
         if (post) {
             const newCommentPost = await commentsService.createComment(content, userId, userLogin)
             res.status(200).send(newCommentPost)
         } else {
             const errors = [];
-            errors.push({message: 'Error postId', field: 'postId'})
-            if (errors.length) {
-                res.status(400).json({
-                    errorsMessages: errors
-                })
-                return
-            }
+            errors.push({message: 'Error postId', field: 'postId'});
+            res.status(400).json({
+                errorsMessages: errors
+            })
+            return
         }
     })

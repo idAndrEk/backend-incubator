@@ -12,15 +12,5 @@ export type UserResponseType = {
     login: string
 }
 
-// export type UserPayloadDbType = Omit<UserDBType, 'id'>
 
-
-
-// declare global {
-//     declare module "express" {
-//         export interface Request {
-//             user: UserResponseType | null
-//         }
-//     }
-// }
 
