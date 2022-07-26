@@ -80,10 +80,10 @@ export const postsRepositories = {
         return result.deletedCount === 1
     },
 
-    async findPostComment(id: string, page: number, pageSize: number): Promise<any> {
+    async findPostComment(commentId: string, page: number, pageSize: number): Promise<any> {
         let filter = {}
-        if (id) {
-            filter = {id}
+        if (commentId) {
+            filter = {commentId}
         }
         const skip = (page - 1) * pageSize
         let allCommentCount = await commentCollection.count(filter)

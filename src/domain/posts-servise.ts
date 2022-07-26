@@ -53,7 +53,8 @@ export const postsServise = {
     },
 
     async findPostComment(id: string, page: number, pageSize: number) {
-        const comment = await postsRepositories.findPostComment(id, page, pageSize)
+        const comment = await postsRepositories.findPostComment(id, page, pageSize);
+        return comment
     }
 
 }
