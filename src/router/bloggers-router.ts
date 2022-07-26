@@ -91,7 +91,7 @@ bloggersRouter.get('/:id/posts',
             const errors = [];
             errors.push({message: 'Error bloggerId', field: 'bloggerId'})
             if (errors.length) {
-                res.status(400).json({
+                res.status(404).json({
                     errorsMessages: errors
                 })
                 return
