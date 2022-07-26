@@ -20,7 +20,7 @@ export const checkIdParamMiddleware = (req: Request, res: Response, next: NextFu
     try {
         new ObjectId(id)
     } catch (error) {
-        res.sendStatus(400)
+        res.sendStatus(404)
         return
     }
     next()
