@@ -110,14 +110,20 @@ postsRouter.get('/:id/comments',
     async (req: Request, res: Response) => {
         let page = req.query.PageNumber || 1
         let pageSize = req.query.PageSize || 10
-        const id = req.params.id
-        const post = await postsRepositories.findPostsId(id)
+        const postId = req.params.id
+        const post = await postsRepositories.findPostsId(postId)
         if (post) {
-            const postComment = await postsServise.findPostComment(id, +page, +pageSize)
+            const postComment = await postsServise.findPostComment(postId, +page, +pageSize)
             res.status(200).send(postComment)
             return
+        } else {
+            const errors = [];
+            errors.push({message: 'Error postId', field: 'postId'})
+            res.status(404).json({
+                errorsMessages: errors
+            })
+            return
         }
-        res.status(404).send('Not found')
     })
 
 postsRouter.post('/:id/comments',

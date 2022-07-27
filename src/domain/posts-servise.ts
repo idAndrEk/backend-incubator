@@ -52,8 +52,8 @@ export const postsServise = {
         return await postsRepositories.deletePost(id)
     },
 
-    async findPostComment(id: string, page: number, pageSize: number) {
-        const comment = await postsRepositories.findPostComment(id, page, pageSize);
+    async findPostComment(postId: string, page: number, pageSize: number) {
+        const comment = await postsRepositories.findPostComment(postId, page, pageSize);
         return comment
     }
 
