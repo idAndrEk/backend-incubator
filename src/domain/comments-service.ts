@@ -8,9 +8,8 @@ export const commentsService = {
         return await commentsRepository.findCommentId(id)
     },
 
-    async createComment(postId: string, content: string, userId: string, userLogin: string) {
+    async createComment(content: string, userId: string, userLogin: string) {
         const newComment = {
-            postId: postId,
             content: content,
             userId: userId,
             userLogin: userLogin,

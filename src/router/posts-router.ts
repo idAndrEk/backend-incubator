@@ -132,13 +132,13 @@ postsRouter.post('/:id/comments',
     commentValidation,
     allValidation,
     async (req: Request, res: Response) => {
-        const postId = req.params.id;
+        const id = req.params.id;
         const content = req.body.content;
         const userLogin = req.user?.login as string;
         const userId = req.user?.id as string;
-        const post = await postsRepositories.findPostsId(postId);
+        const post = await postsRepositories.findPostsId(id);
         if (post) {
-            const newCommentPost = await commentsService.createComment(postId, content, userId, userLogin)
+            const newCommentPost = await commentsService.createComment(content, userId, userLogin)
             res.status(201).send(newCommentPost)
         } else {
             const errors = [];
