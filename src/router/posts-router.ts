@@ -43,7 +43,6 @@ postsRouter.post('/',
     allValidation,
     async (req: Request, res: Response) => {
         // console.log('ROUTER')
-
         const titlePost = req.body.title;
         const shortDescriptionPost = req.body.shortDescription;
         const contentPost = req.body.content;
@@ -89,7 +88,6 @@ postsRouter.put('/:id',
             res.status(400).json({
                 errorsMessages: errors
             })
-            // return
         }
     })
 
@@ -132,11 +130,11 @@ postsRouter.post('/:id/comments',
     commentValidation,
     allValidation,
     async (req: Request, res: Response) => {
-        const id = req.params.id;
+        const postId = req.params.id;
         const content = req.body.content;
         const userLogin = req.user?.login as string;
         const userId = req.user?.id as string;
-        const post = await postsRepositories.findPostsId(id);
+        const post = await postsRepositories.findPostsId(postId);
         if (post) {
             const newCommentPost = await commentsService.createComment(content, userId, userLogin)
             res.status(201).send(newCommentPost)

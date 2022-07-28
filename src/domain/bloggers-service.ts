@@ -1,5 +1,4 @@
 import {bloggersRepository} from "../repositories/bloggers-db-repository";
-import {ObjectId} from "mongodb";
 import {BloggersResponseType, PaginationType} from "../types/bloggersTypes";
 
 export const bloggersService = {

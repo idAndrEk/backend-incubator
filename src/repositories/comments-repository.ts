@@ -18,12 +18,12 @@ export const commentsRepository = {
         }
     },
 
-    async creteComment(newComment: any /*CommentPayloadType*/): Promise<CommentResponseType | null> { //!!!!!!!!!!!
+    async creteComment(newComment: CommentPayloadType): Promise<CommentResponseType | null> {
         const {
             content,
             userId,
-            userLogin,
-            addedAt
+            userLogin
+            // postId
         } = newComment
         const result = await commentCollection.insertOne(newComment);
         if (!result.acknowledged) {
@@ -35,6 +35,7 @@ export const commentsRepository = {
             userLogin,
             addedAt: new Date().toString(),
             id: result.insertedId.toString()
+            // postId
         }
     },
 

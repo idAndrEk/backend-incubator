@@ -1,4 +1,4 @@
-import {MongoClient, ObjectId} from "mongodb";
+import {MongoClient} from "mongodb";
 import {envSetting} from "../env_setting";
 import {BloggerPayloadType} from "../types/bloggersTypes";
 import {PostPayloadType } from "../types/postsTypes";
@@ -14,9 +14,6 @@ export const bloggersCollection = db.collection<BloggerPayloadType>("blogger");
 export const postCollection = db.collection<PostPayloadType>("post");
 export const commentCollection = db.collection<CommentPayloadType>("comment");
 export const usersCollection = db.collection<UserDBPayloadType>("user");
-
-
-
 
 export async function runDb() {
     try {

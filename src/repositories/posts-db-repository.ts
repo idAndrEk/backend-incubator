@@ -88,7 +88,11 @@ export const postsRepositories = {
         const skip = (page - 1) * pageSize
         let allCommentCount = await commentCollection.count(filter)
         let pagesCount = allCommentCount / pageSize
-        let comment = await commentCollection.find(filter).skip(skip).limit(pageSize).toArray()
+        let comment = await commentCollection.
+        find(filter).
+        skip(skip).
+        limit(pageSize).
+        toArray()
         return {
             pagesCount: Math.ceil(pagesCount),
             page: page,

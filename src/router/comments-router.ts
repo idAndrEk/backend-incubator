@@ -27,14 +27,14 @@ commentsRouter.put('/:id',
     commentValidation,
     allValidation,
     async (req: Request<{ id: string }>, res: Response) => {
-        const comment = await commentsRepository.findCommentId(req.body.id)
+        const comment = await commentsRepository.findCommentId(req.body.id) //!!!
         if (comment) {
             const id = req.params.id;
             const content = req.body.content;
             const result = await commentsService.updateComment(id, content);
             if (result) {
                 res.sendStatus(204)
-                return;
+                return
             }
             res.sendStatus(404)
             return

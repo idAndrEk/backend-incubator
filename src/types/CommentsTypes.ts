@@ -5,7 +5,10 @@ export type CommentResponseType = {
     userId: string
     userLogin: string
     addedAt: string
+    // postId: string
 }
+
+// ADD DB TYPE + POSTID
 
 export type CommentPayloadType = Omit<CommentResponseType, 'id'>
 

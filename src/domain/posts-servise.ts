@@ -1,8 +1,6 @@
 import {postsRepositories} from "../repositories/posts-db-repository";
-import {postCollection} from "../repositories/db";
-import {ObjectId} from "mongodb";
 import {PostPayloadType, PostResponseType} from "../types/postsTypes";
-import {BloggerPayloadType, PaginationType} from "../types/bloggersTypes";
+import {PaginationType} from "../types/bloggersTypes";
 import {bloggersRepository} from "../repositories/bloggers-db-repository";
 
 export const postsServise = {
