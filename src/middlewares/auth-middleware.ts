@@ -28,8 +28,7 @@ export const checkIdParamMiddleware = (req: Request, res: Response, next: NextFu
 
 export const authMiddlewareUser = async (req: Request, res: Response, next: NextFunction) => {
     if (!req.headers.authorization) {
-        // res.send(401)
-        res.send(403)
+        res.send(401)
         return
     }
     // Bearer adrgethtrhrthstrhsrth
