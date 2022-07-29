@@ -52,6 +52,13 @@ commentsRouter.delete('/:id',
     checkIdParamMiddleware,
     authMiddlewareUser,
     async (req: Request<{ id: string }>, res: Response) => {
+        const commentToDelet = await commentsService.findCommentId(req.params.id)
+        if (!commentToDelet) {
+            return res.sendStatus(404)
+        }
+        if (commentToDelet.userId != req.user?.id) {
+            res.sendStatus(403)
+        }
         const deleteCommentId = await commentsService.deleteComment(req.params.id)
         if (deleteCommentId) {
             res.sendStatus(204)

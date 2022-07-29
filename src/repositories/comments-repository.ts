@@ -14,7 +14,7 @@ export const commentsRepository = {
             content: comment.content,
             userId: comment.userId,
             userLogin: comment.userLogin,
-            addedAt: new Date().toString(),
+            addedAt: new Date(),
         }
     },
 

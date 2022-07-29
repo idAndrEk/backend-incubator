@@ -4,7 +4,7 @@ export type CommentResponseType = {
     content: string
     userId: string
     userLogin: string
-    addedAt: string
+    addedAt: Date
     // postId: string
 }
 
