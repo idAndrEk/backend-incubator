@@ -99,11 +99,11 @@ export const postsRepositories = {
             pageSize: pageSize,
             totalCount: allCommentCount,
             items: comment.map(comment => ({
-                id: comment._id.toString(),
                 content: comment.content,
                 userId: comment.userId,
                 userLogin: comment.userLogin,
-                addedAt: comment.addedAt
+                addedAt: comment.addedAt,
+                id: comment._id.toString()
             }))
         }
     }
