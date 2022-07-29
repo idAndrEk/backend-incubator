@@ -28,6 +28,12 @@ commentsRouter.put('/:id',
     allValidation,
     async (req: Request<{ id: string }>, res: Response) => {
         const comment = await commentsRepository.findCommentId(req.body.id) //!!!
+        if (!comment) {
+            return res.sendStatus(404)
+        }
+        if (comment.userId != req.user?.id) {
+            res.sendStatus(403)
+        }
         if (comment) {
             const id = req.params.id;
             const content = req.body.content;
@@ -42,7 +48,7 @@ commentsRouter.put('/:id',
         const errors = [];
         errors.push({message: 'Error commentId', field: 'commentId'})
         if (errors.length) {
-            res.status(403).json({
+            res.status(404).json({
                 errorsMessages: errors
             })
         }
@@ -52,11 +58,11 @@ commentsRouter.delete('/:id',
     checkIdParamMiddleware,
     authMiddlewareUser,
     async (req: Request<{ id: string }>, res: Response) => {
-        const commentToDelet = await commentsService.findCommentId(req.params.id)
-        if (!commentToDelet) {
+        const commentToDelete = await commentsService.findCommentId(req.params.id)
+        if (!commentToDelete) {
             return res.sendStatus(404)
         }
-        if (commentToDelet.userId != req.user?.id) {
+        if (commentToDelete.userId != req.user?.id) {
             res.sendStatus(403)
         }
         const deleteCommentId = await commentsService.deleteComment(req.params.id)
