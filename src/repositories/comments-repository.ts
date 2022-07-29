@@ -23,7 +23,6 @@ export const commentsRepository = {
             content,
             userId,
             userLogin,
-            addedAt
         } = newComment
         const result = await commentCollection.insertOne(newComment);
         if (!result.acknowledged) {
@@ -33,7 +32,7 @@ export const commentsRepository = {
             content,
             userId,
             userLogin,
-            addedAt,
+            addedAt: new Date().toString(),
             id: result.insertedId.toString()
         }
     },
