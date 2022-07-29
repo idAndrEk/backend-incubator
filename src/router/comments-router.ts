@@ -42,7 +42,7 @@ commentsRouter.put('/:id',
         const errors = [];
         errors.push({message: 'Error commentId', field: 'commentId'})
         if (errors.length) {
-            res.status(400).json({
+            res.status(403).json({
                 errorsMessages: errors
             })
         }
