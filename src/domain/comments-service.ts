@@ -8,13 +8,13 @@ export const commentsService = {
         return await commentsRepository.findCommentId(id)
     },
 
-    async createComment(content: string, userId: string, userLogin: string) {
+    async createComment(content: string, userId: string, userLogin: string, postId: string) {
         const newComment = {
             content: content,
             userId: userId,
             userLogin: userLogin,
             addedAt: new Date().toString(),
-            // postId: postId
+            postId: postId
         }
         const createComment = await commentsRepository.creteComment(newComment)
         if (createComment) {

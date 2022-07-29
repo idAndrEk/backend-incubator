@@ -136,7 +136,7 @@ postsRouter.post('/:id/comments',
         const userId = req.user?.id as string;
         const post = await postsRepositories.findPostsId(postId);
         if (post) {
-            const newCommentPost = await commentsService.createComment(content, userId, userLogin)
+            const newCommentPost = await commentsService.createComment(content, userId, userLogin, postId)
             res.status(201).send(newCommentPost)
         } else {
             const errors = [];

@@ -1,4 +1,4 @@
-import {CommentPayloadType, CommentResponseType} from "../types/CommentsTypes";
+import {CommentPayloadType, CommentResponseDBType, CommentResponseType} from "../types/CommentsTypes";
 import {commentCollection} from "./db";
 import {ObjectId} from "mongodb";
 
@@ -23,7 +23,6 @@ export const commentsRepository = {
             content,
             userId,
             userLogin
-            // postId
         } = newComment
         const result = await commentCollection.insertOne(newComment);
         if (!result.acknowledged) {
@@ -35,7 +34,6 @@ export const commentsRepository = {
             userLogin,
             addedAt: new Date().toString(),
             id: result.insertedId.toString()
-            // postId
         }
     },
 
