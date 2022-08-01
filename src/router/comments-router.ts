@@ -30,9 +30,11 @@ commentsRouter.put('/:id',
         const commentToUpdate = await commentsService.findCommentId(req.params.id)
         if (commentToUpdate!.userId != req.user?.id) {
             res.sendStatus(403)
+            return
         }
-        const comment = await commentsService.findCommentId(req.body.id)
+        const comment = await commentsService.findCommentId(req.params.id)
         if (comment) {
+            console.log(comment)
             const id = req.params.id;
             const content = req.body.content;
             const result = await commentsService.updateComment(id, content);
@@ -59,13 +61,13 @@ commentsRouter.delete('/:id',
         const commentToDelete = await commentsService.findCommentId(req.params.id)
         if (commentToDelete!.userId != req.user?.id) {
             res.sendStatus(403)
+            return
+        }
+        const deleteCommentId = await commentsService.deleteComment(req.params.id)
+        if (deleteCommentId) {
+            res.sendStatus(204)
         } else {
-            const deleteCommentId = await commentsService.deleteComment(req.params.id)
-            if (deleteCommentId) {
-                res.sendStatus(204)
-            } else {
-                res.sendStatus(404)
-            }
+            res.sendStatus(404)
         }
     })
 
