@@ -32,6 +32,13 @@ authRouter.post('/login',
 
 
 
+
+// authRouter.post('/registration',
+//     async (req: Request, res: Response) => {
+//     const user = await authSevice.createUser(req.body.login, req.body.password)
+//         res.status(201)
+//         return
+//     })
 // authRouter.post('/registration',
 //     async (req: Request, res: Response) => {
 //     const user = await authSevice.createUser(req.body.login, req.body.password)
