@@ -1,4 +1,5 @@
 import {
+    UserAccType,
     UserDBPayloadType,
     UserRepositoryResponseType,
     UserResponseType
@@ -9,58 +10,44 @@ import {ObjectId} from "mongodb";
 
 
 export const usersRepository = {
-    // async getCountDocument(): Promise<number> {
-    //   //  usersCollection.countDocuments()
-    // },
-    async getAllUsers(page: number, pageSize: number): Promise<PaginationType<UserResponseType> | null> {
+
+    async getAllUsers(page: number, pageSize: number)/*: Promise<PaginationType<UserResponseType> | null>*/ {
         const skip = (page - 1) * pageSize
-        let allPostsCount = await usersCollection.countDocuments()
-        let pagesCount = allPostsCount / pageSize
+        let allCount = await usersCollection.countDocuments({})
         let users = await usersCollection
             .find({})
-            // .project<UserResponseType>({_id: 0})
             .skip(skip)
             .limit(pageSize)
+            .map(users => {
+                return {id: users._id.toString(), login: users.accountData.userName}
+            })
             .toArray()    //User
-        let allCount = await usersCollection.count({})
-        return {
-            pagesCount: Math.ceil(pagesCount),
-            page: page,
-            pageSize: pageSize,
-            totalCount: allCount,
-            // items: users
-            items: users.map(users => ({
-                id: users._id.toString(),
-                login: users.login
-            }))
-        }
+        return [users, allCount]
     },
 
     async findUserById(id: string): Promise<UserRepositoryResponseType | null> {
         const user = await usersCollection.findOne({_id: new ObjectId(id)})
-        // const user = await usersCollection.findOne({_id: id})
         if (!user) {
             return null
         }
         return {
             id: user._id.toString(),
-            login: user.login,
-            passwordHash: user.passwordHash
+            login: user.accountData.userName,
+            passwordHash: user.accountData.passwordHash,
+            email: user.accountData.email
         }
     },
 
-    async createUser(newUser: UserDBPayloadType): Promise<UserResponseType | null> { //!!!
-        const { login, passwordHash } = newUser
-        const createdUser = await usersCollection.insertOne(newUser)
-        if (!createdUser.acknowledged) {
-            return null
-        }
-        return {
-            // id: newUser.id,
-            id: createdUser.insertedId.toString(),
-            login,
-            // passwordHash
-        }
+    async createUser(newUser: UserAccType)/*Promise<UserAccType | null>*/ {
+        // const { login, email/*, passwordHash*/ } = newUser
+        return await usersCollection.insertOne(newUser)
+        // if (!createdUser.acknowledged) {
+        //     return null
+        // }
+        // return {
+        //     id: createdUser.insertedId.toString(),
+        //     login,
+        // }
     },
 
     async deleteUserById(id: string): Promise<boolean> {
@@ -75,9 +62,10 @@ export const usersRepository = {
         }
 
         return {
-            login: user.login,
+            login: user.accountData.userName,
             id: user._id.toString(),
-            passwordHash: user.passwordHash
+            passwordHash: user.accountData.passwordHash,
+            email: user.accountData.email
         }
     }
 }

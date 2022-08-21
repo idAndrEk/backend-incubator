@@ -8,6 +8,7 @@ import {runDb} from "./repositories/db";
 import {authRouter} from "./router/auth-router";
 import {commentsRouter} from "./router/comments-router";
 import {testingRouter} from "./router/testing-router";
+
 const app = express()
 
 app.use(cors())

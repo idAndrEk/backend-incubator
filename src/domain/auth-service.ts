@@ -1,6 +1,10 @@
 import bcrypt from "bcrypt";
-import {UserDBPayloadType, UserResponseType} from "../types/UsersTypes";
+import {UserResponseType} from "../types/UsersTypes";
 import {usersRepository} from "../repositories/users-repository";
+import add from 'date-fns/add';
+import {v4 as uuidv4} from 'uuid'
+import {ObjectId} from "mongodb";
+import {emailsManager} from "../mail/emailsManager";
 
 export const authService = {
 
@@ -18,10 +22,13 @@ export const authService = {
         if (result) {
             return {
                 id: user.id,
-                login: user.login
+                login: user.login,
+                email: user.email
             }
         }
         return null
-    }
+    },
+
+
 }
 

@@ -2,6 +2,7 @@ import {promises} from "dns";
 import {bloggersCollection, postCollection} from "./db";
 import {Filter, ObjectId} from "mongodb";
 import {BloggerPayloadType, BloggersResponseType, PaginationType} from "../types/bloggersTypes";
+import {PostResponseType} from "../types/postsTypes";
 
 export const bloggersRepository = {
 
@@ -73,7 +74,7 @@ export const bloggersRepository = {
         return result.deletedCount === 1
     },
 
-    async findBloggerPosts(bloggerId: string | null, page: number, pageSize: number): Promise<any> {
+    async findBloggerPosts(bloggerId: string | null, page: number, pageSize: number): Promise<PaginationType<PostResponseType>> {
         let filter = {}
         if (bloggerId) {
             filter = {bloggerId}

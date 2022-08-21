@@ -30,7 +30,7 @@ usersRouter.post('/',
     userValidation,
     allValidation,
     async (req: Request, res: Response) => {
-        const user = await usersService.createUser(req.body.login, req.body.password)
+        const user = await usersService.createUser(req.body.login, req.body.password, req.body.email)
         if (user) {
             // const token = await jwtService.createJWT(user)
             res.status(201).send(user)
