@@ -6,7 +6,7 @@ import {CommentPayloadType} from "../types/CommentsTypes";
 import {UserAccType} from "../types/UsersTypes";
 
 const mongoUri = envSetting.MongoURI
-console.log(mongoUri)
+// console.log(mongoUri)
 
 const client = new MongoClient(mongoUri);
 export const db = client.db("home-bloggers");

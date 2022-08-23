@@ -1,4 +1,3 @@
-
 import nodemailer from 'nodemailer';
 
 export const emailsManager = {
@@ -10,14 +9,17 @@ export const emailsManager = {
                 pass: 'wxrizdtexhlcstlz'
             },
         });
-       const result = await transporter.sendMail({
+        const result = await transporter.sendMail({
             from: 'Andrey',
             to: email,
             subject: 'Account verified',
-            text: code
+            html: `<a href='https://somesite.com/confirm-email?code=${code}'>Ссылка</a>`
+            // text: code
         })
-        console.log(result.response) // if 250 => OK
-        return (result.response).split(' ')[0]
+        if (250) {
+            console.log(result.response) // if 250 => OK
+            return (result.response).split(' ')[0]
+        }
     }
 }
 

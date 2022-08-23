@@ -13,7 +13,7 @@ export const bloggersRepository = {
             filter = {name: {$regex: `.*${name}.*`}}
         }
         const skip = (page - 1) * pageSize
-        let allBloggersCount = await bloggersCollection.count(filter)
+        let allBloggersCount = await bloggersCollection.countDocuments(filter)
         let pagesCount = allBloggersCount / pageSize
         let bloggers = await bloggersCollection.find(filter).skip(skip).limit(pageSize).toArray()
         return {
@@ -24,7 +24,6 @@ export const bloggersRepository = {
             items: bloggers.map(blogger => ({
                 youtubeUrl: blogger.youtubeUrl,
                 id: blogger._id.toString(),
-                //id: blogger._id,
                 name: blogger.name
             }))
         }
@@ -100,36 +99,5 @@ export const bloggersRepository = {
     }
 }
 
-// async function getQuery() {
-//     let query = await db.collection.find({}).skip(5).limit(5);
-//     let countTotal = await query.count()
-//     let countWithConstraints = await query.count(true)
-//     return { query, countTotal }
-// }
-//
-// const page = parseInt(req.query.page);
-// const userService = new userService();
-// const users = await userService.getAll(page);
-// getAll(page = 1) {
-//     const PAGE_SIZE = 20;
-//     const skip = (page - 1) * PAGE_SIZE;
-//     return UsersModel.aggregate([
-//         { $match: {} },
-//         { $skip: (page - 1) * PAGE_SIZE },
-//         { $limit: PAGE_SIZE },
-//     ])
-// }
 
 
-// async allBloggers(page: number, pageSize: number, filter: object, idBlogger?: object): Promise<any> {
-//     let idBloggerObj = {
-//         projection: {
-//             _id: false,
-//             ...idBlogger
-//         }
-//     }
-//     const skip = (page - 1) * pageSize
-//     let allBloggers = await bloggersCollection.find({}).toArray()
-//     let pagesCount = allBloggers.length / pageSize
-//     let bloggers = await bloggersCollection.find(filter, idBloggerObj).skip(skip).limit(pageSize).toArray()
-//     let allCount = await bloggersCollection.count({})

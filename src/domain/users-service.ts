@@ -8,9 +8,9 @@ import {emailsManager} from "../mail/emailsManager";
 
 export const usersService = {
 
-    async getAllUsers(page: number, pageSize: number)/*: Promise<PaginationType<UserResponseType> | null> */ {
+    async getAllUsers(page: number, pageSize: number)/*: Promise<PaginationType<UserResponseType> | null>*/ {
         const usersData = await usersRepository.getAllUsers(page, pageSize)
-        // console.log(usersData)
+        console.log(usersData)
         return {
             "pagesCount": Math.ceil(Number(usersData[1]) / pageSize),
             "page": page,
@@ -21,22 +21,20 @@ export const usersService = {
     },
 
     async findUserById(id: string): Promise<UserResponseType | null> {
-        const result = await usersRepository.findUserById(id)
-        if (!result) {
+        const userById = await usersRepository.findUserById(id)
+        if (!userById) {
             return null
         }
-
         return {
-            id: result.id,
-            login: result.login,
-            email: result.email
+            id: userById._id.toString(),
+            login: userById.accountData.userName,
+            email: userById.accountData.email
         }
     },
 
     async createUser(login: string, email: string, password: string)/*: Promise<UserAccType | null> */ {
         const passwordHash = await authService._generateHash(password)
         const user: UserAccType = {
-            // _id: new ObjectId(),
             _id: new ObjectId(),
             accountData: {
                 userName: login,
@@ -50,8 +48,9 @@ export const usersService = {
                 isConfirmed: false
             }
         }
+        const createResult = await usersRepository.createUser(user)
         try {
-            const createResult = await usersRepository.createUser(user)
+            // console.log(user)
             if (createResult.acknowledged) {
                 return await emailsManager.sendEmailConfirmationMessage(user.emailConfirmation.confirmationCode, user.accountData.email)
             } else {
@@ -62,19 +61,6 @@ export const usersService = {
             return false
         }
     },
-
-    // async createUser(login: string, password: string): Promise<UserResponseType | null> {
-    //     const passwordHash = await authService._generateHash(password)
-    //     const newUser: UserDBPayloadType = {
-    //         login,
-    //         passwordHash
-    //     }
-    //     const createdUser = await usersRepository.createUser(newUser)
-    //     if (createdUser) {
-    //         return createdUser
-    //     }
-    //     return null
-    // },
 
     async deleteUserById(id: string): Promise<boolean> {
         return await usersRepository.deleteUserById(id)

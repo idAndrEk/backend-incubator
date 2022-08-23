@@ -1,10 +1,7 @@
 import bcrypt from "bcrypt";
-import {UserResponseType} from "../types/UsersTypes";
 import {usersRepository} from "../repositories/users-repository";
-import add from 'date-fns/add';
-import {v4 as uuidv4} from 'uuid'
-import {ObjectId} from "mongodb";
-import {emailsManager} from "../mail/emailsManager";
+import {UserResponseType} from "../types/UsersTypes";
+
 
 export const authService = {
 
@@ -13,22 +10,25 @@ export const authService = {
         return hash
     },
 
-    async checkCredentials(login: string, password: string): Promise<UserResponseType | null> {
+    async checkCredentials(login: string, password: string)/*: Promise<UserResponseType | null> */{
         const user = await usersRepository.findUserByLogin(login) // LOGIN
         if (!user) {
             return null
         }
-        const result: boolean = await bcrypt.compare(password, user.passwordHash)
+        const result: boolean = await bcrypt.compare(password, user.accountData.passwordHash)
         if (result) {
-            return {
-                id: user.id,
-                login: user.login,
-                email: user.email
-            }
+            return user
         }
-        return null
     },
 
-
+    async confirmEmail(code: string): Promise<boolean> {
+        const user = await usersRepository.findUserByConfirmationCode(code)
+        if (!user) return false
+        if (user.emailConfirmation.isConfirmed) return false;
+        if (user.emailConfirmation.confirmationCode !== code) return false;
+        if (user.emailConfirmation.expirationDate > new Date()) return false;
+        let result = await usersRepository.updateConfirmation(user._id)
+        return result
+    }
 }
 

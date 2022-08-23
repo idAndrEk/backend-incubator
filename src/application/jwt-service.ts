@@ -1,12 +1,11 @@
 import jwt, {Jwt, JwtPayload} from 'jsonwebtoken'
 import {envSetting} from "../env_setting";
-import {UserResponseType} from '../types/UsersTypes'
+import {UserAccType, UserResponseType} from '../types/UsersTypes'
 import {ObjectId} from "mongodb";
 
-
 export const jwtService = {
-    async createJWT(user: UserResponseType) {
-        const token = jwt.sign({userId: user.id}, envSetting.JWT_SECRET, {expiresIn: '1h'}) //!!!!!!
+    async createJWT(user: UserAccType) {
+        const token = jwt.sign({userId: user._id}, envSetting.JWT_SECRET, {expiresIn: '1h'}) //!!!!!!
         return token
     },
     async getUserIdByToken(token: string) {
