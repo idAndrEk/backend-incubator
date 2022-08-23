@@ -3,6 +3,8 @@ import {Router} from "express";
 import {Request, Response} from "express";
 import {authService} from "../domain/auth-service";
 import {usersService} from "../domain/users-service";
+import {userValidation} from "../middlewares/User-validation";
+import {allValidation} from "../middlewares/Validation";
 
 export const authRouter = Router({})
 
@@ -19,6 +21,8 @@ authRouter.post('/login',
     })
 
 authRouter.post('/registration',
+    userValidation,
+    allValidation,
     async (req: Request, res: Response) => {
         //if(findByLoginOrEmail) && if(findUserByLogin)
         const user = await usersService.createUser(req.body.login, req.body.email, req.body.password)

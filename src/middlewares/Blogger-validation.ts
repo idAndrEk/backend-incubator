@@ -2,7 +2,6 @@ import {body} from "express-validator";
 
 export const BloggerValidation = [
     body('name')
-        // .exists({checkFalsy: true})
         .notEmpty()
         .isString()
         .trim()
@@ -13,7 +12,6 @@ export const BloggerValidation = [
         .isString()
         .trim()
         .isLength({max: 100, min: 1})
-        // .isURL()
         .matches('^https:\/\/([a-zA-Z0-9_-]+\.)+[a-zA-Z0-9_-]+(\/[a-zA-Z0-9_-]+)*\/?$')
         .withMessage('Error youtubeUrl')
     ]

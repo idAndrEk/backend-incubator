@@ -13,8 +13,7 @@ export const emailsManager = {
             from: 'Andrey',
             to: email,
             subject: 'Account verified',
-            html: `<a href='https://somesite.com/confirm-email?code=${code}'>Ссылка</a>`
-            // text: code
+            text: code
         })
         if (250) {
             console.log(result.response) // if 250 => OK
