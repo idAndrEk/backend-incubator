@@ -14,6 +14,20 @@ const app = express()
 app.use(cors())
 app.use(bodyParser.json())
 
+// IP херуку заменен
+app.set('trust proxy', true) //req.ip будет актуальный адрес
+
+/*
+Enabling trust proxy
+app.enable('trust proxy')
+
+// Defining an Endpoint
+app.get('/api', function (req, res) {
+   console.log("IP : ", req.ip);
+   res.send(req.ip);
+});
+*/
+
 const port = process.env.PORT || 5000
 
 app.use('/bloggers', bloggersRouter)
@@ -31,3 +45,7 @@ const startApp = async () => {
 }
 
 startApp()
+
+
+
+

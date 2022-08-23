@@ -3,7 +3,12 @@ import {Router} from "express";
 import {Request, Response} from "express";
 import {authService} from "../domain/auth-service";
 import {usersService} from "../domain/users-service";
-import {userValidation} from "../middlewares/User-validation";
+import {
+    userValidationCode,
+    userValidationEmail,
+    userValidationLogin,
+    userValidationPassword
+} from "../middlewares/User-validation";
 import {allValidation} from "../middlewares/Validation";
 import {usersRepository} from "../repositories/users-repository";
 
@@ -22,11 +27,13 @@ authRouter.post('/login',
     })
 
 authRouter.post('/registration',
-    userValidation,
+    userValidationLogin,
+    userValidationPassword,
+    userValidationEmail,
     allValidation,
     async (req: Request, res: Response) => {
         const userLogin = await usersRepository.findByLogin(req.body.login)
-        const userEmail = await usersRepository.findOrEmail(req.body.email)
+        const userEmail = await usersRepository.findByEmail(req.body.email)
         if (userLogin) {
             return res.status(400).send({errorsMessages: [{message: "USER", field: "login"}]})
         }
@@ -34,7 +41,9 @@ authRouter.post('/registration',
             return res.status(400).send({errorsMessages: [{message: "EMAIL", field: "login"}]})
         }
         const user = await usersService.createUser(req.body.login, req.body.email, req.body.password)
-        if (user === '250') {
+        // console.log(user)
+        if (user) {
+        // if (user === '250') {
             res.sendStatus(204)
             return
         } else {
@@ -43,23 +52,31 @@ authRouter.post('/registration',
         }
     })
 
-authRouter.post('/confirm-email',
+authRouter.post('/registration-confirmation',
+    userValidationCode,
+    allValidation,
     async (req: Request, res: Response) => {
         const result = await authService.confirmEmail(req.body.code)
         if (result) {
-            res.sendStatus(201)
+            res.sendStatus(204)
         } else {
             res.sendStatus(400)
         }
     })
 
-authRouter.post('/resend-registration-code',
+authRouter.post('/registration-email-resending',
+    userValidationEmail,
+    allValidation,
     async (req: Request, res: Response) => {
-        const result = await authService.confirmEmail(req.body.code)
+        const result = await usersService.findUserByEmail(req.body.email)
+        if (result) {
+            res.sendStatus(204)
+        } else {
+            res.sendStatus(400)
+        }
     })
 
 
-// VALIDATER ID ROUTER    FOR OBJECTID      COUNT      LENGTH     !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 
 

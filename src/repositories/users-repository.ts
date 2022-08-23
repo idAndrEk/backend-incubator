@@ -15,36 +15,16 @@ export const usersRepository = {
             .map(users => {
                 return {id: users._id.toString(), login: users.accountData.userName}
             })
-            .toArray()    //User
+            .toArray()
         return [users, allCount]
     },
 
     async findUserById(id: string): Promise<UserAccType | null> {
         return await usersCollection.findOne({_id: new ObjectId(id)})
-        // const user = await usersCollection.findOne({_id: new ObjectId(id)})
-        // if (!user) {
-        //     return null
-        // }
-        // console.log(user)
-        // return {
-        //     id: user._id.toString(),
-        //     login: user.accountData.userName,
-        //     // passwordHash: user.accountData.passwordHash,
-        //     email: user.accountData.email
-        // }
     },
 
     async createUser(newUser: UserAccType) {
         return await usersCollection.insertOne(newUser)
-        // const { login, email/*, passwordHash*/ } = newUser
-        // return await usersCollection.insertOne(newUser)
-        // if (!createdUser.acknowledged) {
-        //     return null
-        // }
-        // return {
-        //     id: createdUser.insertedId.toString(),
-        //     login,
-        // }
     },
 
     async deleteUserById(id: string): Promise<boolean> {
@@ -56,23 +36,22 @@ export const usersRepository = {
         return await usersCollection.findOne({login})
     },
 
-    async findByLogin(byLogin: string): Promise<UserAccType | null> {
-        return await usersCollection.findOne({$or: [{'accountData.userName': byLogin}]})
+    async findByLogin(login: string): Promise<UserAccType | null> {
+        return await usersCollection.findOne({'accountData.userName': login})
     },
 
-    async findOrEmail(byEmail: string) {
-        return  await usersCollection.findOne({$or: [{'accountData.email': byEmail}]})
-        // return await usersCollection.findOne({$or: [{'accountData.email': loginOrEmail}, {'accountData.userName': loginOrEmail}]})
+    async findByEmail(email: string) {
+        return await usersCollection.findOne({'accountData.email': email})
     },
 
     async findUserByConfirmationCode(emailConfirmationCode: string) {
         const user = await usersCollection.findOne({'emailConfirmation.confirmationCode': emailConfirmationCode})
+        // console.log("findUserByConfirmationCode", user)
         return user
     },
 
     async updateConfirmation(_id: ObjectId) {
-        const result = await usersCollection
-            .updateOne({_id}, {$set: {'emailConfirmation.isConfirmed': true}})
+        const result = await usersCollection.updateOne({_id}, {$set: {'emailConfirmation.isConfirmed': true}})
         return result.modifiedCount === 1
     }
 }

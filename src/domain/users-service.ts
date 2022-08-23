@@ -50,7 +50,7 @@ export const usersService = {
         }
         const createResult = await usersRepository.createUser(user)
         try {
-            // console.log(user)
+            console.log(user)
             if (createResult.acknowledged) {
                 return await emailsManager.sendEmailConfirmationMessage(user.emailConfirmation.confirmationCode, user.accountData.email)
             } else {
@@ -64,7 +64,11 @@ export const usersService = {
 
     async deleteUserById(id: string): Promise<boolean> {
         return await usersRepository.deleteUserById(id)
-    }
+    },
+
+    async findUserByEmail(email: string): Promise<UserAccType | null> {
+        return await usersRepository.findByEmail(email)
+    },
 }
 
 

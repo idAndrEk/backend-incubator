@@ -1,6 +1,5 @@
 import bcrypt from "bcrypt";
 import {usersRepository} from "../repositories/users-repository";
-import {UserResponseType} from "../types/UsersTypes";
 
 
 export const authService = {
@@ -24,11 +23,11 @@ export const authService = {
     async confirmEmail(code: string): Promise<boolean> {
         const user = await usersRepository.findUserByConfirmationCode(code)
         if (!user) return false
-        if (user.emailConfirmation.isConfirmed) return false;
-        if (user.emailConfirmation.confirmationCode !== code) return false;
-        if (user.emailConfirmation.expirationDate > new Date()) return false;
-        let result = await usersRepository.updateConfirmation(user._id)
-        return result
+        if (user.emailConfirmation.expirationDate > new Date()) return false; //????!!!! < || >   Date??? date-fns/add DATE сравнение
+        const isConfirmed = await usersRepository.updateConfirmation(user?._id)//
+        if (!isConfirmed) return false
+        // if (user.emailConfirmation.confirmationCode !== code) return false;
+        return isConfirmed
     }
 }
 
