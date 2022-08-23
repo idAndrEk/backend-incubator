@@ -52,24 +52,17 @@ export const usersRepository = {
         return result.deletedCount === 1
     },
 
-    async findUserByLogin(login: string): Promise<UserAccType | null> { //!!!!!!!!!!!!
+    async findUserByLogin(login: string): Promise<UserAccType | null> {
         return await usersCollection.findOne({login})
-        //     const user = await usersCollection.findOne({login})
-        //     if (!user) {
-        //         return null
-        //     }
-        //
-        //     return {
-        //         login: user.accountData.userName,
-        //         id: user._id.toString(),
-        //         passwordHash: user.accountData.passwordHash,
-        //         email: user.accountData.email
-        //     }
     },
 
-    async findByLoginOrEmail(loginOrEmail: string) {
-        const user = await usersCollection.findOne({$or: [{'accountDate.email': loginOrEmail}, {'accoutData.userName': loginOrEmail}]})
-        return user
+    async findByLogin(byLogin: string): Promise<UserAccType | null> {
+        return await usersCollection.findOne({$or: [{'accountData.userName': byLogin}]})
+    },
+
+    async findOrEmail(byEmail: string) {
+        return  await usersCollection.findOne({$or: [{'accountData.email': byEmail}]})
+        // return await usersCollection.findOne({$or: [{'accountData.email': loginOrEmail}, {'accountData.userName': loginOrEmail}]})
     },
 
     async findUserByConfirmationCode(emailConfirmationCode: string) {

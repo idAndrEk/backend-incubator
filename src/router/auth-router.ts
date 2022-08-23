@@ -5,6 +5,7 @@ import {authService} from "../domain/auth-service";
 import {usersService} from "../domain/users-service";
 import {userValidation} from "../middlewares/User-validation";
 import {allValidation} from "../middlewares/Validation";
+import {usersRepository} from "../repositories/users-repository";
 
 export const authRouter = Router({})
 
@@ -24,7 +25,14 @@ authRouter.post('/registration',
     userValidation,
     allValidation,
     async (req: Request, res: Response) => {
-        //if(findByLoginOrEmail) && if(findUserByLogin)
+        const userLogin = await usersRepository.findByLogin(req.body.login)
+        const userEmail = await usersRepository.findOrEmail(req.body.email)
+        if (userLogin) {
+            return res.status(400).send({errorsMessages: [{message: "USER", field: "login"}]})
+        }
+        if (userEmail) {
+            return res.status(400).send({errorsMessages: [{message: "EMAIL", field: "login"}]})
+        }
         const user = await usersService.createUser(req.body.login, req.body.email, req.body.password)
         if (user === '250') {
             res.sendStatus(204)
