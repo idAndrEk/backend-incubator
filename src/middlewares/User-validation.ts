@@ -8,6 +8,7 @@ export const userValidation = [
         .isLength({max: 20, min: 6})
         .isString(),
     body('email')
+        .trim()
         .isString()
         .matches('^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$')
 ]
