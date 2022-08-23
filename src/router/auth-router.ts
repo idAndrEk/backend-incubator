@@ -35,7 +35,7 @@ authRouter.post('/confirm-email',
     async (req: Request, res: Response) => {
         const result = await authService.confirmEmail(req.body.code)
         if (result) {
-            res.sendStatus(201)
+            res.sendStatus(204)
         } else {
             res.sendStatus(400)
         }
