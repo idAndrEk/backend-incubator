@@ -17,7 +17,7 @@ export const authRouter = Router({})
 authRouter.post('/login',
     async (req: Request, res: Response) => {
         const user = await authService.checkCredentials(req.body.login, req.body.password)
-        console.log(user)
+        // console.log(user)
         if (user) {
             const token = await jwtService.createJWT(user)
             res.status(200).send({token})
@@ -38,10 +38,10 @@ authRouter.post('/registration',
             return res.status(400).send({errorsMessages: [{message: "USER", field: "login"}]})
         }
         if (userEmail) {
-            return res.status(400).send({errorsMessages: [{message: "EMAIL", field: "login"}]})
+            return res.status(400).send({errorsMessages: [{message: "EMAIL", field: "email"}]})
         }
         const user = await usersService.createUser(req.body.login, req.body.email, req.body.password)
-        // console.log(user)
+        // console.log('registration', user)
         if (user) {
         // if (user === '250') {
             res.sendStatus(204)

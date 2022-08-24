@@ -33,7 +33,7 @@ export const usersRepository = {
     },
 
     async findUserByLogin(login: string): Promise<UserAccType | null> {
-        return await usersCollection.findOne({login})
+        return await usersCollection.findOne({'accountData.userName': login})
     },
 
     async findByLogin(login: string): Promise<UserAccType | null> {

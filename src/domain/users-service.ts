@@ -10,7 +10,7 @@ export const usersService = {
 
     async getAllUsers(page: number, pageSize: number)/*: Promise<PaginationType<UserResponseType> | null>*/ {
         const usersData = await usersRepository.getAllUsers(page, pageSize)
-        console.log(usersData)
+        // console.log('getAllUsers',usersData)
         return {
             "pagesCount": Math.ceil(Number(usersData[1]) / pageSize),
             "page": page,
@@ -50,7 +50,7 @@ export const usersService = {
         }
         const createResult = await usersRepository.createUser(user)
         try {
-            console.log(user)
+            // console.log('createUser', user)
             if (createResult.acknowledged) {
                 return await emailsManager.sendEmailConfirmationMessage(user.emailConfirmation.confirmationCode, user.accountData.email)
             } else {

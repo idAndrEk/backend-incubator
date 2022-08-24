@@ -9,15 +9,12 @@ export const authService = {
         return hash
     },
 
-    async checkCredentials(login: string, password: string)/*: Promise<UserResponseType | null> */{
+    async checkCredentials(login: string, password: string)/*: Promise<UserResponseType | null> */ {
         const user = await usersRepository.findUserByLogin(login) // LOGIN
-        if (!user) {
-            return null
-        }
+        console.log('checkCredentials', user)
+        if (!user) return null
         const result: boolean = await bcrypt.compare(password, user.accountData.passwordHash)
-        if (result) {
-            return user
-        }
+        if (result) return user
     },
 
     async confirmEmail(code: string): Promise<boolean> {
