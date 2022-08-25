@@ -32,10 +32,6 @@ export const usersRepository = {
         return result.deletedCount === 1
     },
 
-    async findUserByLogin(login: string): Promise<UserAccType | null> {
-        return await usersCollection.findOne({'accountData.userName': login})
-    },
-
     async findByLogin(login: string): Promise<UserAccType | null> {
         return await usersCollection.findOne({'accountData.userName': login})
     },
@@ -53,5 +49,15 @@ export const usersRepository = {
     async updateConfirmation(_id: ObjectId) {
         const result = await usersCollection.updateOne({_id}, {$set: {'emailConfirmation.isConfirmed': true}})
         return result.modifiedCount === 1
+    },
+
+    async updateConfirmCode(user: UserAccType, confirmCode: string, expirationDate: Date) {
+        await usersCollection.findOneAndUpdate({_id: user._id},
+            {
+                $set: {
+                    "emailConfirmation.confirmationCode": confirmCode,
+                    "emailConfirmation.expirationDate": expirationDate
+                }
+            })
     }
 }

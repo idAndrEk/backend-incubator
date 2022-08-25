@@ -66,9 +66,13 @@ export const usersService = {
         return await usersRepository.deleteUserById(id)
     },
 
+    async findUserByLogin(login: string): Promise<UserAccType | null> {
+        return await usersRepository.findByLogin(login)
+    },
+
     async findUserByEmail(email: string): Promise<UserAccType | null> {
         return await usersRepository.findByEmail(email)
-    },
+    }
 }
 
 

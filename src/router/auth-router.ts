@@ -32,18 +32,18 @@ authRouter.post('/registration',
     userValidationEmail,
     allValidation,
     async (req: Request, res: Response) => {
-        const userLogin = await usersRepository.findByLogin(req.body.login)
+        const userLogin = await usersService.findUserByLogin(req.body.login)
         const userEmail = await usersRepository.findByEmail(req.body.email)
         if (userLogin) {
-            return res.status(400).send({errorsMessages: [{message: "USER", field: "login"}]})
+            return res.status(400).send({errorsMessages: [{message: "User already exists", field: "login"}]})
         }
         if (userEmail) {
-            return res.status(400).send({errorsMessages: [{message: "EMAIL", field: "email"}]})
+            return res.status(400).send({errorsMessages: [{message: "Mail already exists", field: "email"}]})
         }
         const user = await usersService.createUser(req.body.login, req.body.email, req.body.password)
         // console.log('registration', user)
         if (user) {
-        // if (user === '250') {
+            // if (user === '250') {
             res.sendStatus(204)
             return
         } else {
@@ -60,7 +60,7 @@ authRouter.post('/registration-confirmation',
         if (result) {
             res.sendStatus(204)
         } else {
-            res.sendStatus(400)
+            res.status(400).send({errorsMessages: [{message: "Invalid confirmation code", field: "code"}]})
         }
     })
 
@@ -68,12 +68,16 @@ authRouter.post('/registration-email-resending',
     userValidationEmail,
     allValidation,
     async (req: Request, res: Response) => {
-        const result = await usersService.findUserByEmail(req.body.email)
-        if (result) {
-            res.sendStatus(204)
-        } else {
-            res.sendStatus(400)
+        const user = await usersService.findUserByEmail(req.body.email)
+        if (!user) {
+            res.status(400).send({errorsMessages: [{message: "Mail does not exist", field: "email"}]})
+            return
         }
+        if (user.emailConfirmation.isConfirmed) {
+            res.status(400).send({errorsMessages: [{message: "User activated mail", field: "email"}]})
+        }
+        await authService.createNewConfirmCode(user)
+        res.sendStatus(204)
     })
 
 
