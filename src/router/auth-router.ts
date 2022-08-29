@@ -23,8 +23,10 @@ authRouter.post('/login',
         if (user) {
             const token = await jwtService.createJWT(user)
             res.status(200).send({token})
+            return
         } else {
             res.sendStatus(401)
+            return
         }
     })
 
@@ -44,7 +46,6 @@ authRouter.post('/registration',
             return res.status(400).send({errorsMessages: [{message: "Mail already exists", field: "email"}]})
         }
         const user = await usersService.createUser(req.body.login, req.body.email, req.body.password)
-        // console.log('registration', user)
         if (user) {
             // if (user === '250') {
             res.sendStatus(204)
