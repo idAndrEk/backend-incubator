@@ -31,11 +31,13 @@ export const authService = {
         return isConfirmed
     },
 
-    async createNewConfirmCode(user: UserAccType) {
-            const confirmCode = uuidv4()
-            const expirationDate = add(new Date(), {hours: 3})
-            await usersRepository.updateConfirmCode(user, confirmCode, expirationDate)
-            await emailsManager.sendEmailConfirmationMessage(confirmCode, user.accountData.email)
-        }
+    async confirmNewCode(user: UserAccType) {
+        const NewConfirmationCode = uuidv4()
+        const NewExpirationDate = add(new Date, {hours: 1})
+        await usersRepository.updateConfirmationCode(user, NewConfirmationCode, NewExpirationDate)
+        await emailsManager.sendEmailConfirmationMessage(NewConfirmationCode, user.accountData.email)
+    }
+
 }
+
 

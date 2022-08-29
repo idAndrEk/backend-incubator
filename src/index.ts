@@ -16,13 +16,6 @@ app.use(bodyParser.json())
 
 app.set('trust proxy', true) //req.ip будет актуальный адрес
 
-// // app.set('trust proxy', 'loopback')
-
-// app.set('trust proxy', (ip) => {
-//     if (ip === '127.0.0.1' || ip === '123.123.123.123') return true // trusted IPs
-//     else return false
-// })
-
 const port = process.env.PORT || 5000
 
 app.use('/bloggers', bloggersRouter)

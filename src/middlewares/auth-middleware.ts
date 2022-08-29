@@ -32,8 +32,8 @@ export const authMiddlewareUser = async (req: Request, res: Response, next: Next
     }
     const token = req.headers.authorization.split(' ')[1]
     const userId: any = await jwtService.getUserIdByToken(token);// ANY!!!
-    console.log(token)
-    console.log(userId)
+    // console.log(token)
+    // console.log(userId)
     if (userId) {
         const user = await usersService.findUserById(userId)
         req.user = user;
@@ -41,6 +41,14 @@ export const authMiddlewareUser = async (req: Request, res: Response, next: Next
     }
     res.sendStatus(401)
 }
+
+
+
+
+
+
+
+
 
 
 

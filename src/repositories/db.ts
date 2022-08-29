@@ -4,6 +4,7 @@ import {BloggerPayloadType} from "../types/bloggersTypes";
 import {PostPayloadType } from "../types/postsTypes";
 import {CommentPayloadType} from "../types/CommentsTypes";
 import {UserAccType} from "../types/UsersTypes";
+import {InputType} from "../types/InputType";
 
 const mongoUri = envSetting.MongoURI
 // console.log(mongoUri)
@@ -14,6 +15,7 @@ export const bloggersCollection = db.collection<BloggerPayloadType>("blogger");
 export const postCollection = db.collection<PostPayloadType>("post");
 export const commentCollection = db.collection<CommentPayloadType>("comment");
 export const usersCollection = db.collection<UserAccType>("user");
+export const requestIpData = db.collection<InputType>("InputType")
 
 export async function runDb() {
     try {

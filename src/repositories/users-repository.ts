@@ -51,13 +51,14 @@ export const usersRepository = {
         return result.modifiedCount === 1
     },
 
-    async updateConfirmCode(user: UserAccType, confirmCode: string, expirationDate: Date) {
-        await usersCollection.findOneAndUpdate({_id: user._id},
-            {
-                $set: {
-                    "emailConfirmation.confirmationCode": confirmCode,
-                    "emailConfirmation.expirationDate": expirationDate
-                }
-            })
+    async updateConfirmationCode(user: UserAccType, confirmationCode: string, expirationDate: Date) {
+        return await usersCollection.findOneAndUpdate({_id: user._id}, {
+            $set: {
+                'emailConfirmation.confirmationCode': confirmationCode,
+                'emailConfirmation.expirationDate': expirationDate
+            }
+        })
     }
 }
+
+

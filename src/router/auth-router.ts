@@ -11,6 +11,7 @@ import {
 } from "../middlewares/User-validation";
 import {allValidation} from "../middlewares/Validation";
 import {usersRepository} from "../repositories/users-repository";
+import {requestInput} from "../middlewares/requestIp-middleware";
 
 export const authRouter = Router({})
 
@@ -27,6 +28,7 @@ authRouter.post('/login',
     })
 
 authRouter.post('/registration',
+    requestInput,
     userValidationLogin,
     userValidationPassword,
     userValidationEmail,
@@ -76,7 +78,7 @@ authRouter.post('/registration-email-resending',
         if (user.emailConfirmation.isConfirmed) {
             res.status(400).send({errorsMessages: [{message: "User activated mail", field: "email"}]})
         }
-        await authService.createNewConfirmCode(user)
+        await authService.confirmNewCode(user)
         res.sendStatus(204)
     })
 
