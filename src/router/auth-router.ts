@@ -61,8 +61,10 @@ authRouter.post('/registration-confirmation',
         const result = await authService.confirmEmail(req.body.code)
         if (result) {
             res.sendStatus(204)
+            return
         } else {
             res.status(400).send({errorsMessages: [{message: "Invalid confirmation code", field: "code"}]})
+            return
         }
     })
 
@@ -78,9 +80,11 @@ authRouter.post('/registration-email-resending',
         }
         if (user.emailConfirmation.isConfirmed) {
             res.status(400).send({errorsMessages: [{message: "User activated mail", field: "email"}]})
+            return
         }
         await authService.confirmNewCode(user)
         res.sendStatus(204)
+        return
     })
 
 
