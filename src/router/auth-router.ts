@@ -18,15 +18,21 @@ export const authRouter = Router({})
 authRouter.post('/login',
     requestInput,
     async (req: Request, res: Response) => {
+        if (!req.body.login) {
+            return res.status(401).send('not authorized')
+        }
+        if (!req.body.password) {
+            return res.status(401).send('not authorized')
+        }
         const user = await authService.checkCredentials(req.body.login, req.body.password)
-        // console.log(user)
         if (user) {
             const token = await jwtService.createJWT(user)
             res.status(200).send({token})
-        } else {
-            res.sendStatus(401)
-            return
         }
+        // } else {
+        //     res.sendStatus(401)
+        //     return
+        // }
     })
 
 authRouter.post('/registration',

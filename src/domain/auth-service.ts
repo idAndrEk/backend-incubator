@@ -15,8 +15,7 @@ export const authService = {
     },
 
     async checkCredentials(login: string, password: string)/*: Promise<UserResponseType | null> */ {
-        const user = await usersService.findUserByLogin(login) // LOGIN
-        // console.log('checkCredentials', user)
+        const user = await usersService.findUserByLogin(login)
         if (!user) return null
         const result: boolean = await bcrypt.compare(password, user.accountData.passwordHash)
         if (result) return user
