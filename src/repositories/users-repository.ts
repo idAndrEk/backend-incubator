@@ -1,6 +1,7 @@
 import {UserAccType} from "../types/UsersTypes";
-import {usersCollection} from "./db";
+import {requestIpData, usersCollection} from "./db";
 import {ObjectId} from "mongodb";
+import {InputType} from "../types/InputType";
 
 
 export const usersRepository = {
@@ -58,7 +59,15 @@ export const usersRepository = {
                 'emailConfirmation.expirationDate': expirationDate
             }
         })
-    }
+    },
+
+    // async saveRequesBD(count: InputType) {
+    //     return await requestIpData.countDocuments({ // вынести в слой
+    //         ip: req.ip,
+    //         endpoint: req.url,
+    //         date: {$gt: startDate}
+    //     })
+    // }
 }
 
 

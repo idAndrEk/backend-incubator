@@ -16,6 +16,7 @@ import {requestInput} from "../middlewares/requestIp-middleware";
 export const authRouter = Router({})
 
 authRouter.post('/login',
+    requestInput,
     async (req: Request, res: Response) => {
         const user = await authService.checkCredentials(req.body.login, req.body.password)
         // console.log(user)
@@ -55,6 +56,7 @@ authRouter.post('/registration',
     })
 
 authRouter.post('/registration-confirmation',
+    requestInput,
     userValidationCode,
     allValidation,
     async (req: Request, res: Response) => {
@@ -67,6 +69,7 @@ authRouter.post('/registration-confirmation',
     })
 
 authRouter.post('/registration-email-resending',
+    requestInput,
     userValidationEmail,
     allValidation,
     async (req: Request, res: Response) => {

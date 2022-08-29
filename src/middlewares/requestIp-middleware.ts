@@ -17,7 +17,7 @@ export const requestInput = async (req: Request, res: Response, next: NextFuncti
         endpoint: req.url,
         date: {$gt: startDate}
     })
-    console.log(count)
+    // console.log('count', count)
     if (count > 5) {
         res.sendStatus(429)
         return
