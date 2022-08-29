@@ -25,7 +25,6 @@ authRouter.post('/login',
             res.status(200).send({token})
         } else {
             res.sendStatus(401)
-            return
         }
     })
 
