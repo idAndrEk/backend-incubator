@@ -6,12 +6,13 @@ export const requestInput = async (req: Request, res: Response, next: NextFuncti
     const input: InputType = {
         ip: req.ip,
         endpoint: req.url,
-        data: +(new Date())
+        date: +(new Date())
     }
     console.log(input)
     await requestIpData.insertOne(input)
     const startDate = +(new Date()) - 10000
-    const count = await requestIpData.countDocuments({
+    console.log(startDate)
+    const count = await requestIpData.countDocuments({ // вынести в слой
         ip: req.ip,
         endpoint: req.url,
         date: {$gt: startDate}
@@ -19,6 +20,7 @@ export const requestInput = async (req: Request, res: Response, next: NextFuncti
     console.log(count)
     if (count > 5) {
         res.sendStatus(429)
+        return
     }
     return next()
 }
