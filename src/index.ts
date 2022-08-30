@@ -8,11 +8,13 @@ import {runDb} from "./repositories/db";
 import {authRouter} from "./router/auth-router";
 import {commentsRouter} from "./router/comments-router";
 import {testingRouter} from "./router/testing-router";
+import cookieParser from "cookie-parser";
 
 const app = express()
 
 app.use(cors())
 app.use(bodyParser.json())
+app.use(cookieParser())
 
 app.set('trust proxy', true) //req.ip будет актуальный адрес
 

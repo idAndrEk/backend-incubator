@@ -29,3 +29,7 @@ export type UserAccType = {
     }
 }
 
+export type TokenType = {
+    _id: ObjectId,
+    refreshToken: string
+}

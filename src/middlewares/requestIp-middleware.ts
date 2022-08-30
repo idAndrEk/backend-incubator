@@ -11,13 +11,14 @@ export const requestInput = async (req: Request, res: Response, next: NextFuncti
     await requestIpData.insertOne(input)
     const startDate = +(new Date()) - 10000
     const count = await requestIpData.countDocuments({ // вынести в слой
+    // const count  = await usersRepository.saveRequestBD({
         ip: req.ip,
         endpoint: req.url,
         date: {$gt: startDate}
     })
     if (count > 5) {
-        res.sendStatus(429)
-        return
+        return res.sendStatus(429)
+
     }
     return next()
 }

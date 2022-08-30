@@ -2,6 +2,7 @@ import {NextFunction, Request, Response} from "express";
 import {ObjectId} from "mongodb";
 import {jwtService} from "../application/jwt-service";
 import {usersService} from "../domain/users-service";
+import {UserAccType} from "../types/UsersTypes";
 
 export const authMiddleware = (req: Request, res: Response, next: NextFunction) => {
     const authHeader = req.headers.authorization
@@ -30,12 +31,12 @@ export const authMiddlewareUser = async (req: Request, res: Response, next: Next
         res.send(401)
         return
     }
-    const token = req.headers.authorization.split(' ')[1]
-    const userId: any = await jwtService.getUserIdByToken(token);// ANY!!!
+    const accessToken = req.headers.authorization.split(' ')[1]
+    const userId: UserAccType = await jwtService.generateToken(accessToken);// ANY!!!
     // console.log(token)
     // console.log(userId)
     if (userId) {
-        const user = await usersService.findUserById(userId)
+        const user = await usersService.findUserById(userId.accountData.userName)
         req.user = user;
         return next()
     }

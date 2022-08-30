@@ -1,15 +1,15 @@
-import {UserAccType} from "../types/UsersTypes";
-import {requestIpData, usersCollection} from "./db";
+import {TokenType, UserAccType} from "../types/UsersTypes";
+import {requestIpData, tokenCollection, usersCollection} from "./db";
 import {ObjectId} from "mongodb";
-import {InputType} from "../types/InputType";
+
 
 
 export const usersRepository = {
 
-    async getAllUsers(page: number, pageSize: number) {
+    async getAllUsers(page: number, pageSize: number) { // поделить
         const skip = (page - 1) * pageSize
-        let allCount = await usersCollection.countDocuments({})
-        let users = await usersCollection
+        const allCount = await usersCollection.countDocuments({})
+        const users = await usersCollection
             .find({})
             .skip(skip)
             .limit(pageSize)
@@ -61,11 +61,21 @@ export const usersRepository = {
         })
     },
 
-    // async saveRequesBD(count: InputType) {
-    //     return await requestIpData.countDocuments({ // вынести в слой
-    //         ip: req.ip,
-    //         endpoint: req.url,
-    //         date: {$gt: startDate}
+    async logout(refreshToken: string) {
+        const tokenData = await tokenCollection.deleteOne({refreshToken});
+        return tokenData
+    },
+
+    async addTokenDB (refreshToken: TokenType) {
+        return await tokenCollection.insertOne(refreshToken)
+    }
+
+
+    // async saveRequestBD(ip: string, endpoint: string, date: number) {
+    //     return await requestIpData.countDocuments({
+    //         ip,
+    //         endpoint,
+    //         date
     //     })
     // }
 }

@@ -5,10 +5,11 @@ import {authService} from "./auth-service";
 import {v4 as uuidv4} from "uuid";
 import add from "date-fns/add";
 import {emailsManager} from "../mail/emailsManager";
+import {PaginationType} from "../types/bloggersTypes";
 
 export const usersService = {
 
-    async getAllUsers(page: number, pageSize: number)/*: Promise<PaginationType<UserResponseType> | null>*/ {
+    async getAllUsers(page: number, pageSize: number)/*: Promise<PaginationType<Omit<UserResponseType, 'email'>>>*/{ // поделить
         const usersData = await usersRepository.getAllUsers(page, pageSize)
         // console.log('getAllUsers',usersData)
         return {
@@ -63,15 +64,20 @@ export const usersService = {
     },
 
     async deleteUserById(id: string): Promise<boolean> {
-        return await usersRepository.deleteUserById(id)
+        return await usersRepository.deleteUserById(id);
     },
 
     async findUserByLogin(login: string): Promise<UserAccType | null> {
-        return await usersRepository.findByLogin(login)
+        return await usersRepository.findByLogin(login);
     },
 
     async findUserByEmail(email: string): Promise<UserAccType | null> {
-        return await usersRepository.findByEmail(email)
+        return await usersRepository.findByEmail(email);
+    },
+
+    async logout(refreshToken: string) {
+        const token = await usersRepository.logout(refreshToken);
+        return token;
     }
 }
 
