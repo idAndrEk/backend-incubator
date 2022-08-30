@@ -32,7 +32,7 @@ export const authMiddlewareUser = async (req: Request, res: Response, next: Next
         return
     }
     const accessToken = req.headers.authorization.split(' ')[1]
-    const userId: UserAccType = await jwtService.generateToken(accessToken);// ANY!!!
+    const userId: any = await jwtService.generateToken(accessToken);// ANY!!!
     // console.log(token)
     // console.log(userId)
     if (userId) {
