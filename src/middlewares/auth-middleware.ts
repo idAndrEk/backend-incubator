@@ -36,11 +36,12 @@ export const authMiddlewareUser = async (req: Request, res: Response, next: Next
     // console.log(token)
     // console.log(userId)
     if (userId) {
-        const user = await usersService.findUserById(userId.accountData.userName)
+        const user = await usersService.findUserById(userId)
         req.user = user;
         return next()
     }
     res.sendStatus(401)
+    return
 }
 
 

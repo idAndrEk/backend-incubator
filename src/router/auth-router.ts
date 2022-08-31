@@ -30,7 +30,7 @@ authRouter.post('/login',
 
 authRouter.post('/logout',
     async (req: Request, res: Response) => {
-        const {refreshToken} = req.cookies
+        const refreshToken = req.cookies
         const token = await usersService.logout(refreshToken)
         res.clearCookie('refreshToken')
         console.log(token)

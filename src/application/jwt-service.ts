@@ -1,12 +1,11 @@
-import jwt, {Jwt, JwtPayload} from 'jsonwebtoken'
+import jwt from 'jsonwebtoken'
 import {envSetting} from "../env_setting";
 import {TokenType, UserAccType, UserResponseType} from '../types/UsersTypes'
 import {ObjectId} from "mongodb";
-import {usersService} from "../domain/users-service";
 import {usersRepository} from "../repositories/users-repository";
 
 export const jwtService = {
-    async generateToken(user: UserAccType) {
+    async generateToken(user: any) { // <ANY>!!!!!!!!!!
         const accessToken = jwt.sign({userId: user._id}, envSetting.JWT_ACCESS, {expiresIn: '10s'})
         const refreshToken = jwt.sign({userId: user._id}, envSetting.JWT_REFRESH, {expiresIn: '20s'})
         const token = {
@@ -18,14 +17,8 @@ export const jwtService = {
             accessToken,
             refreshToken
         }
-    },
-        //     async saveToken(refreshToken: string) {
-        //     const tokenData =
-        //         if (tokenData) {
-        //
-        //         }
-        // }
     }
+}
 
 
 
