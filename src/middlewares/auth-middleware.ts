@@ -7,16 +7,15 @@ export const authMiddleware = (req: Request, res: Response, next: NextFunction) 
     const base64 = Buffer.from('admin:qwerty').toString('base64');
     const encode = `Basic ${base64}`;
     if (authHeader === encode) {
-        next()
+        return next()
     } else {
-        res.status(401).send('Access denied')
+        return res.status(401).send('Access denied')
     }
 }
 
 export const authMiddlewareUser = async (req: Request, res: Response, next: NextFunction) => {
     if (!req.headers.authorization) {
-        res.send(401)
-        return
+        return res.send(401)
     }
     const token = req.headers.authorization.split(' ')[1]
     const userId = await jwtService.getUserIdByToken(token);// ANY!!!

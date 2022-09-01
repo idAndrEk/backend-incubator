@@ -35,13 +35,13 @@ usersRouter.post('/',
     userValidationEmail,
     allValidation,
     async (req: Request, res: Response) => {
-        const user = await usersService.createUser(req.body.login, req.body.password, req.body.email)
-        // console.log(user)
+        const user = await usersService.createUser(req.body.login, req.body.email, req.body.password)
+        console.log(user)
         if (user) {
-            res.status(201).send(user)
-            return
+            return res.status(201).send(user)
+
         } else {
-            res.sendStatus(401)
+            return res.sendStatus(401)
         }
     })
 
@@ -51,9 +51,9 @@ usersRouter.delete('/:id',
     async (req: Request, res: Response) => {
         const idDeletedUser = await usersService.deleteUserById(req.params.id) // AWAIT
         if (!idDeletedUser) {
-            res.sendStatus(404)
+            return res.sendStatus(404)
         } else {
-            res.sendStatus(204)
+            return res.sendStatus(204)
         }
     })
 
