@@ -13,7 +13,7 @@ export const usersRepository = {
             .skip((page - 1) * pageSize)
             .limit(pageSize)
             .map(users => {
-                return {id: users._id.toString(), login: users.accountData.userName}
+                return {id: users.id, login: users.accountData.userName}
             })
             .toArray()
     },
@@ -57,16 +57,9 @@ export const usersRepository = {
                 'emailConfirmation.expirationDate': expirationDate
             }
         })
-    },
-
-    async logout(refreshToken: string) {
-        const tokenData = await tokenCollection.deleteOne({refreshToken});
-        return tokenData
-    },
-
-    async addTokenDB(refreshToken: TokenType) {
-        return await tokenCollection.insertOne(refreshToken)
     }
+}
+
 
 
     // async saveRequestBD(ip: string, endpoint: string, date: number) {
@@ -76,6 +69,5 @@ export const usersRepository = {
     //         date
     //     })
     // }
-}
 
 

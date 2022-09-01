@@ -6,6 +6,7 @@ import add from "date-fns/add";
 import {v4 as uuidv4} from "uuid";
 import {emailsManager} from "../mail/emailsManager";
 import {jwtService} from "../application/jwt-service";
+import {jwtRepository} from "../repositories/jwt-repository";
 
 
 export const authService = {
@@ -49,6 +50,7 @@ export const authService = {
         const user = await usersService.findUserByLogin(login)
         if (!user) return null
         const token = await jwtService.createRefreshJWT(user)
+        await jwtRepository.addTokenToDB(token)
         return token
     },
 }

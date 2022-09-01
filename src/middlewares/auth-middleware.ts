@@ -13,17 +13,6 @@ export const authMiddleware = (req: Request, res: Response, next: NextFunction) 
     }
 }
 
-// export const checkIdParamMiddleware = (req: Request, res: Response, next: NextFunction) => {
-//     const id = req.params.id;
-//     try {
-//         new ObjectId(id)
-//     } catch (error) {
-//         res.sendStatus(404)
-//         return
-//     }
-//     next()
-// }
-
 export const authMiddlewareUser = async (req: Request, res: Response, next: NextFunction) => {
     if (!req.headers.authorization) {
         res.send(401)

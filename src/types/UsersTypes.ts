@@ -28,7 +28,6 @@ export type UserAccType = {
 }
 
 export type TokenType = {
-    id: string,
     refreshToken: string
 }
 

@@ -11,17 +11,18 @@ import {
 import {allValidation} from "../middlewares/Validation";
 import {usersRepository} from "../repositories/users-repository";
 import {requestInput} from "../middlewares/requestIp-middleware";
+import {tokenCollection} from "../repositories/db";
+import {jwtService} from "../application/jwt-service";
 
 export const authRouter = Router({})
 
-authRouter.post('/login',
+authRouter.post('/login', // TOKEN в BD
     requestInput,
     async (req: Request, res: Response) => {
         const accessToken = await authService.createAccessToken(req.body.login)
         const refreshToken = await authService.createRefreshToken(req.body.login)
-        if (!accessToken) return res.status(401).send('not authorized')
-        if (!refreshToken) return res.status(401).send('not authorized')
-        return res.status(200).cookie('refreshToken', refreshToken, {httpOnly: true, secure: true}).send({accessToken})/*...*/
+        if (!accessToken || !refreshToken) return res.status(401).send('not authorized')
+        return res.status(200).cookie('refreshToken', refreshToken, {httpOnly: true, secure: true}).send({accessToken})
     })
 
 authRouter.post('/logout',
@@ -33,17 +34,37 @@ authRouter.post('/logout',
         return res.status(204).send(token)
     })
 
+//refresh после валидности отправлять в bd (~black list) (обновить) + logout (зачистить)
+
 authRouter.post('/refresh-token',
     async (req: Request, res: Response) => {
+        //  забрали рефрешТокен из куков
+        const requestRefreshToken = req.cookies.refreshToken
+        // проверили был ли он там
+        if (!requestRefreshToken) return res.sendStatus(401)
+        const accessToken = await authService.createAccessToken(req.user.accountData.userName)
+        const refreshToken = await authService.createRefreshToken(req.user.accountData.userName)
+        // const userData = await jwtService.refresh(requestRefreshToken)
+        return res.status(200).cookie('refreshToken', refreshToken, {httpOnly: true, secure: true}).send({accessToken})
 
-    })
+            // В service сделать
+            // проверить сам рефреш токен:
+            // 1. узнать что он не просрочен
+            // 2. достать из него логин юзера
+            // 3. проверить что юзер в бд
+            // 4. проверить что токен есть в списке разрешенных
+            // удалить старый requestRefreshToken
+
+            // сделал новый акцсес и решфреш (с сохранением) с сохранением
+            // const accessToken = await authService.createAccessToken(req.) // где???
+            // const refreshToken = await authService.createRefreshToken(req.) // где???
+            // return res.status(200).cookie('refreshToken', refreshToken, {httpOnly: true, secure: true}).send({accessToken})
+            })
 
 authRouter.get('/',
     async (req: Request, res: Response) => {
 
     })
-
-//refresh после валидности отправлять в bd (~black list) (обновить) + logout (зачистить)
 
 authRouter.post('/registration',
     requestInput,

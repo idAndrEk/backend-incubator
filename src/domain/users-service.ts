@@ -4,6 +4,7 @@ import {authService} from "./auth-service";
 import {v4 as uuidv4} from "uuid";
 import add from "date-fns/add";
 import {emailsManager} from "../mail/emailsManager";
+import {jwtRepository} from "../repositories/jwt-repository";
 
 export const usersService = {
 
@@ -75,7 +76,7 @@ export const usersService = {
     },
 
     async logout(refreshToken: string) {
-        const token = await usersRepository.logout(refreshToken);
+        const token = await jwtRepository.logout(refreshToken);
         return token;
     }
 }
