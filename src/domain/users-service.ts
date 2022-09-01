@@ -1,4 +1,4 @@
-import {PaginationUserType, UserAccType, UserType} from "../types/UsersTypes";
+import {PaginationUserType, UserAccType, UserDto} from "../types/UsersTypes";
 import {usersRepository} from "../repositories/users-repository";
 import {authService} from "./auth-service";
 import {v4 as uuidv4} from "uuid";
@@ -21,7 +21,7 @@ export const usersService = {
         }
     },
 
-    async findUserById(id: string): Promise<UserType | null> {
+    async findUserById(id: string): Promise<UserDto | null> {
         const userById = await usersRepository.findUserById(id)
         if (!userById) {
             return null
@@ -29,11 +29,11 @@ export const usersService = {
         return {
             id: userById.id,
             login: userById.accountData.userName,
-            email: userById.accountData.email
         }
     },
 
-    async createUser(login: string, email: string, password: string)/*: Promise<UserAccType | null> */ {
+    // TODO: разделить логику создания юзера (с отправкой емейла и без) и использовать разные в registration / users
+    async createUser(login: string, email: string, password: string)/*: Promise<UserAccType> */{
         const passwordHash = await authService._generateHash(password)
         const user: UserAccType = {
             id: uuidv4(),
@@ -49,17 +49,14 @@ export const usersService = {
                 isConfirmed: false
             }
         }
-        const createResult = await usersRepository.createUser(user)
-        try {
-            // console.log('createUser', user)
-            if (createResult.acknowledged) {
-                return await emailsManager.sendEmailConfirmationMessage(user.emailConfirmation.confirmationCode, user.accountData.email)
-            } else {
-                return false
-            }
-        } catch (error) {
-            console.error(error)
-            return false
+        const createResult = await usersRepository.createUserByEmail(user)
+        const userDto = {
+            id: user.id,
+            login: user.accountData.userName
+        }
+        if (createResult.acknowledged) {
+            await emailsManager.sendEmailConfirmationMessage(user.emailConfirmation.confirmationCode, user.accountData.email)
+            return userDto
         }
     },
 

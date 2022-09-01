@@ -36,7 +36,7 @@ usersRouter.post('/',
     allValidation,
     async (req: Request, res: Response) => {
         const user = await usersService.createUser(req.body.login, req.body.email, req.body.password)
-        console.log(user)
+        console.log('userTEST', user)
         if (user) {
             return res.status(201).send(user)
 

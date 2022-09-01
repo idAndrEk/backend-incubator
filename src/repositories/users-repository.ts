@@ -1,5 +1,5 @@
-import {TokenType, UserAccType, UserDto} from "../types/UsersTypes";
-import {tokenCollection, usersCollection} from "./db";
+import {UserAccType, UserDto} from "../types/UsersTypes";
+import {usersCollection} from "./db";
 
 export const usersRepository = {
 
@@ -22,7 +22,7 @@ export const usersRepository = {
         return await usersCollection.findOne({id})
     },
 
-    async createUser(newUser: UserAccType) {
+    async createUserByEmail(newUser: UserAccType) {
         return await usersCollection.insertOne(newUser)
     },
 
@@ -65,13 +65,12 @@ export const usersRepository = {
 }
 
 
-
-    // async saveRequestBD(ip: string, endpoint: string, date: number) {
-    //     return await requestIpData.countDocuments({
-    //         ip,
-    //         endpoint,
-    //         date
-    //     })
-    // }
+// async saveRequestBD(ip: string, endpoint: string, date: number) {
+//     return await requestIpData.countDocuments({
+//         ip,
+//         endpoint,
+//         date
+//     })
+// }
 
 

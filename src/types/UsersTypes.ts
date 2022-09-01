@@ -3,6 +3,7 @@ export type UserType = {
     login: string
     email: string
 }
+
 export type UserDto = {
     id: string
     login: string
