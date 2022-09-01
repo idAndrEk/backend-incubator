@@ -1,8 +1,6 @@
 import {NextFunction, Request, Response} from "express";
-import {ObjectId} from "mongodb";
 import {jwtService} from "../application/jwt-service";
 import {usersService} from "../domain/users-service";
-import {UserAccType} from "../types/UsersTypes";
 
 export const authMiddleware = (req: Request, res: Response, next: NextFunction) => {
     const authHeader = req.headers.authorization
@@ -15,24 +13,24 @@ export const authMiddleware = (req: Request, res: Response, next: NextFunction) 
     }
 }
 
-export const checkIdParamMiddleware = (req: Request, res: Response, next: NextFunction) => {
-    const id = req.params.id;
-    try {
-        new ObjectId(id)
-    } catch (error) {
-        res.sendStatus(404)
-        return
-    }
-    next()
-}
+// export const checkIdParamMiddleware = (req: Request, res: Response, next: NextFunction) => {
+//     const id = req.params.id;
+//     try {
+//         new ObjectId(id)
+//     } catch (error) {
+//         res.sendStatus(404)
+//         return
+//     }
+//     next()
+// }
 
 export const authMiddlewareUser = async (req: Request, res: Response, next: NextFunction) => {
     if (!req.headers.authorization) {
         res.send(401)
         return
     }
-    const accessToken = req.headers.authorization.split(' ')[1]
-    const userId: any = await jwtService.generateToken(accessToken);// ANY!!!
+    const token = req.headers.authorization.split(' ')[1]
+    const userId = await jwtService.getUserIdByToken(token);// ANY!!!
     // console.log(token)
     // console.log(userId)
     if (userId) {

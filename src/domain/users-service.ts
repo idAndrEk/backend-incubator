@@ -1,33 +1,32 @@
-import {UserAccType, UserResponseType} from "../types/UsersTypes";
-import {ObjectId} from "mongodb";
+import {PaginationUserType, UserAccType, UserType} from "../types/UsersTypes";
 import {usersRepository} from "../repositories/users-repository";
 import {authService} from "./auth-service";
 import {v4 as uuidv4} from "uuid";
 import add from "date-fns/add";
 import {emailsManager} from "../mail/emailsManager";
-import {PaginationType} from "../types/bloggersTypes";
 
 export const usersService = {
 
-    async getAllUsers(page: number, pageSize: number)/*: Promise<PaginationType<Omit<UserResponseType, 'email'>>>*/{ // поделить
+    async getAllUsers(page: number, pageSize: number): Promise<Omit<PaginationUserType, "email">> { // поделить
         const usersData = await usersRepository.getAllUsers(page, pageSize)
-        // console.log('getAllUsers',usersData)
+        const pagesCount = Math.ceil(await usersRepository.countComment() / pageSize)
+        const totalCount = await usersRepository.countComment()
         return {
-            "pagesCount": Math.ceil(Number(usersData[1]) / pageSize),
+            "pagesCount": pagesCount,
             "page": page,
             "pageSize": pageSize,
-            "totalCount": Number(usersData[1]),
-            "items": usersData[0]
+            "totalCount": totalCount,
+            "items": usersData
         }
     },
 
-    async findUserById(id: string): Promise<UserResponseType | null> {
+    async findUserById(id: string): Promise<UserType | null> {
         const userById = await usersRepository.findUserById(id)
         if (!userById) {
             return null
         }
         return {
-            id: userById._id.toString(),
+            id: userById.id,
             login: userById.accountData.userName,
             email: userById.accountData.email
         }
@@ -36,7 +35,7 @@ export const usersService = {
     async createUser(login: string, email: string, password: string)/*: Promise<UserAccType | null> */ {
         const passwordHash = await authService._generateHash(password)
         const user: UserAccType = {
-            _id: new ObjectId(),
+            id: uuidv4(),
             accountData: {
                 userName: login,
                 email,

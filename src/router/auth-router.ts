@@ -1,4 +1,3 @@
-import {jwtService} from "../application/jwt-service";
 import {Router} from "express";
 import {Request, Response} from "express";
 import {authService} from "../domain/auth-service";
@@ -12,20 +11,17 @@ import {
 import {allValidation} from "../middlewares/Validation";
 import {usersRepository} from "../repositories/users-repository";
 import {requestInput} from "../middlewares/requestIp-middleware";
-import {stat} from "fs";
 
 export const authRouter = Router({})
 
 authRouter.post('/login',
     requestInput,
     async (req: Request, res: Response) => {
-        const user = await authService.checkCredentials(req.body.login, req.body.password)
-        if (user) {
-            const token = await jwtService.generateToken(user)
-            return res.status(200).send({token})
-        } else {
-            return res.status(401).send('not authorized')
-        }
+        const accessToken = await authService.createAccessToken(req.body.login)
+        const refreshToken = await authService.createRefreshToken(req.body.login)
+        if (!accessToken) return res.status(401).send('not authorized')
+        if (!refreshToken) return res.status(401).send('not authorized')
+        return res.status(200).cookie('refreshToken', refreshToken, {httpOnly: true, secure: true}).send({accessToken})/*...*/
     })
 
 authRouter.post('/logout',
@@ -33,8 +29,18 @@ authRouter.post('/logout',
         const refreshToken = req.cookies
         const token = await usersService.logout(refreshToken)
         res.clearCookie('refreshToken')
-        console.log(token)
+        // console.log(token)
         return res.status(204).send(token)
+    })
+
+authRouter.post('/refresh-token',
+    async (req: Request, res: Response) => {
+
+    })
+
+authRouter.get('/',
+    async (req: Request, res: Response) => {
+
     })
 
 //refresh после валидности отправлять в bd (~black list) (обновить) + logout (зачистить)

@@ -1,22 +1,26 @@
-
-export type CommentResponseType = {
+export type CommentType = {
     id: string
     content: string
     userId: string
     userLogin: string
     addedAt: Date
-    // postId: string
 }
 
-// ADD DB TYPE + POSTID
-
-export type CommentPayloadType = Omit<CommentResponseType, 'id'>
-export type CommentResponseDBType = {
-    id: string
-    content: string
-    userId: string
-    userLogin: string
-    addedAt: string
-    postId: string
+export type PaginationCommentType = {
+    pagesCount: number
+    page: number
+    pageSize: number
+    totalCount: number
+    items: CommentType[]
 }
+
+// export type CommentPayloadType = Omit<CommentType, 'id'>
+// export type CommentResponseDBType = {
+//     id: string
+//     content: string
+//     userId: string
+//     userLogin: string
+//     addedAt: string
+//     postId: string
+// }
 

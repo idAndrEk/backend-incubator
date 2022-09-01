@@ -1,12 +1,8 @@
 import {Request, Response, Router} from "express";
 import {postValidation} from "../middlewares/Post-validation";
 import {allValidation} from "../middlewares/Validation";
-import {
-    authMiddleware,
-    authMiddlewareUser,
-    checkIdParamMiddleware,
-} from "../middlewares/auth-middleware";
-import {postsServise} from "../domain/posts-servise";
+import {authMiddleware, authMiddlewareUser,} from "../middlewares/auth-middleware";
+import {postsService} from "../domain/posts-service";
 import {bloggersRepository} from "../repositories/bloggers-db-repository";
 import {postsRepositories} from "../repositories/posts-db-repository";
 import {commentsService} from "../domain/comments-service";
@@ -16,20 +12,16 @@ export const postsRouter = Router({})
 
 postsRouter.get('/',
     async (req: Request, res: Response) => {
-        let page = req.query.PageNumber || 1
-        let pageSize = req.query.PageSize || 10
-        let posts
-        if (page && pageSize) {
-            posts = await postsServise.allPosts(+page, +pageSize)
-        }
-        res.status(200).send(posts)
-        return
+        const page = req.query.PageNumber || 1
+        const pageSize = req.query.PageSize || 10
+        const posts = await postsService.allPosts(+page, +pageSize)
+        return res.status(200).send(posts)
     })
 
 postsRouter.get('/:id',
-    checkIdParamMiddleware,
+    // checkIdParamMiddleware,
     async (req: Request, res: Response) => {
-        const post = await postsServise.findPostsId(req.params.id);
+        const post = await postsService.findPostsId(req.params.id);
         if (!post) {
             res.status(404).send('Not found')
         } else {
@@ -42,12 +34,11 @@ postsRouter.post('/',
     postValidation,
     allValidation,
     async (req: Request, res: Response) => {
-        // console.log('ROUTER')
         const titlePost = req.body.title;
         const shortDescriptionPost = req.body.shortDescription;
         const contentPost = req.body.content;
         const bloggerId = req.body.bloggerId;
-        const newPost = await postsServise.createPost(titlePost, shortDescriptionPost, contentPost, bloggerId)
+        const newPost = await postsService.createPost(titlePost, shortDescriptionPost, contentPost, bloggerId)
         if (!newPost) {
             const errors = [];
             errors.push({message: 'Error bloggerId', field: 'bloggerId'})
@@ -58,14 +49,13 @@ postsRouter.post('/',
                 return
             }
         }
-        res.status(201).send(newPost)
+        return res.status(201).send(newPost)
     })
 
 postsRouter.put('/:id',
     authMiddleware,
     postValidation,
     allValidation,
-    checkIdParamMiddleware,
     async (req: Request, res: Response) => {
         const blogger = await bloggersRepository.findBloggerById(req.body.bloggerId);
         if (blogger) {
@@ -74,7 +64,7 @@ postsRouter.put('/:id',
             const shortDescriptionPost = req.body.shortDescription;
             const contentPost = req.body.content;
             const bloggerId = req.body.bloggerId;
-            const result = await postsServise.updatePost(idPost, titlePost, shortDescriptionPost, contentPost, bloggerId)
+            const result = await postsService.updatePost(idPost, titlePost, shortDescriptionPost, contentPost, bloggerId)
             if (result) {
                 res.sendStatus(204)
                 return;
@@ -93,9 +83,8 @@ postsRouter.put('/:id',
 
 postsRouter.delete('/:id',
     authMiddleware,
-    checkIdParamMiddleware,
     async (req: Request, res: Response) => {
-        const idDeletedPost = await postsServise.deletePost(req.params.id)
+        const idDeletedPost = await postsService.deletePost(req.params.id)
         if (idDeletedPost) {
             res.sendStatus(204)
         } else {
@@ -104,16 +93,14 @@ postsRouter.delete('/:id',
     })
 
 postsRouter.get('/:id/comments',
-    checkIdParamMiddleware,
     async (req: Request, res: Response) => {
         let page = req.query.PageNumber || 1
         let pageSize = req.query.PageSize || 10
         const postId = req.params.id
         const post = await postsRepositories.findPostsId(postId)
         if (post) {
-            const postComment = await postsServise.findPostComment(postId, +page, +pageSize)
-            res.status(200).send(postComment)
-            return
+            const postComment = await postsService.findPostComment(postId, +page, +pageSize)
+            return res.status(200).send(postComment)
         } else {
             const errors = [];
             errors.push({message: 'Error postId', field: 'postId'})
@@ -125,7 +112,6 @@ postsRouter.get('/:id/comments',
     })
 
 postsRouter.post('/:id/comments',
-    checkIdParamMiddleware,
     authMiddlewareUser,
     commentValidation,
     allValidation,

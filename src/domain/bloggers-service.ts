@@ -1,29 +1,34 @@
 import {bloggersRepository} from "../repositories/bloggers-db-repository";
-import {BloggersResponseType, PaginationType} from "../types/bloggersTypes";
+import {BloggerType, PaginationBloggerType} from "../types/bloggersTypes";
+import {v4 as uuidv4} from "uuid";
+import {PaginationPostType} from "../types/postsTypes";
 
 export const bloggersService = {
-    async allBloggers(page: number, pageSize: number, name: string | null): Promise<PaginationType<BloggersResponseType> | null> {
-        return await bloggersRepository.allBloggers(page, pageSize, name)
+    async allBloggers(page: number, pageSize: number, name: string | null): Promise<PaginationBloggerType> {
+        const bloggerData = await bloggersRepository.allBloggers(page, pageSize, name)
+        const pagesCount = Math.ceil(await bloggersRepository.countBlogger(name) / pageSize)
+        const totalCount = await bloggersRepository.countBlogger(name)
+        return {
+            "pagesCount": pagesCount,
+            "page": page,
+            "pageSize": pageSize,
+            "totalCount": totalCount,
+            "items": bloggerData
+        }
     },
 
-    // async findBloggersName(name: string): Promise<any> {
-    //     return await bloggersRepository.findBloggersName(name)
-    // },
-
-    async findBloggerById(id: string): Promise<BloggersResponseType | null> {
+    async findBloggerById(id: string): Promise<BloggerType | null> {
         return bloggersRepository.findBloggerById(id)
     },
 
-    async createBlogger(name: string, youtubeUrl: string): Promise<BloggersResponseType | null> {
+    async createBlogger(name: string, youtubeUrl: string): Promise<BloggerType | null> {
         const newBlogger = {
-            // id: +(new Date()),
+            id: uuidv4(),
             name: name,
             youtubeUrl: youtubeUrl
         }
-        const createdBlogger = await bloggersRepository.createBlogger(newBlogger)
-        if (createdBlogger) {
-            return createdBlogger
-        }
+        const isBloggerCreated = await bloggersRepository.createBlogger(newBlogger)
+        if (isBloggerCreated) return newBlogger
         return null
     },
 
@@ -35,9 +40,17 @@ export const bloggersService = {
         return await bloggersRepository.deleteBlogger(id)
     },
 
-    async findBloggerPosts(bloggerId: string, page: number, pageSize: number) {
-        const post = await bloggersRepository.findBloggerPosts(bloggerId, page, pageSize)
-        return post
+    async findBloggerPosts(bloggerId: string, page: number, pageSize: number): Promise<PaginationPostType> {
+        const postData = await bloggersRepository.findPostsBlogger(bloggerId, page, pageSize)
+        const totalCount = await bloggersRepository.countPostBlogger(bloggerId)
+        const pagesCount = Math.ceil(await bloggersRepository.countPostBlogger(bloggerId) / pageSize)
+        return {
+            "pagesCount": pagesCount,
+            "page": page,
+            "pageSize": pageSize,
+            "totalCount": totalCount,
+            "items": postData
+        }
     }
 
 }

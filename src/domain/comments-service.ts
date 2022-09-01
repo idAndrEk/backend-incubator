@@ -1,25 +1,24 @@
-import {CommentResponseType} from "../types/CommentsTypes";
+import {CommentType} from "../types/CommentsTypes";
 import {commentsRepository} from "../repositories/comments-repository";
-import {UserDBPayloadType, UserResponseType} from "../types/UsersTypes";
+import {v4 as uuidv4} from "uuid";
 
 
 export const commentsService = {
-    async findCommentId(id: string): Promise<CommentResponseType | null> {
+    async findCommentId(id: string): Promise<CommentType | null> {
         return await commentsRepository.findCommentId(id)
     },
 
-    async createComment(content: string, userId: string, userLogin: string, postId: string) {
+    async createComment(content: string, userId: string, userLogin: string, postId: string): Promise<CommentType | null> {
         const newComment = {
+            id: uuidv4(),
             content: content,
             userId: userId,
             userLogin: userLogin,
             addedAt: new Date(),
             postId: postId
         }
-        const createComment = await commentsRepository.creteComment(newComment)
-        if (createComment) {
-            return createComment
-        }
+        const isCommentCreate = await commentsRepository.creteComment(newComment)
+        if (isCommentCreate) return newComment
         return null
     },
 
@@ -32,18 +31,4 @@ export const commentsService = {
     }
 }
 
-// async createComment(postId: string, content: string, user: any): Promise<CommentResponseType | null> {
-//     const newComment = {
-//         content,
-//         postId,
-//         userId: user.id,
-//         userLogin: user.login,
-//         addedAt: new Date().toString()
-//     }
-//     const createComment = await commentsRepository.creteComment(newComment)
-//     if (createComment) {
-//         return createComment
-//     }
-//     return null
-// },
 

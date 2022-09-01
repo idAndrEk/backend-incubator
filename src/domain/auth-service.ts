@@ -5,6 +5,7 @@ import {UserAccType} from "../types/UsersTypes";
 import add from "date-fns/add";
 import {v4 as uuidv4} from "uuid";
 import {emailsManager} from "../mail/emailsManager";
+import {jwtService} from "../application/jwt-service";
 
 
 export const authService = {
@@ -25,7 +26,7 @@ export const authService = {
         const user = await usersRepository.findUserByConfirmationCode(code)
         if (!user) return false
         if (user.emailConfirmation.expirationDate < new Date()) return false; //????!!!! < || >   Date??? date-fns/add DATE сравнение
-        const isConfirmed = await usersRepository.updateConfirmation(user?._id)//
+        const isConfirmed = await usersRepository.updateConfirmation(user?.id)//
         if (!isConfirmed) return false
         return isConfirmed
     },
@@ -35,8 +36,21 @@ export const authService = {
         const NewExpirationDate = add(new Date, {hours: 1})
         await usersRepository.updateConfirmationCode(user, NewConfirmationCode, NewExpirationDate)
         await emailsManager.sendEmailConfirmationMessage(NewConfirmationCode, user.accountData.email)
-    }
+    },
 
+    async createAccessToken(login: string) {
+        const user = await usersService.findUserByLogin(login)
+        if (!user) return null
+        const token = await jwtService.createAccessJWT(user!)
+        return token
+    },
+
+    async createRefreshToken(login: string) {
+        const user = await usersService.findUserByLogin(login)
+        if (!user) return null
+        const token = await jwtService.createRefreshJWT(user)
+        return token
+    },
 }
 
 

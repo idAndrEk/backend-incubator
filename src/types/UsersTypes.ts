@@ -1,35 +1,41 @@
-import {ObjectId} from "mongodb";
-
-export type UserDBPayloadType = {
-    login: string
-    passwordHash: string
-    email: string
-}
-
-export type UserRepositoryResponseType = UserDBPayloadType & {id: string}
-
-export type UserResponseType = {
+export type UserType = {
     id: string
     login: string
     email: string
 }
+export type UserDto = {
+    id: string
+    login: string
+}
+
+type AccountData = {
+    userName: string,
+    email: string,
+    passwordHash: string,
+    createdAt: Date
+}
+
+type EmailConfirmation = {
+    confirmationCode: string,
+    expirationDate: Date,
+    isConfirmed: boolean
+}
 
 export type UserAccType = {
-    _id: ObjectId,
-    accountData: {
-        userName: string,
-        email: string,
-        passwordHash: string,
-        createdAt: Date
-    },
-    emailConfirmation: {
-        confirmationCode: string,
-        expirationDate: Date,
-        isConfirmed: boolean
-    }
+    id: string,
+    accountData: AccountData,
+    emailConfirmation: EmailConfirmation
 }
 
 export type TokenType = {
-    _id: ObjectId,
+    id: string,
     refreshToken: string
+}
+
+export type PaginationUserType = {
+    pagesCount: number
+    page: number
+    pageSize: number
+    totalCount: number
+    items: UserDto[]
 }

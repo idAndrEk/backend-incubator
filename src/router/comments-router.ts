@@ -1,9 +1,6 @@
 import {Request, Response, Router} from "express";
 import {commentsService} from "../domain/comments-service";
-import {
-    authMiddlewareUser,
-    checkIdParamMiddleware
-} from "../middlewares/auth-middleware";
+import {authMiddlewareUser} from "../middlewares/auth-middleware";
 import {commentValidation} from "../middlewares/comments-validation";
 import {allValidation} from "../middlewares/Validation";
 import {commentsRepository} from "../repositories/comments-repository";
@@ -11,26 +8,23 @@ import {commentsRepository} from "../repositories/comments-repository";
 export const commentsRouter = Router({})
 
 commentsRouter.get('/:id',
-    checkIdParamMiddleware,
     async (req: Request, res: Response) => {
         const comment = await commentsService.findCommentId(req.params.id);
         if (!comment) {
-            res.status(404).send('Not found')
+            return res.status(404).send('Not found')
         } else {
-            res.status(200).send(comment)
+            return res.status(200).send(comment)
         }
     })
 
 commentsRouter.put('/:id',
-    checkIdParamMiddleware,
     authMiddlewareUser,
     commentValidation,
     allValidation,
     async (req: Request<{ id: string }>, res: Response) => {
         const commentToUpdate = await commentsService.findCommentId(req.params.id)
         if (commentToUpdate!.userId != req.user?.id) {
-            res.sendStatus(403)
-            return
+            return res.sendStatus(403)
         }
         const comment = await commentsService.findCommentId(req.params.id)
         if (comment) {
@@ -42,8 +36,7 @@ commentsRouter.put('/:id',
                 res.sendStatus(204)
                 return
             }
-            res.sendStatus(404)
-            return
+            return res.sendStatus(404)
         }
         const errors = [];
         errors.push({message: 'Error commentId', field: 'commentId'})
@@ -55,33 +48,19 @@ commentsRouter.put('/:id',
     })
 
 commentsRouter.delete('/:id',
-    checkIdParamMiddleware,
     authMiddlewareUser,
     async (req: Request<{ id: string }>, res: Response) => {
         const commentToDelete = await commentsService.findCommentId(req.params.id)
         if (commentToDelete!.userId != req.user?.id) {
-            res.sendStatus(403)
-            return
+            return res.sendStatus(403)
+
         }
         const deleteCommentId = await commentsService.deleteComment(req.params.id)
         if (deleteCommentId) {
-            res.sendStatus(204)
+            return res.sendStatus(204)
         } else {
-            res.sendStatus(404)
+            return res.sendStatus(404)
         }
     })
 
-// commentsRouter.post('/',
-//     authMiddlewareUser,
-//     async (req: Request, res: Response) => {
-//         const content = req.body.content;
-//         const userId = req.body.userId;
-//         const userLogin = req.body.userLogin;
-//         // const addedAt = new Date().toString();
-//         const newComment = await commentsService.createComment(content, userId, userLogin)
-//         if (!newComment) {
-//             res.status(404).send('Not found')
-//         } else {
-//             res.status(201).send(newComment)
-//         }
-//     })
+

@@ -1,27 +1,25 @@
-import {TokenType, UserAccType} from "../types/UsersTypes";
-import {requestIpData, tokenCollection, usersCollection} from "./db";
-import {ObjectId} from "mongodb";
-
-
+import {TokenType, UserAccType, UserDto} from "../types/UsersTypes";
+import {tokenCollection, usersCollection} from "./db";
 
 export const usersRepository = {
 
-    async getAllUsers(page: number, pageSize: number) { // поделить
-        const skip = (page - 1) * pageSize
-        const allCount = await usersCollection.countDocuments({})
-        const users = await usersCollection
-            .find({})
-            .skip(skip)
+    async countComment(): Promise<number> {
+        return await usersCollection.countDocuments({})
+    },
+
+    async getAllUsers(page: number, pageSize: number): Promise<UserDto[]> {
+        return usersCollection
+            .find({}, {projection: {_id: 0}})
+            .skip((page - 1) * pageSize)
             .limit(pageSize)
             .map(users => {
                 return {id: users._id.toString(), login: users.accountData.userName}
             })
             .toArray()
-        return [users, allCount]
     },
 
     async findUserById(id: string): Promise<UserAccType | null> {
-        return await usersCollection.findOne({_id: new ObjectId(id)})
+        return await usersCollection.findOne({id})
     },
 
     async createUser(newUser: UserAccType) {
@@ -29,7 +27,7 @@ export const usersRepository = {
     },
 
     async deleteUserById(id: string): Promise<boolean> {
-        const result = await usersCollection.deleteOne({_id: new ObjectId(id)})
+        const result = await usersCollection.deleteOne({id})
         return result.deletedCount === 1
     },
 
@@ -47,13 +45,13 @@ export const usersRepository = {
         return user
     },
 
-    async updateConfirmation(_id: ObjectId) {
-        const result = await usersCollection.updateOne({_id}, {$set: {'emailConfirmation.isConfirmed': true}})
+    async updateConfirmation(id: string): Promise<boolean | null> {
+        const result = await usersCollection.updateOne({id}, {$set: {'emailConfirmation.isConfirmed': true}})
         return result.modifiedCount === 1
     },
 
     async updateConfirmationCode(user: UserAccType, confirmationCode: string, expirationDate: Date) {
-        return await usersCollection.findOneAndUpdate({_id: user._id}, {
+        return await usersCollection.findOneAndUpdate({id: user.id}, {
             $set: {
                 'emailConfirmation.confirmationCode': confirmationCode,
                 'emailConfirmation.expirationDate': expirationDate
@@ -66,7 +64,7 @@ export const usersRepository = {
         return tokenData
     },
 
-    async addTokenDB (refreshToken: TokenType) {
+    async addTokenDB(refreshToken: TokenType) {
         return await tokenCollection.insertOne(refreshToken)
     }
 

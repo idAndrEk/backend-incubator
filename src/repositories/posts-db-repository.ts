@@ -1,70 +1,35 @@
 import {commentCollection, postCollection} from "./db";
-import {ObjectId} from "mongodb";
-import {PostPayloadType, PostResponseType} from "../types/postsTypes";
+import {PostType} from "../types/postsTypes";
 import {PaginationType} from "../types/bloggersTypes";
 
 export const postsRepositories = {
-    async allPosts(page: number, pageSize: number): Promise<PaginationType<PostResponseType>> {
-        const skip = (page - 1) * pageSize
-        let allPostsCount = await postCollection.countDocuments()
-        let pagesCount = allPostsCount / pageSize
-        let posts = await postCollection.find({}).skip(skip).limit(pageSize).toArray()
-        let allCount = await postCollection.count({})
-        return {
-            pagesCount: Math.ceil(pagesCount),
-            page: page,
-            pageSize: pageSize,
-            totalCount: allCount,
-            items: posts.map(post => ({
-                id: post._id.toString(),
-                title: post.title,
-                shortDescription: post.shortDescription,
-                content: post.content,
-                bloggerId: post.bloggerId,
-                bloggerName: post.bloggerName
-            }))
-        }
+    async countPost(): Promise<number> {
+        return await postCollection.countDocuments({})
     },
 
-    async findPostsId(id: string): Promise<PostResponseType | null> {
-        const post = await postCollection.findOne({_id: new ObjectId(id)})
-        if (!post) {
-            return null
-        }
-        return {
-            bloggerId: post.bloggerId,
-            content: post.content,
-            shortDescription: post.shortDescription,
-            title: post.title,
-            bloggerName: post.bloggerName,
-            id: post._id.toString()
-        }
+    async allPosts(page: number, pageSize: number): Promise<PostType[]> {
+        return postCollection
+            .find({}, {projection: {_id: 0}})
+            .skip((page - 1) * pageSize)
+            .limit(pageSize)
+            .toArray()
     },
 
-    async createPost(newPost: PostPayloadType): Promise<PostResponseType | null> {
-        const {
-            title,
-            shortDescription,
-            content,
-            bloggerId,
-            bloggerName
-        } = newPost
-        const result = await postCollection.insertOne(newPost);
-        if (!result.acknowledged) {
-            return null
-        }
-        return {
-            bloggerName,
-            title,
-            shortDescription,
-            content,
-            bloggerId,
-            id: result.insertedId.toString()
+    async findPostsId(id: string): Promise<PostType | null> {
+        return await postCollection.findOne({id: id}, {projection: {_id: 0}})
+    },
+
+    async createPost(newPost: PostType): Promise<boolean> {
+        try {
+            await postCollection.insertOne({...newPost})
+            return true
+        } catch (e) {
+            return false
         }
     },
 
     async updatePost(id: string, title: string, shortDescription: string, content: string, bloggerId: string): Promise<boolean | null> {
-        const result = await postCollection.updateOne({_id: new ObjectId(id)}, { //new object
+        const result = await postCollection.updateOne({id}, {
             $set: {
                 title: title,
                 shortDescription: shortDescription,
@@ -76,36 +41,29 @@ export const postsRepositories = {
     },
 
     async deletePost(id: string): Promise<boolean> {
-        const result = await postCollection.deleteOne({_id: new ObjectId(id)})
+        const result = await postCollection.deleteOne({id})
         return result.deletedCount === 1
     },
 
-    async findPostComment(postId: string, page: number, pageSize: number): Promise<any> {
+    async countPostComment(postId: string | null) {
         let filter = {}
         if (postId) {
-            filter = {postId}
+            filter = {$regex: postId}
         }
-        const skip = (page - 1) * pageSize
-        let allCommentCount = await commentCollection.count(filter)
-        let pagesCount = allCommentCount / pageSize
-        let comment = await commentCollection.
-        find(filter).
-        skip(skip).
-        limit(pageSize).
-        toArray()
-        return {
-            pagesCount: Math.ceil(pagesCount),
-            page: page,
-            pageSize: pageSize,
-            totalCount: allCommentCount,
-            items: comment.map(comment => ({
-                content: comment.content,
-                userId: comment.userId,
-                userLogin: comment.userLogin,
-                addedAt: comment.addedAt,
-                id: comment._id.toString()
-            }))
+        return await commentCollection.count(filter)
+    },
+
+    async findPostComment(postId: string | null, page: number, pageSize: number) {
+        let filter = {}
+        if (postId) {
+            filter = {$regex: postId}
         }
+        return commentCollection
+            .find(filter, {projection: {_id: 0}})
+            .skip((page - 1) * pageSize)
+            .limit(pageSize)
+            .toArray()
     }
 }
+
 
