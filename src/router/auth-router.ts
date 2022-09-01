@@ -11,12 +11,12 @@ import {
 import {allValidation} from "../middlewares/Validation";
 import {usersRepository} from "../repositories/users-repository";
 import {requestInput} from "../middlewares/requestIp-middleware";
-import {tokenCollection} from "../repositories/db";
 import {jwtService} from "../application/jwt-service";
+import {JwtAuthMiddleware} from "../middlewares/JwtAuthMiddleware";
 
 export const authRouter = Router({})
 
-authRouter.post('/login', // TOKEN в BD
+authRouter.post('/login',
     requestInput,
     async (req: Request, res: Response) => {
         const accessToken = await authService.createAccessToken(req.body.login)
@@ -30,36 +30,48 @@ authRouter.post('/logout',
         const refreshToken = req.cookies
         const token = await usersService.logout(refreshToken)
         res.clearCookie('refreshToken')
-        // console.log(token)
+        console.log(token)
         return res.status(204).send(token)
     })
-
-//refresh после валидности отправлять в bd (~black list) (обновить) + logout (зачистить)
 
 authRouter.post('/refresh-token',
     async (req: Request, res: Response) => {
         //  забрали рефрешТокен из куков
         const requestRefreshToken = req.cookies.refreshToken
+        console.log('requestRefreshToken', requestRefreshToken)
         // проверили был ли он там
-        if (!requestRefreshToken) return res.sendStatus(401)
-        const accessToken = await authService.createAccessToken(req.user.accountData.userName)
-        const refreshToken = await authService.createRefreshToken(req.user.accountData.userName)
-        // const userData = await jwtService.refresh(requestRefreshToken)
-        return res.status(200).cookie('refreshToken', refreshToken, {httpOnly: true, secure: true}).send({accessToken})
+        if (!requestRefreshToken) return res.status(401).send('no token')
+        const userData = await jwtService.refresh(requestRefreshToken)
+        if (userData) {
+            await usersService.logout(requestRefreshToken)
+            const accessToken = await authService.createAccessToken(req.user.accountData.userName)
+            const refreshToken = await authService.createRefreshToken(req.user.accountData.userName)
+            return res.status(200).cookie('refreshToken', refreshToken, {
+                httpOnly: true,
+                secure: true
+            }).send({accessToken})
+        }
+    })
 
-            // В service сделать
-            // проверить сам рефреш токен:
-            // 1. узнать что он не просрочен
-            // 2. достать из него логин юзера
-            // 3. проверить что юзер в бд
-            // 4. проверить что токен есть в списке разрешенных
-            // удалить старый requestRefreshToken
+authRouter.get('/me',
+    JwtAuthMiddleware,
+    async (req: Request, res: Response) => {
+        return res.status(200).send(req.user)
+    })
 
-            // сделал новый акцсес и решфреш (с сохранением) с сохранением
-            // const accessToken = await authService.createAccessToken(req.) // где???
-            // const refreshToken = await authService.createRefreshToken(req.) // где???
-            // return res.status(200).cookie('refreshToken', refreshToken, {httpOnly: true, secure: true}).send({accessToken})
-            })
+// В service сделать
+// проверить сам рефреш токен:
+// 1. узнать что он не просрочен
+// 2. достать из него логин юзера
+// 3. проверить что юзер в бд
+// 4. проверить что токен есть в списке разрешенных
+// удалить старый requestRefreshToken
+
+// сделал новый акцсес и решфреш (с сохранением) с сохранением
+// const accessToken = await authService.createAccessToken(req.) // где???
+// const refreshToken = await authService.createRefreshToken(req.) // где???
+// return res.status(200).cookie('refreshToken', refreshToken, {httpOnly: true, secure: true}).send({accessToken})
+
 
 authRouter.get('/',
     async (req: Request, res: Response) => {
@@ -99,7 +111,12 @@ authRouter.post('/registration-confirmation',
         if (result) {
             return res.sendStatus(204)
         } else {
-            return res.status(400).send({errorsMessages: [{message: "Invalid confirmation code", field: "code"}]})
+            return res.status(400).send({
+                errorsMessages: [{
+                    message: "Invalid confirmation code",
+                    field: "code"
+                }]
+            })
         }
     })
 

@@ -16,7 +16,7 @@ app.use(cors())
 app.use(bodyParser.json())
 app.use(cookieParser())
 
-app.set('trust proxy', true) //req.ip будет актуальный адрес
+app.set('trust proxy', true)
 
 const port = process.env.PORT || 5000
 

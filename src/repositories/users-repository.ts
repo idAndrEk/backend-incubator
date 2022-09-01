@@ -57,6 +57,10 @@ export const usersRepository = {
                 'emailConfirmation.expirationDate': expirationDate
             }
         })
+    },
+
+    async getAllUsersByToken(user: UserAccType) {
+        return await usersCollection.find({})
     }
 }
 
