@@ -16,17 +16,10 @@ export const JwtAuthMiddleware = async (req: Request, res: Response, next: NextF
 }
 
 export const JwtRefreshAuthMiddleware = async (req: Request, res: Response, next: NextFunction) => {
-    //  забрали рефрешТокен из куков
     const requestRefreshToken = req.cookies.refreshToken
-    console.log('requestRefreshToken', requestRefreshToken)
-    // проверили был ли он там
     if (!requestRefreshToken) return res.status(401).send('no cookies')
-    // 1. узнать что он не просрочен
-    // 2. достать из него логин юзера
-    // 3. проверить что токен есть в списке разрешенных
-    const validRefreshToken = await jwtService.refresh(requestRefreshToken)
+    const validRefreshToken = jwtService.refresh(requestRefreshToken)
     if (!validRefreshToken) return res.status(401).send('token is expired')
-    // 4. проверить что юзер в бд
     const user = await usersService.findUserById(requestRefreshToken.userId)
     if (!user) return res.status(401).send('no user')
     await jwtService.logout(requestRefreshToken)
@@ -35,3 +28,23 @@ export const JwtRefreshAuthMiddleware = async (req: Request, res: Response, next
 }
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//  забрали рефрешТокен из куков
+// проверили был ли он там
+// 1. узнать что он не просрочен
+// 2. достать из него логин юзера
+// 3. проверить что токен есть в списке разрешенных
+// 4. проверить что юзер в бд

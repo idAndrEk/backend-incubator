@@ -1,5 +1,4 @@
 import {tokenCollection} from "./db";
-import {TokenType} from "../types/UsersTypes";
 
 export const jwtRepository = {
 
