@@ -49,6 +49,11 @@ export const jwtService = {
             return null
         }
         return refreshToken
+    },
+
+    async logout(refreshToken: string) {
+        const token = await jwtRepository.removeToken(refreshToken);
+        return token;
     }
 }
 

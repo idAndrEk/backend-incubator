@@ -12,6 +12,7 @@ import {allValidation} from "../middlewares/Validation";
 import {usersRepository} from "../repositories/users-repository";
 import {requestInput} from "../middlewares/requestIp-middleware";
 import {JwtAuthMiddleware, JwtRefreshAuthMiddleware} from "../middlewares/JwtAuthMiddleware";
+import {jwtService} from "../application/jwt-service";
 
 export const authRouter = Router({})
 
@@ -26,11 +27,12 @@ authRouter.post('/login',
 
 authRouter.post('/logout',
     async (req: Request, res: Response) => {
-        const refreshToken = req.cookies
-        const token = await usersService.logout(refreshToken)
+        const refreshToken = req.cookies.refreshToken
+        // console.log(refreshToken)
+        const token = await jwtService.logout(refreshToken)
         res.clearCookie('refreshToken')
-        console.log(token)
-        return res.status(204).send(token)
+        // console.log(token)
+        return res.sendStatus(204)
     })
 
 authRouter.post('/refresh-token',

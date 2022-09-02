@@ -67,12 +67,8 @@ export const usersService = {
 
     async findUserByEmail(email: string): Promise<UserAccType | null> {
         return await usersRepository.findByEmail(email);
-    },
-
-    async logout(refreshToken: string) {
-        const token = await jwtRepository.logout(refreshToken);
-        return token;
     }
+
 }
 
 

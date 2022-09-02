@@ -29,7 +29,7 @@ export const JwtRefreshAuthMiddleware = async (req: Request, res: Response, next
     // 4. проверить что юзер в бд
     const user = await usersService.findUserById(requestRefreshToken.userId)
     if (!user) return res.status(401).send('no user')
-    await usersService.logout(requestRefreshToken)
+    await jwtService.logout(requestRefreshToken)
     req.user = user;
     return next()
 }

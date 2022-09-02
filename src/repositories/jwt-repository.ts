@@ -3,9 +3,9 @@ import {TokenType} from "../types/UsersTypes";
 
 export const jwtRepository = {
 
-    async logout(refreshToken: string) {
-        const tokenData = await tokenCollection.deleteOne({refreshToken});
-        return tokenData
+    async removeToken(refreshToken: string) {
+        return await tokenCollection.deleteOne({refreshToken});
+
     },
 
     async addTokenToDB(refreshToken: string) {
