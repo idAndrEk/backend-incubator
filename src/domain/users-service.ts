@@ -49,6 +49,8 @@ export const usersService = {
             }
         }
         await usersRepository.createUser(user)
+
+        // TODO: CreateUser add
         const userDto = {
             id: user.id,
             login: user.accountData.userName

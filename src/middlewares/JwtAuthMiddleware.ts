@@ -28,20 +28,6 @@ export const JwtRefreshAuthMiddleware = async (req: Request, res: Response, next
 }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 //  забрали рефрешТокен из куков
 // проверили был ли он там
 // 1. узнать что он не просрочен

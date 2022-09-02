@@ -22,6 +22,10 @@ export const usersRepository = {
         return await usersCollection.findOne({id})
     },
 
+    // async createUser(newUser: UserType): Promise<UserAccType> {
+    //     return await usersCollection.insertOne(newUser)
+    // },
+
     async createUser(newUser: UserAccType) {
         return await usersCollection.insertOne(newUser)
     },
