@@ -11,7 +11,6 @@ import {
 import {allValidation} from "../middlewares/Validation";
 import {usersRepository} from "../repositories/users-repository";
 import {requestInput} from "../middlewares/requestIp-middleware";
-import {jwtService} from "../application/jwt-service";
 import {JwtAuthMiddleware, JwtRefreshAuthMiddleware} from "../middlewares/JwtAuthMiddleware";
 
 export const authRouter = Router({})
@@ -46,7 +45,12 @@ authRouter.post('/refresh-token',
 authRouter.get('/me',
     JwtAuthMiddleware,
     async (req: Request, res: Response) => {
-        return res.status(200).send(req.user)
+        const user = {
+            email: req.user.accountData.email,
+            login: req.user.accountData.userName,
+            userId: req.user.id
+        }
+        return res.status(200).send(user)
     })
 
 authRouter.post('/registration',

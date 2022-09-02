@@ -5,12 +5,12 @@ import {jwtRepository} from "../repositories/jwt-repository";
 
 export const jwtService = {
     async createAccessJWT(user: UserAccType) {
-        const token = jwt.sign({userId: user.id}, envSetting.JWT_ACCESS, {expiresIn: '10s'})
+        const token = jwt.sign({userId: user.id}, envSetting.JWT_ACCESS, {expiresIn: '10m'})
         return token
     },
 
     async createRefreshJWT(user: UserAccType) {
-        const token = jwt.sign({userId: user.id}, envSetting.JWT_REFRESH, {expiresIn: '20s'})
+        const token = jwt.sign({userId: user.id}, envSetting.JWT_REFRESH, {expiresIn: '20m'})
         return token
     },
 
