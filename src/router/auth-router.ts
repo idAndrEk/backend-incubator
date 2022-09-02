@@ -12,7 +12,7 @@ import {allValidation} from "../middlewares/Validation";
 import {usersRepository} from "../repositories/users-repository";
 import {requestInput} from "../middlewares/requestIp-middleware";
 import {jwtService} from "../application/jwt-service";
-import {JwtAuthMiddleware} from "../middlewares/JwtAuthMiddleware";
+import {JwtAuthMiddleware, JwtRefreshAuthMiddleware} from "../middlewares/JwtAuthMiddleware";
 
 export const authRouter = Router({})
 
@@ -35,47 +35,18 @@ authRouter.post('/logout',
     })
 
 authRouter.post('/refresh-token',
+    JwtRefreshAuthMiddleware,
     async (req: Request, res: Response) => {
-        //  забрали рефрешТокен из куков
-        const requestRefreshToken = req.cookies.refreshToken
-        console.log('requestRefreshToken', requestRefreshToken)
-        // проверили был ли он там
-        if (!requestRefreshToken) return res.status(401).send('no token')
-        const userData = await jwtService.refresh(requestRefreshToken)
-        if (userData) {
-            await usersService.logout(requestRefreshToken)
-            const accessToken = await authService.createAccessToken(req.user.accountData.userName)
-            const refreshToken = await authService.createRefreshToken(req.user.accountData.userName)
-            return res.status(200).cookie('refreshToken', refreshToken, {
-                httpOnly: true,
-                secure: true
-            }).send({accessToken})
-        }
+        const accessToken = await authService.createAccessToken(req.user.accountData.userName)
+        const refreshToken = await authService.createRefreshToken(req.user.accountData.userName)
+        if (!accessToken || !refreshToken) return res.status(401).send('expired or incorrect')
+        return res.status(200).cookie('refreshToken', refreshToken, {httpOnly: true, secure: true}).send({accessToken})
     })
 
 authRouter.get('/me',
     JwtAuthMiddleware,
     async (req: Request, res: Response) => {
         return res.status(200).send(req.user)
-    })
-
-// В service сделать
-// проверить сам рефреш токен:
-// 1. узнать что он не просрочен
-// 2. достать из него логин юзера
-// 3. проверить что юзер в бд
-// 4. проверить что токен есть в списке разрешенных
-// удалить старый requestRefreshToken
-
-// сделал новый акцсес и решфреш (с сохранением) с сохранением
-// const accessToken = await authService.createAccessToken(req.) // где???
-// const refreshToken = await authService.createRefreshToken(req.) // где???
-// return res.status(200).cookie('refreshToken', refreshToken, {httpOnly: true, secure: true}).send({accessToken})
-
-
-authRouter.get('/',
-    async (req: Request, res: Response) => {
-
     })
 
 authRouter.post('/registration',

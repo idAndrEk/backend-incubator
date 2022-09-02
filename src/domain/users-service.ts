@@ -32,8 +32,7 @@ export const usersService = {
         }
     },
 
-    // TODO: разделить логику создания юзера (с отправкой емейла и без) и использовать разные в registration / users
-    async createUser(login: string, email: string, password: string)/*: Promise<UserAccType> */{
+    async createUser(login: string, email: string, password: string): Promise<UserDto | null> {
         const passwordHash = await authService._generateHash(password)
         const user: UserAccType = {
             id: uuidv4(),
@@ -49,15 +48,13 @@ export const usersService = {
                 isConfirmed: false
             }
         }
-        const createResult = await usersRepository.createUserByEmail(user)
+        await usersRepository.createUser(user)
         const userDto = {
             id: user.id,
             login: user.accountData.userName
         }
-        if (createResult.acknowledged) {
-            await emailsManager.sendEmailConfirmationMessage(user.emailConfirmation.confirmationCode, user.accountData.email)
-            return userDto
-        }
+        await emailsManager.sendEmailConfirmationMessage(user.emailConfirmation.confirmationCode, user.accountData.email)
+        return userDto
     },
 
     async deleteUserById(id: string): Promise<boolean> {

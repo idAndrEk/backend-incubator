@@ -22,7 +22,7 @@ export const usersRepository = {
         return await usersCollection.findOne({id})
     },
 
-    async createUserByEmail(newUser: UserAccType) {
+    async createUser(newUser: UserAccType) {
         return await usersCollection.insertOne(newUser)
     },
 
