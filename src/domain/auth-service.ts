@@ -50,14 +50,14 @@ export const authService = {
     },
 
     async createAccessToken(login: string) {
-        const user = await usersRepository.findByLogin(login)
+        const user = await this.checkCredential(login)
         if (!user) return null
         const token = await jwtService.createAccessJWT(user!)
         return token
     },
 
     async createRefreshToken(login: string) {
-        const user = await usersRepository.findByLogin(login)
+        const user = await this.checkCredential(login)
         if (!user) return null
         const token = await jwtService.createRefreshJWT(user!)
         await jwtRepository.addTokenToDB(token)
