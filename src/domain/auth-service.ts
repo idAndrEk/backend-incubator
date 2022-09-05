@@ -26,8 +26,8 @@ export const authService = {
     async confirmEmail(code: string): Promise<boolean> {
         const user = await usersRepository.findUserByConfirmationCode(code)
         if (!user) return false
-        if (user.emailConfirmation.expirationDate < new Date()) return false; //????!!!! < || >   Date??? date-fns/add DATE сравнение
-        const isConfirmed = await usersRepository.updateConfirmation(user?.id)//
+        if (user.emailConfirmation.expirationDate < new Date()) return false;
+        const isConfirmed = await usersRepository.updateConfirmation(user?.id)
         if (!isConfirmed) return false
         return isConfirmed
     },

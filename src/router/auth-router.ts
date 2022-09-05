@@ -19,7 +19,7 @@ export const authRouter = Router({})
 
 authRouter.post('/login',
     LoginPasswordMiddleware,
-    // TODO: add createUser  "isConfirmed" : true
+    // TODO: add createUser "isConfirmed" : true
     requestInput,
     async (req: Request, res: Response) => {
         const accessToken = await authService.createAccessToken(req.body.login)
