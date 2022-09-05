@@ -24,7 +24,7 @@ authRouter.post('/login',
     async (req: Request, res: Response) => {
         const accessToken = await authService.createAccessToken(req.body.login)
         const refreshToken = await authService.createRefreshToken(req.body.login)
-        if (!accessToken || !refreshToken) return res.status(400).send('not authorized')
+        // if (!accessToken || !refreshToken) return res.status(400).send('not authorized')
         return res.status(200).cookie('refreshToken', refreshToken, {httpOnly: true, secure: true}).send({accessToken})
     })
 
@@ -42,6 +42,7 @@ authRouter.post('/refresh-token',
     async (req: Request, res: Response) => {
         const accessToken = await authService.createAccessToken(req.user.accountData.userName)
         const refreshToken = await authService.createRefreshToken(req.user.accountData.userName)
+        // if (!accessToken || !refreshToken) return res.status(400).send('not authorized')
         return res.status(200).cookie('refreshToken', refreshToken, {httpOnly: true, secure: true}).send({accessToken})
     })
 
