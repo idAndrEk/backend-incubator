@@ -23,32 +23,32 @@ export const jwtService = {
         }
     },
 
-    async validateAccessToken(token: string) {
+    async validateAccessToken(token: string): Promise<string | null> {
         try {
-            const userData: any = jwt.verify(token, envSetting.JWT_ACCESS);
-            return userData;
+            const jwtPayload: any = jwt.verify(token, envSetting.JWT_ACCESS);
+            return jwtPayload.userId;
         } catch (e) {
             return null
         }
     },
 
-    async validateRefreshToken(token: string) {
+    async validateRefreshToken(token: string): Promise<string | null> {
         try {
-            const userData = jwt.verify(token, envSetting.JWT_REFRESH);
-            return userData;
+            const jwtPayload: any = jwt.verify(token, envSetting.JWT_REFRESH);
+            return jwtPayload.userId;
         } catch (e) {
             return null
         }
     },
 
-    async refresh(refreshToken: string) {
+    async ValidateDbRefreshToken(refreshToken: string) { //ValidateDbRefreshToken
         if (!refreshToken) return null
-        const userData = this.validateRefreshToken(refreshToken);
-        const tokenFromDb = await jwtRepository.findTokenToDB(refreshToken);
-        if (!userData || !tokenFromDb) {
+        const userId = this.validateRefreshToken(refreshToken); //зашито
+        const tokenFromDb = await jwtRepository.findTokenToDB(refreshToken); // DB
+        if (!userId || !tokenFromDb) {
             return null
         }
-        return refreshToken
+        return userId
     },
 
     async logout(refreshToken: string) {
