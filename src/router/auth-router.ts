@@ -27,7 +27,7 @@ authRouter.post('/login',
     })
 
 authRouter.post('/logout',
-    JwtRefreshAuthMiddleware,
+    // JwtRefreshAuthMiddleware,
     // TODO: Midl проверить refresh сущ и не валид по времени
     async (req: Request, res: Response) => {
         const refreshToken = req.cookies.refreshToken
