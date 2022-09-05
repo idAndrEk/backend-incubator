@@ -18,7 +18,6 @@ export const requestInput = async (req: Request, res: Response, next: NextFuncti
     })
     if (count > 5) {
         return res.sendStatus(429)
-
     }
     return next()
 }

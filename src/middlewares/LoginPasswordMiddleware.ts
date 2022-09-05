@@ -11,5 +11,5 @@ export const LoginPasswordMiddleware = async (req: Request, res: Response, next:
     if (!password) {
         return res.status(401).send('Not registered')
     }
-    next()
+    return next()
 }
