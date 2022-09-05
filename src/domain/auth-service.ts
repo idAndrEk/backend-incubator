@@ -52,7 +52,7 @@ export const authService = {
     async createAccessToken(login: string) {
         const user = await usersRepository.findByLogin(login)
         if (!user) return null
-        const token = await jwtService.createAccessJWT(user!)
+        const token = await jwtService.createAccessJWT(user)
         return token
     },
 
