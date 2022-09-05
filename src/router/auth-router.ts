@@ -30,7 +30,6 @@ authRouter.post('/login',
 
 authRouter.post('/logout',
     JwtRefreshAuthMiddleware,
-    // TODO: Midl проверить refresh сущ и не валид по времени
     async (req: Request, res: Response) => {
         const refreshToken = req.cookies.refreshToken
         await jwtService.logout(refreshToken) // remove DB
@@ -41,9 +40,9 @@ authRouter.post('/logout',
 authRouter.post('/refresh-token',
     JwtRefreshAuthMiddleware,
     async (req: Request, res: Response) => {
-        // const userByToken = authService.findUserByLogin()
         const accessToken = await authService.createAccessToken(req.user.accountData.userName)
         const refreshToken = await authService.createRefreshToken(req.user.accountData.userName)
+        if (!accessToken || !refreshToken) return res.status(401).send('not authorized')
         return res.status(200).cookie('refreshToken', refreshToken, {httpOnly: true, secure: true}).send({accessToken})
     })
 

@@ -20,8 +20,8 @@ export const JwtRefreshAuthMiddleware = async (req: Request, res: Response, next
     if (!requestRefreshToken) return res.status(401).send('no cookies')
     const validRefreshToken = jwtService.refresh(requestRefreshToken)
     if (!validRefreshToken) return res.status(401).send('token is expired')
-    const user = await jwtService.validateAccessToken((requestRefreshToken))
-    if (!user) return res.status(401).send('no user')
+    const userValidation = await jwtService.validateAccessToken(requestRefreshToken)
+    if (!userValidation) return res.status(401).send('no user')
     await jwtService.logout(requestRefreshToken)
     req.user = await usersService.findUserById(requestRefreshToken.userId);
     return next()
