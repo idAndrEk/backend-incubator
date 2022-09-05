@@ -13,10 +13,12 @@ import {usersRepository} from "../repositories/users-repository";
 import {requestInput} from "../middlewares/requestIp-middleware";
 import {JwtAuthMiddleware, JwtRefreshAuthMiddleware} from "../middlewares/JwtAuthMiddleware";
 import {jwtService} from "../application/jwt-service";
+import {LoginPasswordMiddleware} from "../middlewares/LoginPasswordMiddleware";
 
 export const authRouter = Router({})
 
 authRouter.post('/login',
+    LoginPasswordMiddleware,
     // TODO: midleware на проверку login / password,  "isConfirmed" : false
     requestInput,
     async (req: Request, res: Response) => {
@@ -27,11 +29,11 @@ authRouter.post('/login',
     })
 
 authRouter.post('/logout',
-    // JwtRefreshAuthMiddleware,
+    JwtRefreshAuthMiddleware,
     // TODO: Midl проверить refresh сущ и не валид по времени
     async (req: Request, res: Response) => {
         const refreshToken = req.cookies.refreshToken
-        await jwtService.logout(refreshToken) // remov DB
+        await jwtService.logout(refreshToken) // remove DB
         res.clearCookie('refreshToken')
         return res.sendStatus(204)
     })
@@ -71,7 +73,7 @@ authRouter.post('/registration',
         if (userEmail) {
             return res.status(400).send({errorsMessages: [{message: "Mail already exists", field: "email"}]})
         }
-        const user = await usersService.createUser(req.body.login, req.body.email, req.body.password)
+        const user = await usersService.createUserByEmail(req.body.login, req.body.email, req.body.password)
         if (user) {
             // if (user === '250') {
             return res.sendStatus(204)

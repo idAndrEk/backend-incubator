@@ -39,15 +39,25 @@ export const authService = {
         await emailsManager.sendEmailConfirmationMessage(NewConfirmationCode, user.accountData.email)
     },
 
+    async checkCredential(login:string): Promise<UserAccType | null>{
+        const user = await usersRepository.findByLogin(login)
+        if (!user) return null
+        return user
+    },
+
+    async checkPassword (password: string, hash: string) {
+        return await bcrypt.compare(password, hash)
+    },
+
     async createAccessToken(login: string) {
-        const user = await usersService.findUserByLogin(login)
+        const user = await usersRepository.findByLogin(login)
         if (!user) return null
         const token = await jwtService.createAccessJWT(user!)
         return token
     },
 
     async createRefreshToken(login: string) {
-        const user = await usersService.findUserByLogin(login)
+        const user = await usersRepository.findByLogin(login)
         if (!user) return null
         const token = await jwtService.createRefreshJWT(user)
         await jwtRepository.addTokenToDB(token)

@@ -22,17 +22,10 @@ export const usersService = {
     },
 
     async findUserById(id: string): Promise<UserAccType | null> {
-        return  await usersRepository.findUserById(id)
-        // if (!userById) {
-        //     return null
-        // }
-        // return {
-        //     id: userById.id,
-        //     login: userById.accountData.userName,
-        // }
+        return await usersRepository.findUserById(id)
     },
 
-    async createUser(login: string, email: string, password: string): Promise<UserDto | null> {
+    async createUserByEmail(login: string, email: string, password: string): Promise<UserDto | null> {
         const passwordHash = await authService._generateHash(password)
         const user: UserAccType = {
             id: uuidv4(),
