@@ -1,5 +1,7 @@
+import {ObjectId} from "mongodb";
+
 export type CommentType = {
-    id: string
+    _id: ObjectId
     content: string
     userId: string
     userLogin: string

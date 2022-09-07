@@ -1,6 +1,7 @@
 import {CommentType} from "../types/CommentsTypes";
 import {commentsRepository} from "../repositories/comments-repository";
 import {v4 as uuidv4} from "uuid";
+import {ObjectId} from "mongodb";
 
 
 export const commentsService = {
@@ -10,7 +11,7 @@ export const commentsService = {
 
     async createComment(content: string, userId: string, userLogin: string, postId: string): Promise<CommentType | null> {
         const newComment = {
-            id: uuidv4(),
+            _id: new ObjectId(),
             content: content,
             userId: userId,
             userLogin: userLogin,

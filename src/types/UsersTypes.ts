@@ -1,30 +1,27 @@
-export type UserType = {
-    login: string
-    passwordHash: string
-    email: string
-}
+import {ObjectId} from "mongodb";
 
 export type UserDto = {
+    // _id: ObjectId
     id: string
     login: string
 }
 
 type AccountData = {
-    userName: string,
-    email: string,
-    passwordHash: string,
+    userName: string
+    email: string
+    passwordHash: string
     createdAt: Date
 }
 
 type EmailConfirmation = {
-    confirmationCode: string,
-    expirationDate: Date,
+    confirmationCode: string
+    expirationDate: Date
     isConfirmed: boolean
 }
 
 export type UserAccType = {
-    id: string,
-    accountData: AccountData,
+    _id: ObjectId
+    accountData: AccountData
     emailConfirmation: EmailConfirmation
 }
 

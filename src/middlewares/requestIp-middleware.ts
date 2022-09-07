@@ -1,6 +1,6 @@
 import {NextFunction, Request, Response} from "express";
 import {InputType} from "../types/InputType";
-import {requestIpData} from "../repositories/db";
+import {InputModel} from "../repositories/db";
 
 export const requestInput = async (req: Request, res: Response, next: NextFunction) => {
     const input: InputType = {
@@ -8,9 +8,9 @@ export const requestInput = async (req: Request, res: Response, next: NextFuncti
         endpoint: req.url,
         date: +(new Date())
     }
-    await requestIpData.insertOne(input)
+    await InputModel.insertMany(input)
     const startDate = +(new Date()) - 10000
-    const count = await requestIpData.countDocuments({ // вынести в слой
+    const count = await InputModel.countDocuments({ // вынести в слой
     // const count  = await usersRepository.saveRequestBD({
         ip: req.ip,
         endpoint: req.url,

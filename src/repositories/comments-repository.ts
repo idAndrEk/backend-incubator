@@ -1,32 +1,29 @@
 import {CommentType} from "../types/CommentsTypes";
-import {commentCollection} from "./db";
-
+import {CommentModel} from "./db";
 
 export const commentsRepository = {
     async findCommentId(id: string): Promise<CommentType | null> {
-        return await commentCollection.findOne({id: id}, {projection: {_id: 0}})
+        return CommentModel.findById(id)
     },
 
-    async creteComment(newComment: CommentType): Promise<boolean> {
+    async creteComment(newComment: CommentType): Promise<CommentType | null> {
         try {
-            await commentCollection.insertOne(newComment)
-            return true
+            const comment = new CommentModel(newComment)
+            return comment.save()
         } catch (e) {
-            return false
+            return null
         }
     },
 
     async updateComment(id: string, content: string): Promise<boolean | null> {
-        const result = await commentCollection.updateOne({id}, {
-            $set: {
-                content: content
-            }
-        })
-        return result.matchedCount === 1
+        const comment = await CommentModel.updateOne({id}, {content})
+        if (comment) return true
+        return false
     },
 
     async deleteComment(id: string): Promise<boolean> {
-        const result = await commentCollection.deleteOne({id})
-        return result.deletedCount === 1
+        const comment = await CommentModel.deleteOne({id})
+        if (comment) return true
+        return false
     }
 }

@@ -14,6 +14,7 @@ export const JwtAuthMiddleware = async (req: Request, res: Response, next: NextF
 
     const user = await usersService.findUserById(userId)
     if (!user) return res.sendStatus(401)
+
     req.user = user;
     return next()
 }
@@ -29,14 +30,9 @@ export const JwtRefreshAuthMiddleware = async (req: Request, res: Response, next
 
     const user = await usersService.findUserById(userId)
     if (!user) return res.sendStatus(401)
+
     req.user = user;
     return next()
 }
 
 
-//  забрали рефрешТокен из куков
-// проверили был ли он там
-// 1. узнать что он не просрочен
-// 2. достать из него логин юзера
-// 3. проверить что токен есть в списке разрешенных
-// 4. проверить что юзер в бд

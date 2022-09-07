@@ -2,12 +2,13 @@ import {Request, Response, Router} from "express";
 import {commentsService} from "../domain/comments-service";
 import {authMiddlewareUser} from "../middlewares/auth-middleware";
 import {commentValidation} from "../middlewares/comments-validation";
-import {allValidation} from "../middlewares/Validation";
-import {commentsRepository} from "../repositories/comments-repository";
+import {allValidation} from "../middlewares/ValidationError";
+import {checkIdParamMiddleware} from "../middlewares/checkIdParam-Middleware";
 
 export const commentsRouter = Router({})
 
 commentsRouter.get('/:id',
+    checkIdParamMiddleware,
     async (req: Request, res: Response) => {
         const comment = await commentsService.findCommentId(req.params.id);
         if (!comment) {
@@ -18,6 +19,7 @@ commentsRouter.get('/:id',
     })
 
 commentsRouter.put('/:id',
+    checkIdParamMiddleware,
     authMiddlewareUser,
     commentValidation,
     allValidation,
@@ -48,6 +50,7 @@ commentsRouter.put('/:id',
     })
 
 commentsRouter.delete('/:id',
+    checkIdParamMiddleware,
     authMiddlewareUser,
     async (req: Request<{ id: string }>, res: Response) => {
         const commentToDelete = await commentsService.findCommentId(req.params.id)

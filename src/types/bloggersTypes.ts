@@ -1,15 +1,9 @@
+import {ObjectId} from "mongodb";
+
 export type BloggerType = {
-    id: string
+   _id: ObjectId
     name: string
     youtubeUrl: string
-}
-
-export type PaginationType<T> = {
-    pagesCount: number
-    page: number
-    pageSize: number
-    totalCount: number
-    items: T[]
 }
 
 export type PaginationBloggerType = {

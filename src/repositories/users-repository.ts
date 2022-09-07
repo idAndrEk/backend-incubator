@@ -1,72 +1,79 @@
 import {UserAccType, UserDto} from "../types/UsersTypes";
-import {usersCollection} from "./db";
+import {UserModel} from "./db";
 
 export const usersRepository = {
 
     async countComment(): Promise<number> {
-        return await usersCollection.countDocuments({})
+        const count = await UserModel.countDocuments({})
+        return count
     },
 
     async getAllUsers(page: number, pageSize: number): Promise<UserDto[]> {
-        return usersCollection
-            .find({}, {projection: {_id: 0}})
+        const user = UserModel
+            .aggregate()
+            .project({id: '$_id', login: '$accountData.userName', _id:0})
             .skip((page - 1) * pageSize)
             .limit(pageSize)
-            .map(users => {
-                return {id: users.id, login: users.accountData.userName}
-            })
-            .toArray()
+        return user
     },
 
     async findUserById(id: string): Promise<UserAccType | null> {
-        return await usersCollection.findOne({id})
+        return UserModel.findById(id)
     },
 
     // async createUser(newUser: UserType): Promise<UserAccType> {
     //     return await usersCollection.insertOne(newUser)
     // },
 
-    async createUser(newUser: UserAccType) {
-        return await usersCollection.insertOne(newUser)
+    async createUser(newUser: UserAccType): Promise<UserAccType | null> {
+        try {
+            const user = new UserModel(newUser)
+            return user.save()
+        } catch (e) {
+            return null
+        }
     },
 
     async deleteUserById(id: string): Promise<boolean> {
-        const result = await usersCollection.deleteOne({id})
-        return result.deletedCount === 1
+        const user = await UserModel.findByIdAndDelete(id)
+        if (user) return true
+        return false
     },
 
     async findByLogin(login: string): Promise<UserAccType | null> {
-        return await usersCollection.findOne({'accountData.userName': login})
+        const byLogin = await UserModel.findOne({'accountData.userName': login})
+        return byLogin
     },
 
     async findByEmail(email: string) {
-        return await usersCollection.findOne({'accountData.email': email})
+        const byEmail = await UserModel.findOne({'accountData.email': email})
+        return byEmail
     },
 
     async findUserByConfirmationCode(emailConfirmationCode: string) {
-        const user = await usersCollection.findOne({'emailConfirmation.confirmationCode': emailConfirmationCode})
-        // console.log("findUserByConfirmationCode", user)
+        const user = await UserModel.findOne({'emailConfirmation.confirmationCode': emailConfirmationCode})
         return user
     },
 
     async updateConfirmation(id: string): Promise<boolean | null> {
-        const result = await usersCollection.updateOne({id}, {$set: {'emailConfirmation.isConfirmed': true}})
+        const result = await UserModel.updateOne({id}, {$set: {'emailConfirmation.isConfirmed': true}})
         return result.modifiedCount === 1
     },
 
     async updateConfirmationCode(user: UserAccType, confirmationCode: string, expirationDate: Date) {
-        return await usersCollection.findOneAndUpdate({id: user.id}, {
-            $set: {
-                'emailConfirmation.confirmationCode': confirmationCode,
-                'emailConfirmation.expirationDate': expirationDate
-            }
+        const updateConfirm = await UserModel.findOneAndUpdate(user._id, {
+            'emailConfirmation.confirmationCode': confirmationCode,
+            'emailConfirmation.expirationDate': expirationDate
         })
-    },
-
-    async getAllUsersByToken(user: UserAccType) {
-        return await usersCollection.find({})
+        if (updateConfirm) return true
+        return false
     }
 }
+
+
+// async getAllUsersByToken(user: UserAccType) {
+//     return await UserModel.find({})
+// }
 
 
 // async saveRequestBD(ip: string, endpoint: string, date: number) {

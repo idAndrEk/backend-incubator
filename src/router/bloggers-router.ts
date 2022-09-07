@@ -1,11 +1,12 @@
 import {Request, Response, Router} from "express";
 import {bloggersService} from "../domain/bloggers-service";
-import {allValidation} from "../middlewares/Validation";
+import {allValidation} from "../middlewares/ValidationError";
 import {BloggerValidation} from "../middlewares/Blogger-validation";
 import {authMiddleware} from "../middlewares/auth-middleware";
 import {postsService} from "../domain/posts-service";
 import {bloggersRepository} from "../repositories/bloggers-db-repository";
 import {postValidation} from "../middlewares/Post-validation";
+import {checkIdParamMiddleware} from "../middlewares/checkIdParam-Middleware";
 
 export const bloggersRouter = Router({})
 
@@ -19,6 +20,7 @@ bloggersRouter.get('/',
     })
 
 bloggersRouter.get('/:id',
+    checkIdParamMiddleware,
     async (req: Request, res: Response) => {
         const blogger = await bloggersService.findBloggerById(req.params.id)
         if (!blogger) {
@@ -43,14 +45,16 @@ bloggersRouter.post('/',
     })
 
 bloggersRouter.put('/:id',
+    checkIdParamMiddleware,
     authMiddleware,
     BloggerValidation,
     allValidation,
     async (req: Request, res: Response) => {
-        const idBlogger = req.params.id;
-        const nameBlogger = req.body.name;
-        const youtubeUrlBlogger = req.body.youtubeUrl;
-        const updateBlogger = await bloggersService.updateBlogger(idBlogger, nameBlogger, youtubeUrlBlogger)
+        // const idBlogger = req.params.id;
+        // const nameBlogger = req.body.name;
+        // const youtubeUrlBlogger = req.body.youtubeUrl;
+        const updateBlogger = await bloggersService.updateBlogger(req.params.id, req.body.name, req.body.youtubeUrl)
+        console.log(updateBlogger)
         if (updateBlogger) {
             return res.sendStatus(204)
         } else {
@@ -59,6 +63,7 @@ bloggersRouter.put('/:id',
     })
 
 bloggersRouter.delete('/:id',
+    checkIdParamMiddleware,
     authMiddleware,
     async (req: Request, res: Response) => {
         const isDeleted = await bloggersService.deleteBlogger(req.params.id)
@@ -70,6 +75,7 @@ bloggersRouter.delete('/:id',
     })
 
 bloggersRouter.get('/:id/posts',
+    checkIdParamMiddleware,
     async (req: Request, res: Response) => {
         let page = req.query.PageNumber || 1
         let pageSize = req.query.PageSize || 10
@@ -91,6 +97,7 @@ bloggersRouter.get('/:id/posts',
     })
 
 bloggersRouter.post('/:id/posts',
+    checkIdParamMiddleware,
     authMiddleware,
     postValidation,
     allValidation,

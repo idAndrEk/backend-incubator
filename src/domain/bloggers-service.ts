@@ -2,12 +2,15 @@ import {bloggersRepository} from "../repositories/bloggers-db-repository";
 import {BloggerType, PaginationBloggerType} from "../types/bloggersTypes";
 import {v4 as uuidv4} from "uuid";
 import {PaginationPostType} from "../types/postsTypes";
+import {Schema} from "mongoose";
+import { ObjectId } from "mongodb";
 
 export const bloggersService = {
     async allBloggers(page: number, pageSize: number, name: string | null): Promise<PaginationBloggerType> {
         const bloggerData = await bloggersRepository.allBloggers(page, pageSize, name)
         const pagesCount = Math.ceil(await bloggersRepository.countBlogger(name) / pageSize)
         const totalCount = await bloggersRepository.countBlogger(name)
+        console.log('BL DATA = ', bloggerData)
         return {
             "pagesCount": pagesCount,
             "page": page,
@@ -18,17 +21,19 @@ export const bloggersService = {
     },
 
     async findBloggerById(id: string): Promise<BloggerType | null> {
-        return bloggersRepository.findBloggerById(id)
+        const blogger =  await bloggersRepository.findBloggerById(id)
+        return  blogger
     },
 
     async createBlogger(name: string, youtubeUrl: string): Promise<BloggerType | null> {
         const newBlogger = {
-            id: uuidv4(),
+            _id: new ObjectId(),
             name: name,
             youtubeUrl: youtubeUrl
         }
-        const isBloggerCreated = await bloggersRepository.createBlogger(newBlogger)
-        if (isBloggerCreated) return newBlogger
+
+        const createdBlogger = await bloggersRepository.createBlogger(newBlogger)
+        if (createdBlogger) return createdBlogger
         return null
     },
 

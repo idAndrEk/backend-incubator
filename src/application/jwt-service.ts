@@ -5,19 +5,19 @@ import {jwtRepository} from "../repositories/jwt-repository";
 
 export const jwtService = {
     async createAccessJWT(user: UserAccType) {
-        const token = jwt.sign({userId: user.id}, envSetting.JWT_ACCESS, {expiresIn: '10s'})
+        const token = jwt.sign({userId: user._id}, envSetting.JWT_ACCESS, {expiresIn: '10m'})
         return token
     },
 
     async createRefreshJWT(user: UserAccType) {
-        const token = jwt.sign({userId: user.id}, envSetting.JWT_REFRESH, {expiresIn: '20s'})
+        const token = jwt.sign({userId: user._id}, envSetting.JWT_REFRESH, {expiresIn: '20m'})
         return token
     },
 
     async getUserIdByToken(token: string) {
         try {
-            const result: any = jwt.verify(token, envSetting.JWT_ACCESS);
-            return result.userId
+            const jwtPayload: any = jwt.verify(token, envSetting.JWT_ACCESS);
+            return jwtPayload.userId
         } catch (error) {
             return null
         }
@@ -43,11 +43,9 @@ export const jwtService = {
 
     async ValidateDbRefreshToken(refreshToken: string) { //ValidateDbRefreshToken
         if (!refreshToken) return null
-        const userId = this.validateRefreshToken(refreshToken); //зашито
-        const tokenFromDb = await jwtRepository.findTokenToDB(refreshToken); // DB
-        if (!userId || !tokenFromDb) {
-            return null
-        }
+        const userId = this.validateRefreshToken(refreshToken);
+        const tokenFromDb = await jwtRepository.findTokenToDB(refreshToken);
+        if (!userId || !tokenFromDb) return null
         return userId
     },
 

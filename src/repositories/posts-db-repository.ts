@@ -1,48 +1,50 @@
-import {commentCollection, postCollection} from "./db";
+import {CommentModel, PostModel} from "./db";
 import {PostType} from "../types/postsTypes";
-import {PaginationType} from "../types/bloggersTypes";
+import {ifError} from "assert";
 
 export const postsRepositories = {
     async countPost(): Promise<number> {
-        return await postCollection.countDocuments({})
+        const count = await PostModel.countDocuments({})
+        return count
     },
 
     async allPosts(page: number, pageSize: number): Promise<PostType[]> {
-        return postCollection
-            .find({}, {projection: {_id: 0}})
+        const post = PostModel
+            .find({})
             .skip((page - 1) * pageSize)
             .limit(pageSize)
-            .toArray()
+        return post
     },
 
     async findPostsId(id: string): Promise<PostType | null> {
-        return await postCollection.findOne({id: id}, {projection: {_id: 0}})
+        const post = await PostModel.findById(id)
+        return post
     },
 
-    async createPost(newPost: PostType): Promise<boolean> {
+    async createPost(newPost: PostType): Promise<PostType | null> {
         try {
-            await postCollection.insertOne({...newPost})
-            return true
+            const post = new PostModel(newPost)
+            return post.save()
         } catch (e) {
-            return false
+            return null
         }
     },
 
     async updatePost(id: string, title: string, shortDescription: string, content: string, bloggerId: string): Promise<boolean | null> {
-        const result = await postCollection.updateOne({id}, {
-            $set: {
-                title: title,
-                shortDescription: shortDescription,
-                content: content,
-                bloggerId: bloggerId
-            }
+        const post = await PostModel.findByIdAndUpdate(id, {
+            title,
+            shortDescription,
+            content,
+            bloggerId
         })
-        return result.matchedCount === 1
+        if (post) return true
+        return false
     },
 
     async deletePost(id: string): Promise<boolean> {
-        const result = await postCollection.deleteOne({id})
-        return result.deletedCount === 1
+        const post = await PostModel.findByIdAndDelete(id)
+        if (post) return true
+        return false
     },
 
     async countPostComment(postId: string | null) {
@@ -50,7 +52,7 @@ export const postsRepositories = {
         if (postId) {
             filter = {$regex: postId}
         }
-        return await commentCollection.count(filter)
+        return CommentModel.count(filter)
     },
 
     async findPostComment(postId: string | null, page: number, pageSize: number) {
@@ -58,11 +60,10 @@ export const postsRepositories = {
         if (postId) {
             filter = {$regex: postId}
         }
-        return commentCollection
-            .find(filter, {projection: {_id: 0}})
+        return CommentModel
+            .find(filter)
             .skip((page - 1) * pageSize)
             .limit(pageSize)
-            .toArray()
     }
 }
 

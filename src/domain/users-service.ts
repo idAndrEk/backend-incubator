@@ -4,11 +4,11 @@ import {authService} from "./auth-service";
 import {v4 as uuidv4} from "uuid";
 import add from "date-fns/add";
 import {emailsManager} from "../mail/emailsManager";
-import {jwtRepository} from "../repositories/jwt-repository";
+import {ObjectId} from "mongodb";
 
 export const usersService = {
 
-    async getAllUsers(page: number, pageSize: number): Promise<Omit<PaginationUserType, "email">> { // поделить
+    async getAllUsers(page: number, pageSize: number): Promise<Omit<PaginationUserType, "email">> {
         const usersData = await usersRepository.getAllUsers(page, pageSize)
         const pagesCount = Math.ceil(await usersRepository.countComment() / pageSize)
         const totalCount = await usersRepository.countComment()
@@ -22,13 +22,14 @@ export const usersService = {
     },
 
     async findUserById(id: string): Promise<UserAccType | null> {
-        return await usersRepository.findUserById(id)
+        const user = await usersRepository.findUserById(id)
+        return user
     },
 
-    async createUserByEmail(login: string, email: string, password: string): Promise<UserDto | null> {
+    async createUser(login: string, email: string, password: string): Promise<UserDto | null> {
         const passwordHash = await authService._generateHash(password)
         const user: UserAccType = {
-            id: uuidv4(),
+            _id: new ObjectId(),
             accountData: {
                 userName: login,
                 email,
@@ -41,15 +42,17 @@ export const usersService = {
                 isConfirmed: false
             }
         }
-        await usersRepository.createUser(user)
-
-        // TODO: CreateUser add
+        const newUserDB = await usersRepository.createUser(user)
+        if (!newUserDB) return null
+        await emailsManager.sendEmailConfirmationMessage(user.emailConfirmation.confirmationCode, user.accountData.email)
         const userDto = {
-            id: user.id,
+            // id: user._id.toString(),
+            id: user._id.toString(),
             login: user.accountData.userName
         }
-        await emailsManager.sendEmailConfirmationMessage(user.emailConfirmation.confirmationCode, user.accountData.email)
-        return userDto
+        console.log(userDto)
+        if (userDto) return userDto
+        return null
     },
 
     async deleteUserById(id: string): Promise<boolean> {

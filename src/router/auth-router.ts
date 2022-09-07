@@ -8,12 +8,12 @@ import {
     userValidationLogin,
     userValidationPassword
 } from "../middlewares/User-validation";
-import {allValidation} from "../middlewares/Validation";
+import {allValidation} from "../middlewares/ValidationError";
 import {usersRepository} from "../repositories/users-repository";
 import {requestInput} from "../middlewares/requestIp-middleware";
-import {JwtAuthMiddleware, JwtRefreshAuthMiddleware} from "../middlewares/JwtAuthMiddleware";
+import {JwtAuthMiddleware, JwtRefreshAuthMiddleware} from "../middlewares/JwtAuth-Middleware";
 import {jwtService} from "../application/jwt-service";
-import {LoginPasswordMiddleware} from "../middlewares/LoginPasswordMiddleware";
+import {LoginPasswordMiddleware} from "../middlewares/LoginPassword-Middleware";
 
 export const authRouter = Router({})
 
@@ -22,8 +22,8 @@ authRouter.post('/login',
     // TODO: add createUser "isConfirmed" : true
     requestInput,
     async (req: Request, res: Response) => {
-        const accessToken = await authService.createAccessToken(req.user.accountData.userName)
-        const refreshToken = await authService.createRefreshToken(req.user.accountData.userName)
+        const accessToken = await authService.createAccessToken(req?.user.accountData.userName)
+        const refreshToken = await authService.createRefreshToken(req?.user.accountData.userName)
         return res.status(200).cookie('refreshToken', refreshToken, {httpOnly: true, secure: true}).send({accessToken})
     })
 
@@ -70,7 +70,7 @@ authRouter.post('/registration',
         if (userEmail) {
             return res.status(400).send({errorsMessages: [{message: "Mail already exists", field: "email"}]})
         }
-        const user = await usersService.createUserByEmail(req.body.login, req.body.email, req.body.password)
+        const user = await usersService.createUser(req.body.login, req.body.email, req.body.password)
         if (user) {
             // if (user === '250') {
             return res.sendStatus(204)
