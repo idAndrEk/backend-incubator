@@ -19,7 +19,6 @@ export const authRouter = Router({})
 
 authRouter.post('/login',
     LoginPasswordMiddleware,
-    // TODO: add createUser "isConfirmed" : true
     requestInput,
     async (req: Request, res: Response) => {
         const accessToken = await authService.createAccessToken(req?.user.accountData.userName)
@@ -107,7 +106,7 @@ authRouter.post('/registration-email-resending',
             return res.status(400).send({errorsMessages: [{message: "Mail does not exist", field: "email"}]})
         }
         if (user.emailConfirmation.isConfirmed) {
-            return res.status(400).send({errorsMessages: [{message: "User activated mail", field: "email"}]})
+            return res.status(400).send({errorsMessages: [{message: "User activated adapters", field: "email"}]})
         }
         await authService.confirmNewCode(user)
         return res.sendStatus(204)

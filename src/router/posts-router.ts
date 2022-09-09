@@ -3,8 +3,8 @@ import {postValidation} from "../middlewares/Post-validation";
 import {allValidation} from "../middlewares/ValidationError";
 import {authMiddleware, authMiddlewareUser,} from "../middlewares/auth-middleware";
 import {postsService} from "../domain/posts-service";
-import {bloggersRepository} from "../repositories/bloggers-db-repository";
-import {postsRepositories} from "../repositories/posts-db-repository";
+import {bloggersRepository} from "../repositories/bloggers-repository";
+import {postsRepositories} from "../repositories/posts-repository";
 import {commentsService} from "../domain/comments-service";
 import {commentValidation} from "../middlewares/comments-validation";
 import {checkIdParamMiddleware} from "../middlewares/checkIdParam-Middleware";
@@ -59,7 +59,7 @@ postsRouter.put('/:id',
     postValidation,
     allValidation,
     async (req: Request, res: Response) => {
-        const blogger = await bloggersRepository.findBloggerById(req.body.bloggerId);
+        const blogger = await bloggersRepository.getBloggerById(req.body.bloggerId);
         if (blogger) {
             const idPost = req.params.id;
             const titlePost = req.body.title;

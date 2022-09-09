@@ -1,6 +1,6 @@
-import {postsRepositories} from "../repositories/posts-db-repository";
+import {postsRepositories} from "../repositories/posts-repository";
 import {PaginationPostType, PostType} from "../types/postsTypes";
-import {bloggersRepository} from "../repositories/bloggers-db-repository";
+import {bloggersRepository} from "../repositories/bloggers-repository";
 import {PaginationCommentType} from "../types/CommentsTypes";
 import {ObjectId} from "mongodb";
 
@@ -24,7 +24,7 @@ export const postsService = {
     },
 
     async createPost(title: string, shortDescription: string, content: string, bloggerId: string): Promise<PostType | null> {
-        const blogger = await bloggersRepository.findBloggerById(bloggerId);
+        const blogger = await bloggersRepository.getBloggerById(bloggerId);
         if (!blogger) return null
         const newPost = {
             _id: new ObjectId(),

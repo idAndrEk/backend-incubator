@@ -1,29 +1,30 @@
-import {CommentModel, PostModel} from "./db";
+import {CommentModelClass, PostModelClass} from "./db";
 import {PostType} from "../types/postsTypes";
 import {ifError} from "assert";
 
 export const postsRepositories = {
     async countPost(): Promise<number> {
-        const count = await PostModel.countDocuments({})
+        const count = await PostModelClass.countDocuments({})
         return count
     },
 
     async allPosts(page: number, pageSize: number): Promise<PostType[]> {
-        const post = PostModel
+        const post = PostModelClass
             .find({})
             .skip((page - 1) * pageSize)
             .limit(pageSize)
+            .lean()
         return post
     },
 
     async findPostsId(id: string): Promise<PostType | null> {
-        const post = await PostModel.findById(id)
+        const post = await PostModelClass.findById(id)
         return post
     },
 
     async createPost(newPost: PostType): Promise<PostType | null> {
         try {
-            const post = new PostModel(newPost)
+            const post = new PostModelClass(newPost)
             return post.save()
         } catch (e) {
             return null
@@ -31,7 +32,7 @@ export const postsRepositories = {
     },
 
     async updatePost(id: string, title: string, shortDescription: string, content: string, bloggerId: string): Promise<boolean | null> {
-        const post = await PostModel.findByIdAndUpdate(id, {
+        const post = await PostModelClass.findByIdAndUpdate(id, {
             title,
             shortDescription,
             content,
@@ -42,7 +43,7 @@ export const postsRepositories = {
     },
 
     async deletePost(id: string): Promise<boolean> {
-        const post = await PostModel.findByIdAndDelete(id)
+        const post = await PostModelClass.findByIdAndDelete(id)
         if (post) return true
         return false
     },
@@ -52,7 +53,7 @@ export const postsRepositories = {
         if (postId) {
             filter = {$regex: postId}
         }
-        return CommentModel.count(filter)
+        return CommentModelClass.count(filter)
     },
 
     async findPostComment(postId: string | null, page: number, pageSize: number) {
@@ -60,10 +61,11 @@ export const postsRepositories = {
         if (postId) {
             filter = {$regex: postId}
         }
-        return CommentModel
+        return CommentModelClass
             .find(filter)
             .skip((page - 1) * pageSize)
             .limit(pageSize)
+            .lean()
     }
 }
 

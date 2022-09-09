@@ -1,4 +1,4 @@
-import {bloggersRepository} from "../repositories/bloggers-db-repository";
+import {bloggersRepository} from "../repositories/bloggers-repository";
 import {BloggerType, PaginationBloggerType} from "../types/bloggersTypes";
 import {v4 as uuidv4} from "uuid";
 import {PaginationPostType} from "../types/postsTypes";
@@ -6,8 +6,8 @@ import {Schema} from "mongoose";
 import { ObjectId } from "mongodb";
 
 export const bloggersService = {
-    async allBloggers(page: number, pageSize: number, name: string | null): Promise<PaginationBloggerType> {
-        const bloggerData = await bloggersRepository.allBloggers(page, pageSize, name)
+    async getBloggers(page: number, pageSize: number, name: string | null): Promise<PaginationBloggerType> {
+        const bloggerData = await bloggersRepository.getBloggers(page, pageSize, name)
         const pagesCount = Math.ceil(await bloggersRepository.countBlogger(name) / pageSize)
         const totalCount = await bloggersRepository.countBlogger(name)
         console.log('BL DATA = ', bloggerData)
@@ -20,8 +20,8 @@ export const bloggersService = {
         }
     },
 
-    async findBloggerById(id: string): Promise<BloggerType | null> {
-        const blogger =  await bloggersRepository.findBloggerById(id)
+    async getBloggerById(id: string): Promise<BloggerType | null> {
+        const blogger =  await bloggersRepository.getBloggerById(id)
         return  blogger
     },
 
@@ -45,7 +45,7 @@ export const bloggersService = {
         return await bloggersRepository.deleteBlogger(id)
     },
 
-    async findBloggerPosts(bloggerId: string, page: number, pageSize: number): Promise<PaginationPostType> {
+    async getBloggerPosts(bloggerId: string, page: number, pageSize: number): Promise<PaginationPostType> {
         const postData = await bloggersRepository.findPostsBlogger(bloggerId, page, pageSize)
         const totalCount = await bloggersRepository.countPostBlogger(bloggerId)
         const pagesCount = Math.ceil(await bloggersRepository.countPostBlogger(bloggerId) / pageSize)
@@ -57,5 +57,4 @@ export const bloggersService = {
             "items": postData
         }
     }
-
 }

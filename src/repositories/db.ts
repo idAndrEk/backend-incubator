@@ -113,12 +113,12 @@ tokenSchema.set('toJSON', {
     }
 })
 
-export const BloggerModel = mongoose.model('bloggers', bloggerSchema)
-export const PostModel = mongoose.model('posts', postSchema)
-export const CommentModel = mongoose.model('comments', commentSchema)
-export const UserModel = mongoose.model('users', userSchema)
-export const InputModel = mongoose.model('InputsType', inputSchema)
-export const TokenModel = mongoose.model('Token', tokenSchema)
+export const BloggerModelClass = mongoose.model('bloggers', bloggerSchema)
+export const PostModelClass = mongoose.model('posts', postSchema)
+export const CommentModelClass = mongoose.model('comments', commentSchema)
+export const UserModelClass = mongoose.model('users', userSchema)
+export const InputModelClass = mongoose.model('InputsType', inputSchema)
+export const TokenModelClass = mongoose.model('Token', tokenSchema)
 
 
 export async function runDb() {
@@ -129,10 +129,8 @@ export async function runDb() {
         console.log("Connected successfully to mongo server");
     } catch {
         console.log("Cant`t connect to db!");
+        await mongoose.disconnect();
         // await client.close();
     }
 }
 
-
-// const result: any = await bloggersCollection.find({$regex: name});
-// return result

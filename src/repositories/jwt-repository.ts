@@ -1,18 +1,18 @@
-import {TokenModel} from "./db";
+import {TokenModelClass} from "./db";
 
 export const jwtRepository = {
 
     async removeToken(refreshToken: string) {
-        return TokenModel.deleteMany({refreshToken});
+        return TokenModelClass.deleteMany({refreshToken});
 
     },
 
     async addTokenToDB(refreshToken: string) {
-        return await TokenModel.insertMany({refreshToken})
+        return await TokenModelClass.insertMany({refreshToken})
     },
 
     async findTokenToDB(refreshToken: string) {
-        return TokenModel.findOne({refreshToken})
+        return TokenModelClass.findOne({refreshToken})
     }
 }
 

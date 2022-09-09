@@ -1,6 +1,6 @@
 import nodemailer from 'nodemailer';
 
-export const emailsManager = {
+export const emailAdapter = {
     async sendEmailConfirmationMessage(code: string, email: string) {
         const transporter = nodemailer.createTransport({
             service: 'gmail',

@@ -1,6 +1,6 @@
 import {ObjectId} from "mongodb";
 
-export type UserDto = {
+export type UserResponse = {
     // _id: ObjectId
     id: string
     login: string
@@ -34,5 +34,5 @@ export type PaginationUserType = {
     page: number
     pageSize: number
     totalCount: number
-    items: UserDto[]
+    items: UserResponse[]
 }

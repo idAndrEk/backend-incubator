@@ -4,7 +4,7 @@ import {usersService} from "./users-service";
 import {UserAccType} from "../types/UsersTypes";
 import add from "date-fns/add";
 import {v4 as uuidv4} from "uuid";
-import {emailsManager} from "../mail/emailsManager";
+import {emailAdapter} from "../adapters/email-adapter";
 import {jwtService} from "../application/jwt-service";
 import {jwtRepository} from "../repositories/jwt-repository";
 
@@ -36,7 +36,7 @@ export const authService = {
         const NewConfirmationCode = uuidv4()
         const NewExpirationDate = add(new Date, {hours: 1})
         await usersRepository.updateConfirmationCode(user, NewConfirmationCode, NewExpirationDate)
-        await emailsManager.sendEmailConfirmationMessage(NewConfirmationCode, user.accountData.email)
+        await emailAdapter.sendEmailConfirmationMessage(NewConfirmationCode, user.accountData.email)
     },
 
     async checkCredential(login:string): Promise<UserAccType | null>{

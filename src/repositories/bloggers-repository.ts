@@ -1,4 +1,4 @@
-import {BloggerModel, PostModel} from "./db";
+import {BloggerModelClass, PostModelClass} from "./db";
 import {BloggerType} from "../types/bloggersTypes";
 import {PostType} from "../types/postsTypes";
 
@@ -8,45 +8,46 @@ export const bloggersRepository = {
         if (name) {
             filter = {name: {$regex: `.*${name}.*`}}
         }
-        const count = BloggerModel.countDocuments(filter)
-        return count
+        const countBlogger = BloggerModelClass.countDocuments(filter)
+        return countBlogger
     },
 
-    async allBloggers(page: number, pageSize: number, name: string | null): Promise<BloggerType[]> {
+    async getBloggers(page: number, pageSize: number, name: string | null): Promise<BloggerType[]> {
         let filter = {}
         if (name) {
             filter = {name: {$regex: `.*${name}.*`}}
         }
-        const blogger = BloggerModel
+        const blogger = BloggerModelClass
             .find(filter)
             .skip((page - 1) * pageSize)
             .limit(pageSize)
+            .lean()
         return blogger
     },
 
-    async findBloggerById(id: string): Promise<BloggerType | null> {
-        const blogger = BloggerModel.findById(id)
+    async getBloggerById(id: string): Promise<BloggerType | null> {
+        const blogger = BloggerModelClass.findById(id)
         return blogger
     },
 
     async createBlogger(newBlogger: BloggerType): Promise<BloggerType | null> {
         try {
-            const blogger = new BloggerModel(newBlogger);
-            return blogger.save()
+            const bloggerInstance = new BloggerModelClass(newBlogger);
+            return bloggerInstance.save()
         } catch (e) {
             return null
         }
     },
 
     async updateBlogger(id: string, name: string, youtubeUrl: string): Promise<boolean> {
-        const blogger = await BloggerModel.findByIdAndUpdate(id, {name, youtubeUrl})
-        if (blogger) return true
+        const updateResult = await BloggerModelClass.findByIdAndUpdate(id, {name, youtubeUrl})
+        if (updateResult) return true
         return false
     },
 
     async deleteBlogger(id: string): Promise<boolean> {
-        const blogger = await BloggerModel.findByIdAndDelete(id)
-        if (blogger) return true
+        const deleteResult = await BloggerModelClass.findByIdAndDelete(id)
+        if (deleteResult) return true
         return false
     },
 
@@ -55,8 +56,8 @@ export const bloggersRepository = {
         if (bloggerId) {
             filter = {$regex: bloggerId}
         }
-        const count = PostModel.countDocuments(filter)
-        return count
+        const bloggerPostsCount = PostModelClass.countDocuments(filter)
+        return bloggerPostsCount
     },
 
     async findPostsBlogger(bloggerId: string | null, page: number, pageSize: number): Promise<PostType[]> {
@@ -64,10 +65,11 @@ export const bloggersRepository = {
         if (bloggerId) {
             filter = {$regex: bloggerId}
         }
-        const postByBlogger = PostModel
+        const postByBlogger = PostModelClass
             .find(filter)
             .skip((page - 1) * pageSize)
             .limit(pageSize)
+            .lean()
         return postByBlogger
     }
 }

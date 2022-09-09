@@ -1,9 +1,9 @@
-import {PaginationUserType, UserAccType, UserDto} from "../types/UsersTypes";
+import {PaginationUserType, UserAccType, UserResponse} from "../types/UsersTypes";
 import {usersRepository} from "../repositories/users-repository";
 import {authService} from "./auth-service";
 import {v4 as uuidv4} from "uuid";
 import add from "date-fns/add";
-import {emailsManager} from "../mail/emailsManager";
+import {emailAdapter} from "../adapters/email-adapter";
 import {ObjectId} from "mongodb";
 
 export const usersService = {
@@ -26,7 +26,7 @@ export const usersService = {
         return user
     },
 
-    async createUser(login: string, email: string, password: string): Promise<UserDto | null> {
+    async createUser(login: string, email: string, password: string): Promise<UserResponse | null> {
         const passwordHash = await authService._generateHash(password)
         const user: UserAccType = {
             _id: new ObjectId(),
@@ -44,14 +44,13 @@ export const usersService = {
         }
         const newUserDB = await usersRepository.createUser(user)
         if (!newUserDB) return null
-        await emailsManager.sendEmailConfirmationMessage(user.emailConfirmation.confirmationCode, user.accountData.email)
-        const userDto = {
-            // id: user._id.toString(),
+        await emailAdapter.sendEmailConfirmationMessage(user.emailConfirmation.confirmationCode, user.accountData.email)
+        const userResponse = {
             id: user._id.toString(),
             login: user.accountData.userName
         }
-        console.log(userDto)
-        if (userDto) return userDto
+        console.log(userResponse)
+        if (userResponse) return userResponse
         return null
     },
 
@@ -66,7 +65,6 @@ export const usersService = {
     async findUserByEmail(email: string): Promise<UserAccType | null> {
         return await usersRepository.findByEmail(email);
     }
-
 }
 
 

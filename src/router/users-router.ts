@@ -40,9 +40,9 @@ usersRouter.get('/:id',
 
 usersRouter.post('/',
     authMiddleware,
-    // userValidationLogin,
-    // userValidationPassword,
-    // userValidationEmail,
+    userValidationLogin,
+    userValidationPassword,
+    userValidationEmail,
     allValidation,
     async (req: Request, res: Response) => {
         try {
