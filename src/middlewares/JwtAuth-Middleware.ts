@@ -1,6 +1,5 @@
 import {NextFunction, Request, Response} from "express";
-import {jwtService} from "../application/jwt-service";
-import {usersService} from "../domain/users-service";
+import {jwtService, usersService} from "../composition-root";
 
 export const JwtAuthMiddleware = async (req: Request, res: Response, next: NextFunction) => {
     const authorizationHeader = req.headers.authorization;
@@ -12,7 +11,7 @@ export const JwtAuthMiddleware = async (req: Request, res: Response, next: NextF
     const userId = await jwtService.validateAccessToken(accessToken)
     if (!userId) return res.sendStatus(401)
 
-    const user = await usersService.findUserById(userId)
+    const user = await usersService.getUser(userId)
     if (!user) return res.sendStatus(401)
 
     req.user = user;
@@ -28,7 +27,7 @@ export const JwtRefreshAuthMiddleware = async (req: Request, res: Response, next
 
     await jwtService.logout(requestRefreshToken) // remove
 
-    const user = await usersService.findUserById(userId)
+    const user = await usersService.getUser(userId)
     if (!user) return res.sendStatus(401)
 
     req.user = user;

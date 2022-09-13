@@ -3,16 +3,18 @@ import {envSetting} from "../env_setting";
 import {UserAccType} from '../types/UsersTypes'
 import {jwtRepository} from "../repositories/jwt-repository";
 
-export const jwtService = {
+export class JwtService {
+    constructor() {
+    }
     async createAccessJWT(user: UserAccType) {
-        const token = jwt.sign({userId: user._id}, envSetting.JWT_ACCESS, {expiresIn: '10s'})
+        const token = jwt.sign({userId: user._id}, envSetting.JWT_ACCESS, {expiresIn: '10m'})
         return token
-    },
+    }
 
     async createRefreshJWT(user: UserAccType) {
-        const token = jwt.sign({userId: user._id}, envSetting.JWT_REFRESH, {expiresIn: '20s'})
+        const token = jwt.sign({userId: user._id}, envSetting.JWT_REFRESH, {expiresIn: '20m'})
         return token
-    },
+    }
 
     async getUserIdByToken(token: string) {
         try {
@@ -21,7 +23,7 @@ export const jwtService = {
         } catch (error) {
             return null
         }
-    },
+    }
 
     async validateAccessToken(token: string): Promise<string | null> {
         try {
@@ -30,7 +32,7 @@ export const jwtService = {
         } catch (e) {
             return null
         }
-    },
+    }
 
     async validateRefreshToken(token: string): Promise<string | null> {
         try {
@@ -39,7 +41,7 @@ export const jwtService = {
         } catch (e) {
             return null
         }
-    },
+    }
 
     async ValidateDbRefreshToken(refreshToken: string) { //ValidateDbRefreshToken
         if (!refreshToken) return null
@@ -47,7 +49,7 @@ export const jwtService = {
         const tokenFromDb = await jwtRepository.findTokenToDB(refreshToken);
         if (!userId || !tokenFromDb) return null
         return userId
-    },
+    }
 
     async logout(refreshToken: string) {
         const token = await jwtRepository.removeToken(refreshToken);

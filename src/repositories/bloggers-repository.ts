@@ -2,7 +2,7 @@ import {BloggerModelClass, PostModelClass} from "./db";
 import {BloggerType} from "../types/bloggersTypes";
 import {PostType} from "../types/postsTypes";
 
-export const bloggersRepository = {
+export class BloggersRepository {
     async countBlogger(name: string | null) {
         let filter = {}
         if (name) {
@@ -10,7 +10,7 @@ export const bloggersRepository = {
         }
         const countBlogger = BloggerModelClass.countDocuments(filter)
         return countBlogger
-    },
+    }
 
     async getBloggers(page: number, pageSize: number, name: string | null): Promise<BloggerType[]> {
         let filter = {}
@@ -21,14 +21,14 @@ export const bloggersRepository = {
             .find(filter)
             .skip((page - 1) * pageSize)
             .limit(pageSize)
-            .lean()
+            // .lean()
         return blogger
-    },
+    }
 
     async getBloggerById(id: string): Promise<BloggerType | null> {
         const blogger = BloggerModelClass.findById(id)
         return blogger
-    },
+    }
 
     async createBlogger(newBlogger: BloggerType): Promise<BloggerType | null> {
         try {
@@ -37,19 +37,19 @@ export const bloggersRepository = {
         } catch (e) {
             return null
         }
-    },
+    }
 
     async updateBlogger(id: string, name: string, youtubeUrl: string): Promise<boolean> {
         const updateResult = await BloggerModelClass.findByIdAndUpdate(id, {name, youtubeUrl})
         if (updateResult) return true
         return false
-    },
+    }
 
     async deleteBlogger(id: string): Promise<boolean> {
         const deleteResult = await BloggerModelClass.findByIdAndDelete(id)
         if (deleteResult) return true
         return false
-    },
+    }
 
     async countPostBlogger(bloggerId: string | null) {
         let filter = {}
@@ -58,7 +58,7 @@ export const bloggersRepository = {
         }
         const bloggerPostsCount = PostModelClass.countDocuments(filter)
         return bloggerPostsCount
-    },
+    }
 
     async findPostsBlogger(bloggerId: string | null, page: number, pageSize: number): Promise<PostType[]> {
         let filter = {}
@@ -73,6 +73,5 @@ export const bloggersRepository = {
         return postByBlogger
     }
 }
-
 
 

@@ -1,10 +1,10 @@
 import {CommentType} from "../types/CommentsTypes";
 import {CommentModelClass} from "./db";
 
-export const commentsRepository = {
+export class CommentsRepository {
     async findCommentId(id: string): Promise<CommentType | null> {
         return CommentModelClass.findById(id)
-    },
+    }
 
     async creteComment(newComment: CommentType): Promise<CommentType | null> {
         try {
@@ -13,13 +13,13 @@ export const commentsRepository = {
         } catch (e) {
             return null
         }
-    },
+    }
 
     async updateComment(id: string, content: string): Promise<boolean | null> {
         const comment = await CommentModelClass.updateOne({id}, {content})
         if (comment) return true
         return false
-    },
+    }
 
     async deleteComment(id: string): Promise<boolean> {
         const comment = await CommentModelClass.deleteOne({id})

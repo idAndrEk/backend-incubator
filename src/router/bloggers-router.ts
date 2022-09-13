@@ -1,127 +1,20 @@
-import {Request, Response, Router} from "express";
-import {bloggersService} from "../domain/bloggers-service";
+import {Router} from "express";
 import {allValidation} from "../middlewares/ValidationError";
 import {BloggerValidation} from "../middlewares/Blogger-validation";
 import {authMiddleware} from "../middlewares/auth-middleware";
-import {postsService} from "../domain/posts-service";
-import {bloggersRepository} from "../repositories/bloggers-repository";
 import {postValidation} from "../middlewares/Post-validation";
 import {checkIdParamMiddleware} from "../middlewares/checkIdParam-Middleware";
+import {bloggersController} from "../composition-root";
 
 export const bloggersRouter = Router({})
 
-bloggersRouter.get('/',
-    async (req: Request, res: Response) => {
-        const page = req.query.PageNumber || 1
-        const pageSize = req.query.PageSize || 10
-        const name = req.query.SearchNameTerm || null
-        const bloggers = await bloggersService.getBloggers(+page, +pageSize, name ? name.toString() : null)
-        return res.status(200).send(bloggers)
-    })
-
-bloggersRouter.get('/:id',
-    checkIdParamMiddleware,
-    async (req: Request, res: Response) => {
-        const blogger = await bloggersService.getBloggerById(req.params.id)
-        if (!blogger) {
-            res.status(404).send('Not found')
-        } else {
-            res.status(200).send(blogger)
-        }
-    })
-
-bloggersRouter.post('/',
-    authMiddleware,
-    BloggerValidation,
-    allValidation,
-    async (req: Request, res: Response) => {
-        const bloggerName = req.body.name;
-        const bloggerYoutubeUrl = req.body.youtubeUrl;
-        const newBlogger = await bloggersService.createBlogger(bloggerName, bloggerYoutubeUrl);
-        if (!newBlogger) {
-            return res.status(500).send('something went wrong')
-        }
-        return res.status(201).send(newBlogger)
-    })
-
-bloggersRouter.put('/:id',
-    checkIdParamMiddleware,
-    authMiddleware,
-    BloggerValidation,
-    allValidation,
-    async (req: Request, res: Response) => {
-        // const idBlogger = req.params.id;
-        // const nameBlogger = req.body.name;
-        // const youtubeUrlBlogger = req.body.youtubeUrl;
-        const updateBlogger = await bloggersService.updateBlogger(req.params.id, req.body.name, req.body.youtubeUrl)
-        console.log(updateBlogger)
-        if (updateBlogger) {
-            return res.sendStatus(204)
-        } else {
-            return res.sendStatus(404)
-        }
-    })
-
-bloggersRouter.delete('/:id',
-    checkIdParamMiddleware,
-    authMiddleware,
-    async (req: Request, res: Response) => {
-        const isDeleted = await bloggersService.deleteBlogger(req.params.id)
-        if (isDeleted) {
-            return res.sendStatus(204)
-        } else {
-            return res.sendStatus(404)
-        }
-    })
-
-bloggersRouter.get('/:id/posts',
-    checkIdParamMiddleware,
-    async (req: Request, res: Response) => {
-        let page = req.query.PageNumber || 1
-        let pageSize = req.query.PageSize || 10
-        const bloggerId = req.params.id
-        const blogger = await bloggersRepository.getBloggerById(bloggerId)
-        if (blogger) {
-            const bloggerPosts = await bloggersService.getBloggerPosts(bloggerId, +page, +pageSize)
-            return res.status(200).send(bloggerPosts)
-        } else {
-            const errors = [];
-            errors.push({message: 'Error bloggerId', field: 'bloggerId'})
-            if (errors.length) {
-                res.status(404).json({
-                    errorsMessages: errors
-                })
-                return
-            }
-        }
-    })
-
-bloggersRouter.post('/:id/posts',
-    checkIdParamMiddleware,
-    authMiddleware,
-    postValidation,
-    allValidation,
-    async (req: Request, res: Response) => {
-        const bloggerId = req.params.id;
-        const titlePost = req.body.title;
-        const shortDescriptionPost = req.body.shortDescription;
-        const contentPost = req.body.content;
-        const newPostBlogger = await postsService.createPost(
-            titlePost,
-            shortDescriptionPost,
-            contentPost,
-            bloggerId,
-        )
-        if (!newPostBlogger) {
-            const errors = [];
-            errors.push({message: 'Error bloggerId', field: 'bloggerId'})
-            res.status(404).json({
-                errorsMessages: errors
-            })
-            return
-        }
-        return res.status(201).send(newPostBlogger)
-    })
+bloggersRouter.get('/', bloggersController.getBloggers.bind(bloggersController))
+bloggersRouter.get('/:id', checkIdParamMiddleware, bloggersController.getBlogger.bind(bloggersController))
+bloggersRouter.post('/', authMiddleware, BloggerValidation, allValidation, bloggersController.createBlogger.bind(bloggersController))
+bloggersRouter.put('/:id', checkIdParamMiddleware, authMiddleware, BloggerValidation, allValidation, bloggersController.updateBlogger.bind(bloggersController))
+bloggersRouter.delete('/:id', checkIdParamMiddleware, authMiddleware, bloggersController.deleteBlogger.bind(bloggersController))
+bloggersRouter.get('/:id/posts', checkIdParamMiddleware, bloggersController.getBloggerPosts.bind(bloggersController))
+bloggersRouter.post('/:id/posts', checkIdParamMiddleware, authMiddleware, postValidation, allValidation, bloggersController.createPostBlogger.bind(bloggersController))
 
 
 
