@@ -125,24 +125,23 @@ export class PostsController {
     }
 
     async createComment(req: Request, res: Response) {
+        const post = await this.postsService.getPost(req.params.id);
+        if (!post) return res.sendStatus(404)
         const postId = req.params.id;
-        console.log(postId)
         const content = req.body.content;
         // const userLogin = req.user?.login as string;
+        // const userId = req.user?.id as string;
+        const userId = req.user.id;
         const userLogin = req.user.accountData.userName;
-        const userId = req.user?.id as string;
-        const post = await this.postsService.getPost(postId);
-        if (post) {
-            const newCommentPost = await this.commentsService.createComment(content, userId, userLogin, postId)
-            res.status(201).send(newCommentPost)
-        } else {
-            const errors = [];
-            errors.push({message: 'Error postId', field: 'postId'});
-            res.status(404).json({
-                errorsMessages: errors
-            })
-            return
-        }
+        const newCommentPost = await this.commentsService.createComment(content, userId, userLogin, postId)
+        return res.status(201).send(newCommentPost)
+        const errors = [];
+        errors.push({message: 'Error postId', field: 'postId'});
+        res.status(404).json({
+            errorsMessages: errors
+        })
+        return
     }
+
 }
 
