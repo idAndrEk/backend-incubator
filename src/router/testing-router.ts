@@ -1,7 +1,7 @@
 import {Router, Request, Response} from "express";
 import {
     BloggerModelClass,
-    CommentModelClass, InputModelClass, LikeModelClass,
+    CommentModelClass, InputModelClass, PostLikeModelClass,
     PostModelClass,
     TokenModelClass,
     UserModelClass,
@@ -17,7 +17,7 @@ testingRouter.delete('/all-data',
         await UserModelClass.deleteMany({})
         await TokenModelClass.deleteMany({})
         await InputModelClass.deleteMany({})
-        await LikeModelClass.deleteMany({})
+        await PostLikeModelClass.deleteMany({})
         return res.sendStatus(204)
     })
 

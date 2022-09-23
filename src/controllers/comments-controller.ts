@@ -42,6 +42,20 @@ export class CommentsController {
         }
     }
 
+    async addLikeToComment(req: Request, res: Response) {
+        try {
+            const comment = await this.commentsService.findCommentId(req.params.id);
+            if (!comment) return res.sendStatus(404)
+            const commentId = req.params.id;
+            const userId = req.user.id;
+            const login = req.user.accountData.userName;
+            const {likeStatus} = req.body;
+            await this.commentsService.addLikeToComment(commentId, userId, login, likeStatus)
+        } catch (error) {
+            return res.status(500).send(error)
+        }
+    }
+
     async deleteComment(req: Request<{ id: string }>, res: Response) {
         const commentToDelete = await this.commentsService.findCommentId(req.params.id)
         if (commentToDelete!.userId != req.user?.id) {

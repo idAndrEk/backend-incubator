@@ -4,7 +4,7 @@ import {PaginationCommentType} from "../types/CommentsTypes";
 import {ObjectId} from "mongodb";
 import {BloggersRepository} from "../repositories/bloggers-repository";
 import {injectable} from "inversify";
-import {LikeCollectionType} from "../types/likeType";
+import {LikePostCollectionType} from "../types/likeTypes";
 
 @injectable()
 export class PostsService {
@@ -49,7 +49,7 @@ export class PostsService {
                 newestLikes: []
             }
         }
-        console.log('postService', newPost)
+        //add array push
         const createdPost = await this.postsRepository.createPost(newPost)
         if (createdPost) return createdPost
         return null
@@ -67,13 +67,13 @@ export class PostsService {
     // }
 
     async addLikeToPost(postId: string, userId: string, login: string, likeStatus: string): Promise<boolean> {
-        const likeDB: LikeCollectionType = {
+        const likePostDB: LikePostCollectionType = {
             status: likeStatus,
             createdAt: new Date(),
             postId: new ObjectId(postId),
             userId: new ObjectId(userId)
         }
-        const createdLike = await this.postsRepository.addLike(likeDB)
+        const createdLike = await this.postsRepository.addLike(likePostDB)
         if (createdLike) return createdLike
         return false
     }

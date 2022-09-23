@@ -1,4 +1,5 @@
 import {ObjectId} from "mongodb";
+import {LikesInfo} from "./likeTypes";
 
 export type CommentType = {
     _id: ObjectId
@@ -6,6 +7,7 @@ export type CommentType = {
     userId: string
     userLogin: string
     addedAt: Date
+    likesInfo: LikesInfo
 }
 
 export type PaginationCommentType = {

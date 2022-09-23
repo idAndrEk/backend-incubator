@@ -1,5 +1,5 @@
 import {ObjectId} from "mongodb";
-import {ExtendedLikesInfo} from "./likeType";
+import {ExtendedLikesInfo} from "./likeTypes";
 
 
 export type PostType = {

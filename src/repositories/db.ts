@@ -4,9 +4,9 @@ import {BloggerType} from "../types/bloggersTypes";
 import {PostType} from "../types/postsTypes";
 import {CommentType} from "../types/CommentsTypes";
 import {TokenType, UserAccType} from "../types/UsersTypes";
-import {InputType} from "../types/InputType";
+import {InputType} from "../types/InputTypes";
 import mongoose from "mongoose";
-import {LikeCollectionType} from "../types/likeType";
+import {LikeCommentCollectionType, LikePostCollectionType} from "../types/likeTypes";
 
 // const client = new MongoClient(envSetting.MongoURI);
 // export const db = client.db("home-blogger");
@@ -67,7 +67,12 @@ const commentSchema = new mongoose.Schema<CommentType>({
     content: {type: String, required: true},
     userId: {type: String, required: true},
     userLogin: {type: String, required: true},
-    addedAt: {type: Date, default: Date.now}
+    addedAt: {type: Date, default: Date.now},
+    likesInfo: {
+        likesCount: Number,
+        dislikesCount: Number,
+        myStatus: String
+    }
 })
 
 commentSchema.set('toJSON', {
@@ -128,9 +133,15 @@ tokenSchema.set('toJSON', {
 })
 
 
-const likeSchema = new mongoose.Schema<LikeCollectionType>({
-    // _id: {type: ObjectId, required: true},
-    postId: {type: ObjectId, required: true}, // postId
+const likePostSchema = new mongoose.Schema<LikePostCollectionType>({
+    postId: {type: ObjectId, required: true},
+    status: { type: String, required: true },
+    createdAt: { type: Date, required: true },
+    userId: {type: ObjectId, required: true} //UserId
+})
+
+const likeCommentSchema = new mongoose.Schema<LikeCommentCollectionType>({
+    commentId: {type: ObjectId, required: true},
     status: { type: String, required: true },
     createdAt: { type: Date, required: true },
     userId: {type: ObjectId, required: true} //UserId
@@ -142,8 +153,8 @@ export const CommentModelClass = mongoose.model('comments', commentSchema)
 export const UserModelClass = mongoose.model('users', userSchema)
 export const InputModelClass = mongoose.model('InputsType', inputSchema)
 export const TokenModelClass = mongoose.model('Token', tokenSchema)
-export const LikeModelClass = mongoose.model('likes', likeSchema)
-
+export const PostLikeModelClass = mongoose.model('likesPost', likePostSchema)
+export const LikeCommentModelClass = mongoose.model('likesComment', likeCommentSchema)
 
 export async function runDb() {
     try {

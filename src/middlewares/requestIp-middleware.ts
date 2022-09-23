@@ -1,5 +1,5 @@
 import {NextFunction, Request, Response} from "express";
-import {InputType} from "../types/InputType";
+import {InputType} from "../types/InputTypes";
 import {InputModelClass} from "../repositories/db";
 
 export const requestInput = async (req: Request, res: Response, next: NextFunction) => {
