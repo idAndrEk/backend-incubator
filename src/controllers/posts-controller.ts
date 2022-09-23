@@ -7,6 +7,7 @@ import {jwtService} from "../composition-root";
 
 @injectable()
 export class PostsController {
+
     constructor(protected postsService: PostsService, protected bloggersService: BloggersService, protected commentsService: CommentsService) {
     }
 
@@ -125,8 +126,10 @@ export class PostsController {
 
     async createComment(req: Request, res: Response) {
         const postId = req.params.id;
+        console.log(postId)
         const content = req.body.content;
-        const userLogin = req.user?.login as string;
+        // const userLogin = req.user?.login as string;
+        const userLogin = req.user.accountData.userName;
         const userId = req.user?.id as string;
         const post = await this.postsService.getPost(postId);
         if (post) {

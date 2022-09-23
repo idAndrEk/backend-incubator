@@ -10,6 +10,7 @@ export class CommentsController {
 
     async getComment(req: Request, res: Response) {
         const comment = await this.commentsService.findCommentId(req.params.id);
+        console.log(comment)
         if (!comment) {
             return res.status(404).send('Not found')
         } else {

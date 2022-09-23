@@ -59,13 +59,6 @@ export class PostsService {
         return await this.postsRepository.updatePost(id, title, shortDescription, content, bloggerId)
     }
 
-    // async updateLike(postId: string,likeStatus: string): Promise<PostType | null> {
-    //     const like = await this.postsRepository.updateLike(postId, likeStatus)
-    //     if (!like) return null
-    //     // await this.addLikeToPost(likeStatus)
-    //
-    // }
-
     async addLikeToPost(postId: string, userId: string, login: string, likeStatus: string): Promise<boolean> {
         const likePostDB: LikePostCollectionType = {
             status: likeStatus,
