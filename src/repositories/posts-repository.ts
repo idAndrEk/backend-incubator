@@ -1,6 +1,10 @@
-import {CommentModelClass, PostModelClass} from "./db";
+import {CommentModelClass, LikeModelClass, PostModelClass} from "./db";
 import {PostType} from "../types/postsTypes";
+import {injectable} from "inversify";
+import {LikeCollectionType} from "../types/likeType";
+import {ObjectId} from "mongodb";
 
+@injectable()
 export class PostsRepository {
     async countPost(): Promise<number> {
         const count = await PostModelClass.countDocuments({})
@@ -10,9 +14,10 @@ export class PostsRepository {
     async allPosts(page: number, pageSize: number): Promise<PostType[]> {
         const post = PostModelClass
             .find({})
+            // .find({}, {_id: false, __v: false})
             .skip((page - 1) * pageSize)
             .limit(pageSize)
-            // .lean()
+        // .lean()
         return post
     }
 
@@ -38,6 +43,24 @@ export class PostsRepository {
             bloggerId
         })
         if (post) return true
+        return false
+    }
+
+    // async updateLike(postId: string, likeStatus: string): Promise<PostType | null> {
+
+        // const like = await PostModelClass.updateOne({extendedLikesInfo.newestLikes})
+        // const post = await PostModelClass.findById(postId)
+        // const newLikes = {...post, likeStatus}
+        // if (!post) return null
+        // post.extendedLikesInfo.newestLikes = newLikes
+        // await post.save()
+        // return true
+    // }
+
+    async addLike(likeDB: LikeCollectionType): Promise<boolean> {
+        const updateLake = await PostModelClass.updateOne({'extendedLikesInfo.myStatus': likeDB.status})
+        const createdResult = await LikeModelClass.create(likeDB)
+        if (createdResult && updateLake) return true
         return false
     }
 

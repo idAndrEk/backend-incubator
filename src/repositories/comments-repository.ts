@@ -1,6 +1,8 @@
 import {CommentType} from "../types/CommentsTypes";
 import {CommentModelClass} from "./db";
+import {injectable} from "inversify";
 
+@injectable()
 export class CommentsRepository {
     async findCommentId(id: string): Promise<CommentType | null> {
         return CommentModelClass.findById(id)

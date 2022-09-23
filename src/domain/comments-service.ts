@@ -1,7 +1,9 @@
 import {CommentType} from "../types/CommentsTypes";
 import {CommentsRepository} from "../repositories/comments-repository";
 import {ObjectId} from "mongodb";
+import {injectable} from "inversify";
 
+@injectable()
 export class CommentsService {
 
     constructor(protected commentsRepository: CommentsRepository) {}

@@ -1,7 +1,9 @@
 import {BloggerModelClass, PostModelClass} from "./db";
 import {BloggerType} from "../types/bloggersTypes";
 import {PostType} from "../types/postsTypes";
+import {injectable} from "inversify";
 
+@injectable()
 export class BloggersRepository {
     async countBlogger(name: string | null) {
         let filter = {}

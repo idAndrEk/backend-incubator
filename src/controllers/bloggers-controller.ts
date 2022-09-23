@@ -1,7 +1,9 @@
 import {PostsService} from "../domain/posts-service";
 import {BloggersService} from "../domain/bloggers-service";
 import {Request, Response} from "express";
+import {injectable} from "inversify";
 
+@injectable()
 export class BloggersController {
     constructor(protected bloggersService: BloggersService, protected postsService: PostsService) {}
 

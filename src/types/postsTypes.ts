@@ -1,4 +1,6 @@
 import {ObjectId} from "mongodb";
+import {ExtendedLikesInfo} from "./likeType";
+
 
 export type PostType = {
     _id: ObjectId
@@ -7,6 +9,7 @@ export type PostType = {
     content: string
     bloggerId: string
     bloggerName: string
+    extendedLikesInfo: ExtendedLikesInfo
 }
 
 export type PaginationPostType = {

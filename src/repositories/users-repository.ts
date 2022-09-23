@@ -1,6 +1,8 @@
 import {UserAccType, UserResponse} from "../types/UsersTypes";
 import {UserModelClass} from "./db";
+import {injectable} from "inversify";
 
+@injectable()
 export class UsersRepository {
 
     async countComment(): Promise<number> {

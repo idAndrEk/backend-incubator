@@ -1,11 +1,12 @@
 import {UsersService} from "../domain/users-service";
 import {Request, Response} from "express";
 import {jwtService} from "../composition-root";
+import {injectable} from "inversify";
 
+@injectable()
 export class AuthController {
 
-    constructor(protected usersService: UsersService) {
-    }
+    constructor(protected usersService: UsersService) {}
 
     async login(req: Request, res: Response) {
         const accessToken = await this.usersService.createAccessToken(req?.user.accountData.userName)

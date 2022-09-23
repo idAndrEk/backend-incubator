@@ -4,7 +4,10 @@ import {BloggerValidation} from "../middlewares/Blogger-validation";
 import {authMiddleware} from "../middlewares/auth-middleware";
 import {postValidation} from "../middlewares/Post-validation";
 import {checkIdParamMiddleware} from "../middlewares/checkIdParam-Middleware";
-import {bloggersController} from "../composition-root";
+import {container} from "../composition-root";
+import {BloggersController} from "../controllers/bloggers-controller";
+
+const bloggersController = container.resolve(BloggersController)
 
 export const bloggersRouter = Router({})
 

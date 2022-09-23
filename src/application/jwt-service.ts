@@ -7,12 +7,12 @@ export class JwtService {
     constructor() {
     }
     async createAccessJWT(user: UserAccType) {
-        const token = jwt.sign({userId: user._id}, envSetting.JWT_ACCESS, {expiresIn: '10m'})
+        const token = jwt.sign({userId: user._id}, envSetting.JWT_ACCESS, {expiresIn: '10h'})
         return token
     }
 
     async createRefreshJWT(user: UserAccType) {
-        const token = jwt.sign({userId: user._id}, envSetting.JWT_REFRESH, {expiresIn: '20m'})
+        const token = jwt.sign({userId: user._id}, envSetting.JWT_REFRESH, {expiresIn: '20h'})
         return token
     }
 
@@ -58,33 +58,3 @@ export class JwtService {
 }
 
 
-// аналог в AuthService
-// async refreshTokenDB(refreshToken: string) {
-//     await jwtRepository.addTokenToDB(refreshToken)
-//     return
-// },
-
-
-//     async generateToken(user: any) { // <ANY> !!!!!!!!!
-//         const accessToken = jwt.sign({userId: user._id}, envSetting.JWT_ACCESS, {expiresIn: '10s'})
-//         const refreshToken = jwt.sign({userId: user._id}, envSetting.JWT_REFRESH, {expiresIn: '20s'})
-//         const token = {
-//             _id: new ObjectId,
-//             refreshToken: refreshToken
-//         }
-//         await usersRepository.addTokenDB(token)
-//         return {
-//             accessToken,
-//             refreshToken
-//         }
-//     }
-// }
-
-
-// export const jwtService = {
-//     async createJWT(user: UserAccType) {
-//         const token = jwt.sign({userId: user._id}, envSetting.JWT_SECRET, {expiresIn: '1h'}) //!!!!!!
-//         return token
-//     },
-
-// }

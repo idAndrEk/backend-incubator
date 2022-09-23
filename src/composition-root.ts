@@ -1,3 +1,5 @@
+import "reflect-metadata";
+import {Container} from "inversify";
 import {BloggersRepository} from "./repositories/bloggers-repository";
 import {BloggersService} from "./domain/bloggers-service";
 import {BloggersController} from "./controllers/bloggers-controller";
@@ -13,27 +15,31 @@ import {UsersController} from "./controllers/users-controller";
 import {AuthController} from "./controllers/auth-controller"
 import {JwtService} from "./application/jwt-service";
 
-const bloggersRepository = new BloggersRepository()
-const postsRepository = new PostsRepository()
-const commentsRepository = new CommentsRepository()
-const usersRepository = new UsersRepository
-
-
-const bloggersService = new BloggersService(bloggersRepository)
-const postsService = new PostsService(postsRepository, bloggersRepository)
-const commentsService = new CommentsService(commentsRepository)
-export const usersService = new UsersService(usersRepository)
 export const jwtService = new JwtService()
 
+const usersRepository = new UsersRepository
 
-export const bloggersController = new BloggersController(bloggersService, postsService)
-export const postsController = new PostsController(postsService, bloggersService, commentsService)
-export const commentsController = new CommentsController(commentsService)
-export const usersController = new UsersController(usersService)
-export const authController = new AuthController(usersService)
+export const usersService = new UsersService(usersRepository)
 
+// export const postsLikeRepository = new PostsLikeRepository
 
+export const container = new Container();
 
+container.bind<BloggersController>(BloggersController).to(BloggersController);
+container.bind<BloggersService>(BloggersService).to(BloggersService);
+container.bind<BloggersRepository>(BloggersRepository).to(BloggersRepository);
 
+container.bind<PostsController>(PostsController).to(PostsController);
+container.bind<PostsService>(PostsService).to(PostsService);
+container.bind<PostsRepository>(PostsRepository).to(PostsRepository);
 
+container.bind<CommentsController>(CommentsController).to(CommentsController);
+container.bind<CommentsService>(CommentsService).to(CommentsService);
+container.bind<CommentsRepository>(CommentsRepository).to(CommentsRepository);
+
+container.bind<UsersController>(UsersController).to(UsersController);
+container.bind<UsersService>(UsersService).to(UsersService);
+container.bind<UsersRepository>(UsersRepository).to(UsersRepository);
+
+container.bind<AuthController>(AuthController).to(AuthController);
 

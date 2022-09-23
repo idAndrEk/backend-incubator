@@ -6,6 +6,7 @@ import {CommentType} from "../types/CommentsTypes";
 import {TokenType, UserAccType} from "../types/UsersTypes";
 import {InputType} from "../types/InputType";
 import mongoose from "mongoose";
+import {LikeCollectionType} from "../types/likeType";
 
 // const client = new MongoClient(envSetting.MongoURI);
 // export const db = client.db("home-blogger");
@@ -31,6 +32,12 @@ bloggerSchema.set('toJSON', {
     }
 })
 
+const NewestLikesSchema = new mongoose.Schema({
+    addedAt: Date,
+    userId: String,
+    login: String
+})
+
 const postSchema = new mongoose.Schema<PostType>({
     _id: {type: ObjectId, required: true},
     title: {type: String, required: true},
@@ -38,6 +45,12 @@ const postSchema = new mongoose.Schema<PostType>({
     content: {type: String, required: true},
     bloggerId: {type: String, required: true},
     bloggerName: {type: String, required: true},
+    extendedLikesInfo: {
+        likesCount: Number,
+        dislikesCount: Number,
+        myStatus: String,
+        newestLikes: [NewestLikesSchema]
+    }
 })
 
 postSchema.set('toJSON', {
@@ -113,12 +126,22 @@ tokenSchema.set('toJSON', {
     }
 })
 
+
+const likeSchema = new mongoose.Schema<LikeCollectionType>({
+    // _id: {type: ObjectId, required: true},
+    postId: {type: ObjectId, required: true}, // postId
+    status: { type: String, required: true },
+    createdAt: { type: Date, required: true },
+    userId: {type: ObjectId, required: true} //UserId
+})
+
 export const BloggerModelClass = mongoose.model('bloggers', bloggerSchema)
 export const PostModelClass = mongoose.model('posts', postSchema)
 export const CommentModelClass = mongoose.model('comments', commentSchema)
 export const UserModelClass = mongoose.model('users', userSchema)
 export const InputModelClass = mongoose.model('InputsType', inputSchema)
 export const TokenModelClass = mongoose.model('Token', tokenSchema)
+export const LikeModelClass = mongoose.model('likes', likeSchema)
 
 
 export async function runDb() {

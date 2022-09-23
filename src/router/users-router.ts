@@ -3,7 +3,10 @@ import {authMiddleware} from "../middlewares/auth-middleware";
 import {userValidationEmail, userValidationLogin, userValidationPassword} from "../middlewares/User-validation";
 import {allValidation} from "../middlewares/ValidationError";
 import {checkIdParamMiddleware} from "../middlewares/checkIdParam-Middleware";
-import {usersController} from "../composition-root";
+import {container} from "../composition-root";
+import {UsersController} from "../controllers/users-controller";
+
+const usersController = container.resolve(UsersController)
 
 export const usersRouter = Router({})
 

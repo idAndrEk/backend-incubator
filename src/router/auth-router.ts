@@ -9,8 +9,10 @@ import {allValidation} from "../middlewares/ValidationError";
 import {requestInput} from "../middlewares/requestIp-middleware";
 import {JwtAuthMiddleware, JwtRefreshAuthMiddleware} from "../middlewares/JwtAuth-Middleware";
 import {LoginPasswordMiddleware} from "../middlewares/LoginPassword-Middleware";
-import {authController} from "../composition-root";
+import {container} from "../composition-root";
+import {AuthController} from "../controllers/auth-controller";
 
+const authController = container.resolve(AuthController)
 
 export const authRouter = Router({})
 

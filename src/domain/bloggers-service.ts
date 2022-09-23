@@ -3,10 +3,12 @@ import {BloggerType, PaginationBloggerType} from "../types/bloggersTypes";
 import {PaginationPostType} from "../types/postsTypes";
 import {ObjectId} from "mongodb";
 import {PostsRepository} from "../repositories/posts-repository";
+import {injectable} from "inversify";
 
+@injectable()
 export class BloggersService {
     constructor(protected bloggersRepository: BloggersRepository, protected postsRepository = PostsRepository) {}
-//TODO: ID
+
     async getBloggers(page: number, pageSize: number, name: string | null): Promise<PaginationBloggerType> {
         const bloggerData = await this.bloggersRepository.getBloggers(page, pageSize, name)
         const pagesCount = Math.ceil(await this.bloggersRepository.countBlogger(name) / pageSize)

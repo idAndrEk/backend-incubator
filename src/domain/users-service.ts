@@ -5,10 +5,11 @@ import add from "date-fns/add";
 import {emailAdapter} from "../adapters/email-adapter";
 import {ObjectId} from "mongodb";
 import bcrypt from "bcrypt";
-import {JwtService} from "../application/jwt-service";
 import {jwtRepository} from "../repositories/jwt-repository";
 import {jwtService} from "../composition-root";
+import {injectable} from "inversify";
 
+@injectable()
 export class UsersService {
 
     constructor(protected usersRepository: UsersRepository) {}
@@ -54,7 +55,6 @@ export class UsersService {
             id: user._id.toString(),
             login: user.accountData.userName
         }
-        console.log(userResponse)
         if (userResponse) return userResponse
         return null
     }

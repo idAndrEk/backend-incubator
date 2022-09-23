@@ -16,13 +16,3 @@ export type PaginationCommentType = {
     items: CommentType[]
 }
 
-// export type CommentPayloadType = Omit<CommentType, 'id'>
-// export type CommentResponseDBType = {
-//     id: string
-//     content: string
-//     userId: string
-//     userLogin: string
-//     addedAt: string
-//     postId: string
-// }
-

@@ -1,6 +1,8 @@
 import {CommentsService} from "../domain/comments-service";
 import {Request, Response} from "express";
+import {injectable} from "inversify";
 
+@injectable()
 export class CommentsController {
 
     constructor(protected commentsService: CommentsService) {
@@ -22,7 +24,6 @@ export class CommentsController {
         }
         const comment = await this.commentsService.findCommentId(req.params.id)
         if (comment) {
-            console.log(comment)
             const id = req.params.id;
             const content = req.body.content;
             const result = await this.commentsService.updateComment(id, content);
