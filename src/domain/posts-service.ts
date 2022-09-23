@@ -49,6 +49,7 @@ export class PostsService {
                 newestLikes: []
             }
         }
+        console.log('postService', newPost)
         const createdPost = await this.postsRepository.createPost(newPost)
         if (createdPost) return createdPost
         return null

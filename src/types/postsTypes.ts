@@ -9,6 +9,7 @@ export type PostType = {
     content: string
     bloggerId: string
     bloggerName: string
+    addedAt: Date
     extendedLikesInfo: ExtendedLikesInfo
 }
 

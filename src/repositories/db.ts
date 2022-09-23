@@ -45,6 +45,7 @@ const postSchema = new mongoose.Schema<PostType>({
     content: {type: String, required: true},
     bloggerId: {type: String, required: true},
     bloggerName: {type: String, required: true},
+    addedAt: { type: Date, required: true },
     extendedLikesInfo: {
         likesCount: Number,
         dislikesCount: Number,

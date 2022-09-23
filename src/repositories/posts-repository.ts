@@ -29,6 +29,7 @@ export class PostsRepository {
     async createPost(newPost: PostType): Promise<PostType | null> {
         try {
             const post = new PostModelClass(newPost)
+            console.log('postRepository', post)
             return post.save()
         } catch (e) {
             return null
