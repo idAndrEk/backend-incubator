@@ -6,7 +6,7 @@ import {CommentType} from "../types/CommentsTypes";
 import {TokenType, UserAccType} from "../types/UsersTypes";
 import {InputType} from "../types/InputTypes";
 import mongoose from "mongoose";
-import {LikeCommentCollectionType, LikePostCollectionType} from "../types/likeTypes";
+import {LikeCommentCollectionType, LikePostCollectionType, LikesType} from "../types/likeTypes";
 
 // const client = new MongoClient(envSetting.MongoURI);
 // export const db = client.db("home-blogger");
@@ -36,6 +36,13 @@ const NewestLikesSchema = new mongoose.Schema({
     addedAt: Date,
     userId: String,
     login: String
+})
+
+NewestLikesSchema.set('toJSON', {
+    versionKey: false,
+    transform: function (doc, ret) {
+        delete ret._id
+    }
 })
 
 const postSchema = new mongoose.Schema<PostType>({
@@ -147,6 +154,14 @@ const likeCommentSchema = new mongoose.Schema<LikeCommentCollectionType>({
     userId: {type: ObjectId, required: true} //UserId
 })
 
+const likesSchema = new mongoose.Schema<LikesType>({
+    parentId: {type: ObjectId, required: true},
+    status: { type: String, required: true },
+    addedAt: { type: Date, required: true },
+    userId: {type: ObjectId, required: true},
+    login: {type: String, required: true},
+})
+
 export const BloggerModelClass = mongoose.model('bloggers', bloggerSchema)
 export const PostModelClass = mongoose.model('posts', postSchema)
 export const CommentModelClass = mongoose.model('comments', commentSchema)
@@ -154,7 +169,8 @@ export const UserModelClass = mongoose.model('users', userSchema)
 export const InputModelClass = mongoose.model('InputsType', inputSchema)
 export const TokenModelClass = mongoose.model('Token', tokenSchema)
 export const PostLikeModelClass = mongoose.model('likesPost', likePostSchema)
-export const LikeCommentModelClass = mongoose.model('likesComment', likeCommentSchema)
+export const CommentLikeModelClass = mongoose.model('likesComment', likeCommentSchema)
+export const LikesModelClass = mongoose.model('likesCollection', likesSchema)
 
 export async function runDb() {
     try {

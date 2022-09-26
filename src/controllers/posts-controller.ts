@@ -4,12 +4,16 @@ import {BloggersService} from "../domain/bloggers-service";
 import {Request, Response} from "express";
 import {injectable} from "inversify";
 import {jwtService} from "../composition-root";
+import {LikesRepository} from "../repositories/like-repoository";
 
 @injectable()
 export class PostsController {
 
-    constructor(protected postsService: PostsService, protected bloggersService: BloggersService, protected commentsService: CommentsService) {
-    }
+    constructor(protected postsService: PostsService,
+                protected bloggersService: BloggersService,
+                protected commentsService: CommentsService,
+                protected likesRepository: LikesRepository
+    ) {}
 
     async getPosts(req: Request, res: Response) {
         const page = req.query.PageNumber || 1
@@ -19,7 +23,7 @@ export class PostsController {
     }
 
     async getPost(req: Request, res: Response) {
-        const post = await this.postsService.getPost(req.params.id);
+        const post = await this.postsService.getPost(req.params.id, req.user);
         if (!post) {
             res.status(404).send('Not found')
         } else {
@@ -71,18 +75,9 @@ export class PostsController {
         }
     }
 
-    // async updateLike(req: Request, res: Response) {
-    //     const post = await this.postsService.getPost(req.params.id);
-    //     if (!post) return res.sendStatus(404)
-    //     const postId = req.params.id;
-    //     const {likeStatus} = req.body;
-    //     await this.postsService.updateLike(postId, likeStatus);
-    //     return res.sendStatus(204)
-    // }
-
     async addLikeToPost(req: Request<{ id: string }, never, { likeStatus: string }, never>, res: Response) {
         try {
-            const post = await this.postsService.getPost(req.params.id);
+            const post = await this.postsService.getPost(req.params.id, req.user);
             if (!post) return res.sendStatus(404)
             const postId = req.params.id;
             const userId = req.user.id;
@@ -110,7 +105,7 @@ export class PostsController {
         let page = req.query.PageNumber || 1
         let pageSize = req.query.PageSize || 10
         const postId = req.params.id
-        const post = await this.postsService.getPost(postId)
+        const post = await this.postsService.checkPost(postId)
         if (post) {
             const postComment = await this.postsService.getPostComment(postId, +page, +pageSize)
             return res.status(200).send(postComment)
@@ -125,12 +120,11 @@ export class PostsController {
     }
 
     async createComment(req: Request, res: Response) {
-        const post = await this.postsService.getPost(req.params.id);
+        const post = await this.postsService.checkPost(req.params.id);
         if (!post) return res.sendStatus(404)
         const postId = req.params.id;
         const content = req.body.content;
-        // const userLogin = req.user?.login as string;
-        // const userId = req.user?.id as string;
+
         const userId = req.user.id;
         const userLogin = req.user.accountData.userName;
         const newCommentPost = await this.commentsService.createComment(content, userId, userLogin, postId)

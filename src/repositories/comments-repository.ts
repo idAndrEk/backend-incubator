@@ -1,5 +1,5 @@
 import {CommentType} from "../types/CommentsTypes";
-import {CommentModelClass, LikeCommentModelClass} from "./db";
+import {CommentModelClass, CommentLikeModelClass} from "./db";
 import {injectable} from "inversify";
 import {LikeCommentCollectionType, LikesInfo} from "../types/likeTypes";
 
@@ -26,7 +26,7 @@ export class CommentsRepository {
 
     async addLike(likeDb: LikeCommentCollectionType): Promise<boolean | null> {
         const updateLikeComment = await CommentModelClass.updateOne({'likesInfo.myStatus': likeDb.status})
-        const addLikeCommentDB = await LikeCommentModelClass.create(likeDb)
+        const addLikeCommentDB = await CommentLikeModelClass.create(likeDb)
         if (updateLikeComment && addLikeCommentDB) return true
         return false
     }

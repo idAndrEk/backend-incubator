@@ -1,4 +1,4 @@
-import {ObjectId} from "mongodb";
+import {ObjectId, WithoutId} from "mongodb";
 
 // type myStatus = "None" | "Like" | "Dislike"
 
@@ -6,14 +6,15 @@ export type ExtendedLikesInfo = {
     likesCount: number
     dislikesCount: number
     myStatus: string
-    newestLikes: NewestLikes
+    newestLikes: NewestLikes[]
 }
 
-export type NewestLikes = Array<{
+export type NewestLikes = {
     addedAt: Date
-    userId: string
+    // userId: string
+    userId: ObjectId
     login: string
-}>
+}
 
 export type LikePostCollectionType = {
     postId: ObjectId
@@ -28,6 +29,15 @@ export type LikeCommentCollectionType = {
     createdAt: Date
     userId: ObjectId
 }
+
+export type LikesType = {
+    parentId: ObjectId
+    status: string
+    addedAt: Date
+    userId: ObjectId
+    login: string
+}
+
 
 export type LikesInfo = {
     likesCount: number,

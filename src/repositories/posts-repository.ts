@@ -1,8 +1,7 @@
-import {CommentModelClass, PostLikeModelClass, PostModelClass} from "./db";
+import {CommentModelClass, PostLikeModelClass, PostModelClass, UserModelClass} from "./db";
 import {PostType} from "../types/postsTypes";
 import {injectable} from "inversify";
-import {LikePostCollectionType} from "../types/likeTypes";
-import {ObjectId} from "mongodb";
+import {LikePostCollectionType, NewestLikes} from "../types/likeTypes";
 
 @injectable()
 export class PostsRepository {
@@ -21,8 +20,15 @@ export class PostsRepository {
         return post
     }
 
+    // async getLikePost(userId: string): Promise<NewestLikes> {
+    //     const filter = {user: {$regex: userId}}
+    //     const likePost = PostLikeModelClass.findOne({filter}, {'userId' : {'slice' : 3}})
+    //     return likePost
+    // }
+
     async findPostsId(id: string): Promise<PostType | null> {
         const post = await PostModelClass.findById(id)
+        // .select({__v: false}).lean()
         return post
     }
 
@@ -47,9 +53,9 @@ export class PostsRepository {
     }
 
     async addLike(likeDB: LikePostCollectionType): Promise<boolean> {
-        const updateLikePost = await PostModelClass.updateOne({'extendedLikesInfo.myStatus': likeDB.status})
+        // const updateLikePost = await PostModelClass.updateOne({'extendedLikesInfo.myStatus': likeDB.status})
         const addLikePostDB = await PostLikeModelClass.create(likeDB)
-        if (addLikePostDB && updateLikePost) return true
+        if (addLikePostDB) return true
         return false
     }
 

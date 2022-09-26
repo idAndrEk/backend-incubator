@@ -34,4 +34,19 @@ export const JwtRefreshAuthMiddleware = async (req: Request, res: Response, next
     return next()
 }
 
+export const checkUserTokenMiddleware = async (req: Request, res: Response, next: NextFunction) => {
+    const authorizationHeader = req.headers.authorization;
+    if (!authorizationHeader) return next()
 
+    const accessToken = authorizationHeader.split(' ')[1]
+    if (!accessToken) return next()
+
+    const userId = await jwtService.validateAccessToken(accessToken)
+    if (!userId) return next()
+
+    const user = await usersService.getUser(userId)
+    if (!user) return next()
+
+    req.user = user;
+    return next()
+}

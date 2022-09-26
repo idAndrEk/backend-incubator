@@ -1,7 +1,6 @@
 import {ObjectId} from "mongodb";
 import {ExtendedLikesInfo} from "./likeTypes";
 
-
 export type PostType = {
     _id: ObjectId
     title: string

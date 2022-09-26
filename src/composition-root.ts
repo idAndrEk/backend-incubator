@@ -14,14 +14,13 @@ import {UsersRepository} from "./repositories/users-repository";
 import {UsersController} from "./controllers/users-controller";
 import {AuthController} from "./controllers/auth-controller"
 import {JwtService} from "./application/jwt-service";
+import {LikesRepository} from "./repositories/like-repoository";
 
 export const jwtService = new JwtService()
 
 const usersRepository = new UsersRepository
 
 export const usersService = new UsersService(usersRepository)
-
-// export const postsLikeRepository = new PostsLikeRepository
 
 export const container = new Container();
 
@@ -42,4 +41,6 @@ container.bind<UsersService>(UsersService).to(UsersService);
 container.bind<UsersRepository>(UsersRepository).to(UsersRepository);
 
 container.bind<AuthController>(AuthController).to(AuthController);
+
+container.bind<LikesRepository>(LikesRepository).to(LikesRepository)
 
