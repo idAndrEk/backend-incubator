@@ -1,7 +1,7 @@
 import {ObjectId} from "mongodb";
 
 export type UserResponse = {
-    id: string
+    id: ObjectId
     login: string
 }
 

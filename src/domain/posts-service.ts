@@ -1,7 +1,6 @@
 import {PostsRepository} from "../repositories/posts-repository";
-import {PaginationPostType, PostType} from "../types/postsTypes";
-import {PaginationCommentType} from "../types/CommentsTypes";
-import {ObjectId} from "mongodb";
+import {CreatePostDto, PaginationPostType, PostViewType} from "../types/postsTypes";
+import {PaginationCommentType} from "../types/commentsTypes";
 import {BloggersRepository} from "../repositories/bloggers-repository";
 import {injectable} from "inversify";
 import {LikesRepository} from "../repositories/like-repoository";
@@ -13,7 +12,7 @@ export class PostsService {
     }
 
     async getPosts(page: number, pageSize: number): Promise<PaginationPostType> {
-        const postData = await this.postsRepository.allPosts(page, pageSize)
+        const postData = await this.postsRepository.getPosts(page, pageSize)
 
         const pagesCount = Math.ceil(await this.postsRepository.countPost() / pageSize)
         const totalCount = await this.postsRepository.countPost()
@@ -26,45 +25,47 @@ export class PostsService {
         }
     }
 
-    async getPost(id: string, user: UserAccType | undefined): Promise<PostType | null> {
-        let post = await this.postsRepository.findPostsId(id)
+    async getPost(id: string, user: UserAccType | undefined): Promise<PostViewType | null> {
+        let post = await this.postsRepository.getPost(id)
         if (!post) return null
-        const {likes, dislikes} = await this.likesRepository.getLikesAndDislikesCountByParentId((post._id).toString())
+        const {likes, dislikes} = await this.likesRepository.getLikesAndDislikesCountByParentId((post.id).toString())
         post.extendedLikesInfo.likesCount = likes
         post.extendedLikesInfo.dislikesCount = dislikes
         let defaultMyStatus = 'None'
         if (user) {
-            defaultMyStatus = await this.likesRepository.getLikeStatusByUserId((post._id).toString(), (user._id).toString())
+            defaultMyStatus = await this.likesRepository.getLikeStatusByUserId((post.id).toString(), (user._id).toString())
         }
         post.extendedLikesInfo.myStatus = defaultMyStatus
-        const newestLikes = await this.likesRepository.getNewestLikesByParentId((post._id).toString(), 3)
-        // let resultLikesArray = []
-        // for (let like of newestLikes){
-        //     resultLikesArray.push({
-        //         addedAt: like.addedAt,
-        //         userId: like.userId.toString(),
-        //         login: like.login
-        //     })
-        // }
-        // post.extendedLikesInfo.newestLikes = resultLikesArray
-        console.log(post.extendedLikesInfo.newestLikes)
+        const newestLikes  = await this.likesRepository.getNewestLikesByParentId((post.id).toString(), 3)
         post.extendedLikesInfo.newestLikes = newestLikes
-        console.log(newestLikes)
-        console.log(post.extendedLikesInfo.newestLikes)
         return post
+        // return {
+        //     id: post._id.toString(),
+        //     title: post.title,
+        //     shortDescription: post.shortDescription,
+        //     content: post.content,
+        //     bloggerId: post.bloggerId,
+        //     bloggerName: post.bloggerName,
+        //     addedAt: post.addedAt,
+        //     extendedLikesInfo: {
+        //         likesCount: post.extendedLikesInfo.likesCount,
+        //         dislikesCount: post.extendedLikesInfo.dislikesCount,
+        //         myStatus: post.extendedLikesInfo.myStatus,
+        //         newestLikes: []
+        //     }
+        // }
     }
 
-    async checkPost(id: string): Promise<PostType | null> {
-        let post = await this.postsRepository.findPostsId(id)
+    async checkPost(id: string): Promise<PostViewType | null> {
+        let post = await this.postsRepository.getPost(id)
         if (!post) return null
         return post
     }
 
-    async createPost(title: string, shortDescription: string, content: string, bloggerId: string): Promise<PostType | null> {
+    async createPost(title: string, shortDescription: string, content: string, bloggerId: string): Promise<PostViewType | null> {
         const blogger = await this.bloggersRepository.getBloggerById(bloggerId);
         if (!blogger) return null
-        const newPost = {
-            _id: new ObjectId(),
+        const newPost: CreatePostDto = {
             title: title,
             bloggerName: blogger.name,
             shortDescription: shortDescription,
@@ -78,9 +79,17 @@ export class PostsService {
                 newestLikes: []
             }
         }
-        //add array push
         const createdPost = await this.postsRepository.createPost(newPost)
-        if (createdPost) return createdPost
+        if (createdPost) return {
+            id: createdPost._id.toString(),
+            title: createdPost.title,
+            bloggerName: createdPost.bloggerName,
+            shortDescription: createdPost.shortDescription,
+            content: createdPost.content,
+            bloggerId: createdPost.bloggerId,
+            addedAt: createdPost.addedAt,
+            extendedLikesInfo: createdPost.extendedLikesInfo
+        }
         return null
     }
 
@@ -114,3 +123,14 @@ export class PostsService {
         }
     }
 }
+
+// let resultLikesArray = []
+// for (let like of newestLikes){
+//     resultLikesArray.push({
+//         addedAt: like.addedAt,
+//         userId: like.userId.toString(),
+//         login: like.login
+//     })
+// }
+// post.extendedLikesInfo.newestLikes = resultLikesArray
+// console.log(post.extendedLikesInfo.newestLikes)

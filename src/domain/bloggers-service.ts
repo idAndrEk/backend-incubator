@@ -1,5 +1,5 @@
 import {BloggersRepository} from "../repositories/bloggers-repository";
-import {BloggerType, PaginationBloggerType} from "../types/bloggersTypes";
+import {BloggerType, BloggerViewType, CreateBloggerDto, PaginationBloggerType} from "../types/bloggersTypes";
 import {PaginationPostType} from "../types/postsTypes";
 import {ObjectId} from "mongodb";
 import {PostsRepository} from "../repositories/posts-repository";
@@ -27,20 +27,28 @@ export class BloggersService {
         }
     }
 
-    async getBloggerById(id: string): Promise<BloggerType | null> {
+    async getBlogger(id: string): Promise<BloggerViewType | null> {
         const blogger = await this.bloggersRepository.getBloggerById(id)
-        return blogger
+        if (!blogger) return null
+        return {
+            id: blogger._id.toString(),
+            name: blogger.name,
+            youtubeUrl: blogger.youtubeUrl
+        }
     }
 
-    async createBlogger(name: string, youtubeUrl: string): Promise<BloggerType | null> {
-        const newBlogger = {
-            _id: new ObjectId(),
+    async createBlogger(name: string, youtubeUrl: string): Promise<BloggerViewType | null> {
+        const newBlogger: CreateBloggerDto = {
             name: name,
             youtubeUrl: youtubeUrl
         }
 
         const createdBlogger = await this.bloggersRepository.createBlogger(newBlogger)
-        if (createdBlogger) return createdBlogger
+        if (createdBlogger) return {
+            id: createdBlogger._id.toString(),
+            name: createdBlogger.name,
+            youtubeUrl: createdBlogger.youtubeUrl
+        }
         return null
     }
 

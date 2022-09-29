@@ -10,6 +10,23 @@ export type CommentType = {
     likesInfo: LikesInfo
 }
 
+export type CommentViewType = {
+    id: string
+    content: string
+    userId: string
+    userLogin: string
+    addedAt: Date
+    likesInfo: LikesInfo
+}
+
+export type CreateCommentDto = {
+    content: string
+    userId: string
+    userLogin: string
+    addedAt: Date
+    likesInfo: LikesInfo
+}
+
 export type PaginationCommentType = {
     pagesCount: number
     page: number

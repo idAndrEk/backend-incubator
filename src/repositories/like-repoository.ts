@@ -1,6 +1,5 @@
 import {injectable} from "inversify";
 import {LikesModelClass} from "./db";
-import {ObjectId} from "mongodb";
 
 @injectable()
 export class LikesRepository {
@@ -21,13 +20,35 @@ export class LikesRepository {
         return 'None'
     }
 
-    async getNewestLikesByParentId(parentId: string, count: number) {
-        const newestLikes = await LikesModelClass.find({parentId, status: 'Like'})
+    async getNewestLikesByParentId(parentId: string, count: number)/*: Promise <NewestLikes>*/ {
+        const newestLikes = await LikesModelClass.find(
+            {parentId, status: 'Like'},
+             { _id: 0, __v: 0, parentId: 0, status: 0 }
+        )
             .sort({'addedAt': 1})
             .limit(count)
-            .select({id: false, parentId: false, status: false})
             .lean()
+            //.select({_id: false, __v: false, parentId: false, status: false})
+            // .projection({_id: 0})
+            // .lean()
         return newestLikes
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 

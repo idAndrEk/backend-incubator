@@ -16,7 +16,7 @@ export class BloggersController {
     }
 
     async getBlogger(req: Request, res: Response) {
-        const blogger = await this.bloggersService.getBloggerById(req.params.id)
+        const blogger = await this.bloggersService.getBlogger(req.params.id)
         if (!blogger) {
             res.status(404).send('Not found')
         } else {
@@ -60,7 +60,7 @@ export class BloggersController {
         let page = req.query.PageNumber || 1
         let pageSize = req.query.PageSize || 10
         const bloggerId = req.params.id
-        const blogger = await this.bloggersService.getBloggerById(bloggerId)
+        const blogger = await this.bloggersService.getBlogger(bloggerId)
         if (blogger) {
             const bloggerPosts = await this.bloggersService.getBloggerPosts(bloggerId, +page, +pageSize)
             return res.status(200).send(bloggerPosts)

@@ -1,5 +1,5 @@
 import {BloggerModelClass, PostModelClass} from "./db";
-import {BloggerType} from "../types/bloggersTypes";
+import {BloggerType, CreateBloggerDto} from "../types/bloggersTypes";
 import {PostType} from "../types/postsTypes";
 import {injectable} from "inversify";
 
@@ -23,7 +23,7 @@ export class BloggersRepository {
             .find(filter)
             .skip((page - 1) * pageSize)
             .limit(pageSize)
-            // .lean()
+        // .lean()
         return blogger
     }
 
@@ -32,7 +32,7 @@ export class BloggersRepository {
         return blogger
     }
 
-    async createBlogger(newBlogger: BloggerType): Promise<BloggerType | null> {
+    async createBlogger(newBlogger: CreateBloggerDto): Promise<BloggerType | null> {
         try {
             const bloggerInstance = new BloggerModelClass(newBlogger);
             return bloggerInstance.save()

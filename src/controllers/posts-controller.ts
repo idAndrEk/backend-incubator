@@ -51,7 +51,7 @@ export class PostsController {
     }
 
     async updatePost(req: Request, res: Response) {
-        const blogger = await this.bloggersService.getBloggerById(req.body.bloggerId);
+        const blogger = await this.bloggersService.getBlogger(req.body.bloggerId);
         if (blogger) {
             const idPost = req.params.id;
             const titlePost = req.body.title;
@@ -127,7 +127,7 @@ export class PostsController {
 
         const userId = req.user.id;
         const userLogin = req.user.accountData.userName;
-        const newCommentPost = await this.commentsService.createComment(content, userId, userLogin, postId)
+        const newCommentPost = await this.commentsService.createComment(content, userId, userLogin)
         return res.status(201).send(newCommentPost)
         const errors = [];
         errors.push({message: 'Error postId', field: 'postId'});

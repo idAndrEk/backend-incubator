@@ -1,7 +1,6 @@
-import {CommentModelClass, PostLikeModelClass, PostModelClass, UserModelClass} from "./db";
-import {PostType} from "../types/postsTypes";
+import {CommentModelClass, PostModelClass} from "./db";
+import {CreatePostDto, PostType, PostViewType} from "../types/postsTypes";
 import {injectable} from "inversify";
-import {LikePostCollectionType, NewestLikes} from "../types/likeTypes";
 
 @injectable()
 export class PostsRepository {
@@ -10,29 +9,38 @@ export class PostsRepository {
         return count
     }
 
-    async allPosts(page: number, pageSize: number): Promise<PostType[]> {
+    async getPosts(page: number, pageSize: number): Promise<PostType[]> {
         const post = PostModelClass
             .find({})
             // .find({}, {_id: false, __v: false})
             .skip((page - 1) * pageSize)
+            .select({__v: false})
             .limit(pageSize)
-        // .lean()
+            .lean()
         return post
     }
 
-    // async getLikePost(userId: string): Promise<NewestLikes> {
-    //     const filter = {user: {$regex: userId}}
-    //     const likePost = PostLikeModelClass.findOne({filter}, {'userId' : {'slice' : 3}})
-    //     return likePost
-    // }
-
-    async findPostsId(id: string): Promise<PostType | null> {
+    async getPost(id: string): Promise<PostViewType | null> {
         const post = await PostModelClass.findById(id)
-        // .select({__v: false}).lean()
-        return post
+        if (!post) return null
+        return {
+            id: post._id.toString(),
+            title: post.title,
+            shortDescription: post.shortDescription,
+            content: post.content,
+            bloggerId: post.bloggerId,
+            bloggerName: post.bloggerName,
+            addedAt: post.addedAt,
+            extendedLikesInfo: {
+                likesCount: post.extendedLikesInfo.likesCount,
+                dislikesCount: post.extendedLikesInfo.dislikesCount,
+                myStatus: post.extendedLikesInfo.myStatus,
+                newestLikes: []
+            }
+        }
     }
 
-    async createPost(newPost: PostType): Promise<PostType | null> {
+    async createPost(newPost: CreatePostDto): Promise<PostType | null> {
         try {
             const post = new PostModelClass(newPost)
             return post.save()
@@ -49,13 +57,6 @@ export class PostsRepository {
             bloggerId
         })
         if (post) return true
-        return false
-    }
-
-    async addLike(likeDB: LikePostCollectionType): Promise<boolean> {
-        // const updateLikePost = await PostModelClass.updateOne({'extendedLikesInfo.myStatus': likeDB.status})
-        const addLikePostDB = await PostLikeModelClass.create(likeDB)
-        if (addLikePostDB) return true
         return false
     }
 
@@ -85,4 +86,52 @@ export class PostsRepository {
             .lean()
     }
 }
+
+
+// async findPostsId(id: string): Promise<PostType | null> {
+//     const post = await PostModelClass
+//         .aggregate()
+//         .project({
+//             id: '$_id',
+//             title: true,
+//             shortDescription: true,
+//             content: true,
+//             bloggerId: true,
+//             bloggerName: true,
+//             addedAt: true,
+//             extendedLikesInfo: true,
+//             _id: 0
+//         })
+//
+//     return post
+// }
+
+// async findPostsId(id: string): Promise<PostType | null> {
+//     // const post = await PostModelClass.aggregate([
+//     // {
+//     //     $project: {
+//     //         _id: false,
+//     //         id: '$_id',
+//     //         title: true,
+//     //         shortDescription: true,
+//     //         content: true,
+//     //         bloggerId: true,
+//     //         bloggerName: true,
+//     //         addedAt: true,
+//     //         extendedLikesInfo: true
+//     //     }
+//     // }])
+//     const post = await PostModelClass.findById(id)
+//         .lean()
+//     return post
+//     // .project({id: '$_id', _id: 0})
+// }
+
+// async addLike(likeDB: LikePostCollectionType): Promise<boolean> {
+//     // const updateLikePost = await PostModelClass.updateOne({'extendedLikesInfo.myStatus': likeDB.status})
+//     const addLikePostDB = await PostLikeModelClass.create(likeDB)
+//     if (addLikePostDB) return true
+//     return false
+// }
+
 

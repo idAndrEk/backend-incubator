@@ -11,23 +11,8 @@ export type ExtendedLikesInfo = {
 
 export type NewestLikes = {
     addedAt: Date
-    // userId: string
     userId: ObjectId
     login: string
-}
-
-export type LikePostCollectionType = {
-    postId: ObjectId
-    status: string
-    createdAt: Date
-    userId: ObjectId
-}
-
-export type LikeCommentCollectionType = {
-    commentId: ObjectId
-    status: string
-    createdAt: Date
-    userId: ObjectId
 }
 
 export type LikesType = {
@@ -44,3 +29,17 @@ export type LikesInfo = {
     dislikesCount: number,
     myStatus: string
 }
+
+// export type LikePostCollectionType = {
+//     postId: ObjectId
+//     status: string
+//     createdAt: Date
+//     userId: ObjectId
+// }
+//
+// export type LikeCommentCollectionType = {
+//     commentId: ObjectId
+//     status: string
+//     createdAt: Date
+//     userId: ObjectId
+// }

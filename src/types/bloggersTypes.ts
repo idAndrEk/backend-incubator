@@ -1,7 +1,18 @@
 import {ObjectId} from "mongodb";
 
 export type BloggerType = {
-   _id: ObjectId
+    _id: ObjectId
+    name: string
+    youtubeUrl: string
+}
+
+export type BloggerViewType = {
+    id: string
+    name: string
+    youtubeUrl: string
+}
+
+export type CreateBloggerDto = {
     name: string
     youtubeUrl: string
 }
