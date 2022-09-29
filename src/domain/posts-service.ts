@@ -36,7 +36,7 @@ export class PostsService {
             defaultMyStatus = await this.likesRepository.getLikeStatusByUserId((post.id).toString(), (user._id).toString())
         }
         post.extendedLikesInfo.myStatus = defaultMyStatus
-        const newestLikes  = await this.likesRepository.getNewestLikesByParentId((post.id).toString(), 3)
+        const newestLikes = await this.likesRepository.getNewestLikesByParentId((post.id).toString(), 3)
         post.extendedLikesInfo.newestLikes = newestLikes
         return post
         // return {
@@ -88,7 +88,12 @@ export class PostsService {
             content: createdPost.content,
             bloggerId: createdPost.bloggerId,
             addedAt: createdPost.addedAt,
-            extendedLikesInfo: createdPost.extendedLikesInfo
+            extendedLikesInfo: {
+                likesCount: 0,
+                dislikesCount: 0,
+                myStatus: 'None',
+                newestLikes: []
+            }
         }
         return null
     }
