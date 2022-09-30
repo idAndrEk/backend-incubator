@@ -14,7 +14,7 @@ export const postsRouter = Router({})
 
 // ОЧЕРЕДНОСТЬ
 
-postsRouter.get('/', postsController.getPosts.bind(postsController))
+postsRouter.get('/', checkUserTokenMiddleware, postsController.getPosts.bind(postsController)) // USER ID
 postsRouter.get('/:id', checkUserTokenMiddleware, checkIdParamMiddleware, postsController.getPost.bind(postsController))
 postsRouter.post('/', authMiddleware, postValidation, allValidation, postsController.createPost.bind(postsController))
 postsRouter.post('/:id/comments', checkIdParamMiddleware, JwtAuthMiddleware, commentValidation, allValidation, postsController.createComment.bind(postsController))

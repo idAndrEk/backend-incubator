@@ -12,6 +12,22 @@ export type PostType = {
     extendedLikesInfo: ExtendedLikesInfo
 }
 
+export type PaginationPostType = {
+    pagesCount: number
+    page: number
+    pageSize: number
+    totalCount: number
+    items: PostViewType[]
+}
+
+export type PaginationBloggerPostType = {
+    pagesCount: number
+    page: number
+    pageSize: number
+    totalCount: number
+    items: PostType[]
+}
+
 export type PostViewType = {
     id: string
     title: string
@@ -31,13 +47,5 @@ export type CreatePostDto = {
     bloggerName: string
     addedAt: Date
     extendedLikesInfo: ExtendedLikesInfo
-}
-
-export type PaginationPostType = {
-    pagesCount: number
-    page: number
-    pageSize: number
-    totalCount: number
-    items: PostType[]
 }
 

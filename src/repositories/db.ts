@@ -23,17 +23,10 @@ const bloggerSchema = new mongoose.Schema<BloggerType>({
     youtubeUrl: {type: String, required: true}
 })
 
-// const NewestLikesSchema = new mongoose.Schema({
-//     addedAt: Date,
-//     userId: String,
-//     login: String
-// }, { _id: false })
-
 const extendedLikesInfoSchema = new mongoose.Schema({
     likesCount: {type: Number, default: 0},
     dislikesCount: {type: Number, default: 0},
     myStatus: {type: String},
-    // newestLikes: { type: [NewestLikesSchema], default: [] }
 }, {_id: false})
 
 const postSchema = new mongoose.Schema<PostType>({

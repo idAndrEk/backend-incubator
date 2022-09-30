@@ -5,6 +5,11 @@ export type UserResponse = {
     login: string
 }
 
+export type UserViewResponse = {
+    _id: ObjectId
+    login: string
+}
+
 type AccountData = {
     userName: string
     email: string

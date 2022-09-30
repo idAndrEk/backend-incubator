@@ -9,35 +9,21 @@ export class PostsRepository {
         return count
     }
 
-    async getPosts(page: number, pageSize: number): Promise<PostType[]> {
+    async getPosts(page: number, pageSize: number): Promise<PostType[]>{
         const post = PostModelClass
             .find({})
             // .find({}, {_id: false, __v: false})
             .skip((page - 1) * pageSize)
-            .select({__v: false})
+            // .select({__v: false})
             .limit(pageSize)
             .lean()
         return post
     }
 
-    async getPost(id: string): Promise<PostViewType | null> {
+    async getPost(id: string): Promise<PostType | null> {
         const post = await PostModelClass.findById(id)
         if (!post) return null
-        return {
-            id: post._id.toString(),
-            title: post.title,
-            shortDescription: post.shortDescription,
-            content: post.content,
-            bloggerId: post.bloggerId,
-            bloggerName: post.bloggerName,
-            addedAt: post.addedAt,
-            extendedLikesInfo: {
-                likesCount: post.extendedLikesInfo.likesCount,
-                dislikesCount: post.extendedLikesInfo.dislikesCount,
-                myStatus: post.extendedLikesInfo.myStatus,
-                newestLikes: []
-            }
-        }
+        return post
     }
 
     async createPost(newPost: CreatePostDto): Promise<PostType | null> {

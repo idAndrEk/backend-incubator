@@ -3,7 +3,6 @@ import {PostsService} from "../domain/posts-service";
 import {BloggersService} from "../domain/bloggers-service";
 import {Request, Response} from "express";
 import {injectable} from "inversify";
-import {jwtService} from "../composition-root";
 import {LikesRepository} from "../repositories/like-repoository";
 
 @injectable()
@@ -18,7 +17,7 @@ export class PostsController {
     async getPosts(req: Request, res: Response) {
         const page = req.query.PageNumber || 1
         const pageSize = req.query.PageSize || 10
-        const posts = await this.postsService.getPosts(+page, +pageSize)
+        const posts = await this.postsService.getPosts(+page, +pageSize, req.user)
         return res.status(200).send(posts)
     }
 

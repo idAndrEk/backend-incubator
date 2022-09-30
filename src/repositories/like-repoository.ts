@@ -16,6 +16,16 @@ export class LikesRepository {
 
     async getLikeStatusByUserId(parentId: string, userId: string) {
         const result = await LikesModelClass.findOne({parentId, userId})
+        // console.log('!!!',result)
+        if (result) return result.status
+        return 'None'
+    }
+
+    async getLikeStatusByParentIdsANdUserId(parentIds: string[], userId: string) {
+        const result = await LikesModelClass.findOne({
+            parentId: {$in: parentIds},
+            userId
+        })
         if (result) return result.status
         return 'None'
     }
@@ -23,17 +33,15 @@ export class LikesRepository {
     async getNewestLikesByParentId(parentId: string, count: number)/*: Promise <NewestLikes>*/ {
         const newestLikes = await LikesModelClass.find(
             {parentId, status: 'Like'},
-             { _id: 0, __v: 0, parentId: 0, status: 0 }
+            {_id: 0, __v: 0, parentId: 0, status: 0},
         )
             .sort({'addedAt': 1})
             .limit(count)
             .lean()
-            //.select({_id: false, __v: false, parentId: false, status: false})
-            // .projection({_id: 0})
-            // .lean()
         return newestLikes
     }
 }
+
 
 
 

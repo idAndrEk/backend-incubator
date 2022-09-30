@@ -1,6 +1,6 @@
 import {BloggersRepository} from "../repositories/bloggers-repository";
 import {BloggerType, BloggerViewType, CreateBloggerDto, PaginationBloggerType} from "../types/bloggersTypes";
-import {PaginationPostType} from "../types/postsTypes";
+import {PaginationBloggerPostType, PaginationPostType} from "../types/postsTypes";
 import {ObjectId} from "mongodb";
 import {PostsRepository} from "../repositories/posts-repository";
 import {injectable} from "inversify";
@@ -60,7 +60,7 @@ export class BloggersService {
         return await this.bloggersRepository.deleteBlogger(id)
     }
 
-    async getBloggerPosts(bloggerId: string, page: number, pageSize: number): Promise<PaginationPostType> {
+    async getBloggerPosts(bloggerId: string, page: number, pageSize: number): Promise<PaginationBloggerPostType> {
         const postData = await this.bloggersRepository.findPostsBlogger(bloggerId, page, pageSize)
         const totalCount = await this.bloggersRepository.countPostBlogger(bloggerId)
         const pagesCount = Math.ceil(await this.bloggersRepository.countPostBlogger(bloggerId) / pageSize)
