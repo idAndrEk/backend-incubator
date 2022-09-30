@@ -61,11 +61,11 @@ export class PostsService {
         const {likes, dislikes} = await this.likesRepository.getLikesAndDislikesCountByParentId((post._id).toString())
         post.extendedLikesInfo.likesCount = likes
         post.extendedLikesInfo.dislikesCount = dislikes
-        // let defaultMyStatus = 'None'
-        // if (user) {
-        //     defaultMyStatus = await this.likesRepository.getLikeStatusByUserId((post._id).toString(), (user._id).toString())
-        // }
-        // post.extendedLikesInfo.myStatus = defaultMyStatus
+        let defaultMyStatus = 'None'
+        if (user) {
+            defaultMyStatus = await this.likesRepository.getLikeStatusByUserId((post._id).toString(), (user._id).toString())
+        }
+        post.extendedLikesInfo.myStatus = defaultMyStatus
         const newestLikes = await this.likesRepository.getNewestLikesByParentId((post._id).toString(), 3)
         post.extendedLikesInfo.newestLikes = newestLikes
         return {
@@ -79,7 +79,7 @@ export class PostsService {
             extendedLikesInfo: {
                 likesCount: post.extendedLikesInfo.likesCount,
                 dislikesCount: post.extendedLikesInfo.dislikesCount,
-                myStatus: await this.likesRepository.getLikeStatusByUserId((post._id).toString(), (user!._id).toString()),
+                myStatus: post.extendedLikesInfo.myStatus,
                 newestLikes
             }
         }
