@@ -20,13 +20,13 @@ export type PaginationPostType = {
     items: PostViewType[]
 }
 
-export type PaginationBloggerPostType = {
-    pagesCount: number
-    page: number
-    pageSize: number
-    totalCount: number
-    items: PostType[]
-}
+// export type PaginationBloggerPostType = {
+//     pagesCount: number
+//     page: number
+//     pageSize: number
+//     totalCount: number
+//     items: PostType[]
+// }
 
 export type PostViewType = {
     id: string

@@ -63,12 +63,8 @@ export class BloggersRepository {
     }
 
     async findPostsBlogger(bloggerId: string | null, page: number, pageSize: number): Promise<PostType[]> {
-        let filter = {}
-        if (bloggerId) {
-            filter = {$regex: bloggerId}
-        }
         const postByBlogger = PostModelClass
-            .find(filter)
+            .find({bloggerId})
             .skip((page - 1) * pageSize)
             .limit(pageSize)
             .lean()

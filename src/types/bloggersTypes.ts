@@ -22,7 +22,7 @@ export type PaginationBloggerType = {
     page: number
     pageSize: number
     totalCount: number
-    items: BloggerType[]
+    items: BloggerViewType[]
 }
 
 

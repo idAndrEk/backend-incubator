@@ -57,23 +57,27 @@ export class BloggersController {
     }
 
     async getBloggerPosts(req: Request, res: Response) {
-        let page = req.query.PageNumber || 1
-        let pageSize = req.query.PageSize || 10
-        const bloggerId = req.params.id
-        const blogger = await this.bloggersService.getBlogger(bloggerId)
-        if (blogger) {
-            const bloggerPosts = await this.bloggersService.getBloggerPosts(bloggerId, +page, +pageSize)
-            return res.status(200).send(bloggerPosts)
-        } else {
-            const errors = [];
-            errors.push({message: 'Error bloggerId', field: 'bloggerId'})
-            if (errors.length) {
-                res.status(404).json({
-                    errorsMessages: errors
-                })
-                return
-            }
-        }
+      try {
+          let page = req.query.PageNumber || 1
+          let pageSize = req.query.PageSize || 10
+          const bloggerId = req.params.id
+          const blogger = await this.bloggersService.getBlogger(bloggerId)
+          if (blogger) {
+              const bloggerPosts = await this.bloggersService.getBloggerPosts(bloggerId, +page, +pageSize, req.user)
+              return res.status(200).send(bloggerPosts)
+          } else {
+              const errors = [];
+              errors.push({message: 'Error bloggerId', field: 'bloggerId'})
+              if (errors.length) {
+                  res.status(404).json({
+                      errorsMessages: errors
+                  })
+                  return
+              }
+          }
+      } catch (error) {
+          return res.status(500).send('ERROR')
+      }
     }
 
     async createPostBlogger(req: Request, res: Response) {

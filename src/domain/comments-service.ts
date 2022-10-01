@@ -2,15 +2,46 @@ import {CommentType, CommentViewType, CreateCommentDto} from "../types/commentsT
 import {CommentsRepository} from "../repositories/comments-repository";
 import {injectable} from "inversify";
 import {LikesInfo} from "../types/likeTypes";
+import {LikesRepository} from "../repositories/like-repoository";
+import {UserViewResponse} from "../types/UsersTypes";
 
 @injectable()
 export class CommentsService {
 
-    constructor(protected commentsRepository: CommentsRepository) {
+    constructor(protected commentsRepository: CommentsRepository, protected likesRepository: LikesRepository) {
     }
 
-    async findCommentId(id: string): Promise<CommentViewType | null> {
-        const comment =  await this.commentsRepository.findCommentId(id)
+    async findCommentId(id: string, user: UserViewResponse | undefined): Promise<CommentViewType | null> {
+        const comment = await this.commentsRepository.findCommentId(id)
+        if (!comment) return null
+
+        const {
+            likes,
+            dislikes
+        } = await this.likesRepository.getLikesAndDislikesCountByParentId((comment._id).toString())
+        comment.likesInfo.likesCount = likes
+        comment.likesInfo.dislikesCount = dislikes
+        let defaultMyStatus = 'None'
+        if (user) {
+            defaultMyStatus = await this.likesRepository.getLikeStatusByUserId((comment._id).toString(), (comment._id).toString())
+        }
+        comment.likesInfo.myStatus = defaultMyStatus
+        return {
+            id: comment._id.toString(),
+            content: comment.content,
+            userId: comment.userId,
+            userLogin: comment.userLogin,
+            addedAt: comment.addedAt,
+            likesInfo: {
+                likesCount: comment.likesInfo.likesCount,
+                dislikesCount: comment.likesInfo.dislikesCount,
+                myStatus: comment.likesInfo.myStatus
+            }
+        }
+    }
+
+    async checkComment(id: string): Promise<CommentViewType | null> {
+        const comment = await this.commentsRepository.findCommentId(id)
         if (!comment) return null
         return {
             id: comment._id.toString(),
@@ -24,6 +55,7 @@ export class CommentsService {
                 myStatus: comment.likesInfo.myStatus
             }
         }
+
     }
 
     async createComment(content: string, userId: string, userLogin: string): Promise<CommentViewType | null> {
@@ -50,21 +82,18 @@ export class CommentsService {
         return null
     }
 
+    async addLikeToComment(commentId: string, userId: string, login: string, likeStatus: string): Promise<boolean> {
+        try {
+            await this.likesRepository.addLikeOrDislikeOrNone(commentId, userId, login, likeStatus)
+            return true
+        } catch (e) {
+            return false
+        }
+    }
+
     async updateComment(id: string, content: string): Promise<boolean | null> {
         return await this.commentsRepository.updateComment(id, content)
     }
-
-    // async addLikeToComment(commentId: string, userId: string, login: string, likeStatus: string): Promise<boolean | null> {
-    //     const likeCommentDB: LikeCommentCollectionType = {
-    //         status: likeStatus,
-    //         createdAt: new Date(),
-    //         commentId: new ObjectId(commentId),
-    //         userId: new ObjectId(userId)
-    //     }
-    //     const createdLike = await this.commentsRepository.addLike(likeCommentDB)
-    //     if (createdLike) return createdLike
-    //     return false
-    // }
 
     async deleteComment(id: string): Promise<boolean> {
         return await this.commentsRepository.deleteComment(id)

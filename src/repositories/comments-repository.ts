@@ -24,13 +24,6 @@ export class CommentsRepository {
         return false
     }
 
-    // async addLike(likeDb: LikeCommentCollectionType): Promise<boolean | null> {
-    //     const updateLikeComment = await CommentModelClass.updateOne({'likesInfo.myStatus': likeDb.status})
-    //     const addLikeCommentDB = await CommentLikeModelClass.create(likeDb)
-    //     if (updateLikeComment && addLikeCommentDB) return true
-    //     return false
-    // }
-
     async deleteComment(id: string): Promise<boolean> {
         const comment = await CommentModelClass.deleteOne({id})
         if (comment) return true

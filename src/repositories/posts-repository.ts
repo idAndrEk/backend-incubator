@@ -12,9 +12,7 @@ export class PostsRepository {
     async getPosts(page: number, pageSize: number): Promise<PostType[]>{
         const post = PostModelClass
             .find({})
-            // .find({}, {_id: false, __v: false})
             .skip((page - 1) * pageSize)
-            // .select({__v: false})
             .limit(pageSize)
             .lean()
         return post

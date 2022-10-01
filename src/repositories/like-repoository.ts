@@ -11,6 +11,7 @@ export class LikesRepository {
     async getLikesAndDislikesCountByParentId(parentId: string) {
         const likes = await LikesModelClass.countDocuments({parentId, status: 'Like'})
         const dislikes = await LikesModelClass.countDocuments({parentId, status: 'Dislike'})
+        // console.log('LIKE',parentId)
         return {likes, dislikes}
     }
 

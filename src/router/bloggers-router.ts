@@ -6,6 +6,7 @@ import {postValidation} from "../middlewares/Post-validation";
 import {checkIdParamMiddleware} from "../middlewares/checkIdParam-Middleware";
 import {container} from "../composition-root";
 import {BloggersController} from "../controllers/bloggers-controller";
+import {checkUserTokenMiddleware} from "../middlewares/JwtAuth-Middleware";
 
 const bloggersController = container.resolve(BloggersController)
 
@@ -16,7 +17,7 @@ bloggersRouter.get('/:id', checkIdParamMiddleware, bloggersController.getBlogger
 bloggersRouter.post('/', authMiddleware, BloggerValidation, allValidation, bloggersController.createBlogger.bind(bloggersController))
 bloggersRouter.put('/:id', checkIdParamMiddleware, authMiddleware, BloggerValidation, allValidation, bloggersController.updateBlogger.bind(bloggersController))
 bloggersRouter.delete('/:id', checkIdParamMiddleware, authMiddleware, bloggersController.deleteBlogger.bind(bloggersController))
-bloggersRouter.get('/:id/posts', checkIdParamMiddleware, bloggersController.getBloggerPosts.bind(bloggersController))
+bloggersRouter.get('/:id/posts', checkUserTokenMiddleware, checkIdParamMiddleware, bloggersController.getBloggerPosts.bind(bloggersController))
 bloggersRouter.post('/:id/posts', checkIdParamMiddleware, authMiddleware, postValidation, allValidation, bloggersController.createPostBlogger.bind(bloggersController))
 
 

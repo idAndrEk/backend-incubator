@@ -9,8 +9,7 @@ export class CommentsController {
     }
 
     async getComment(req: Request, res: Response) {
-        const comment = await this.commentsService.findCommentId(req.params.id);
-        console.log(comment)
+        const comment = await this.commentsService.findCommentId(req.params.id, req.user);
         if (!comment) {
             return res.status(404).send('Not found')
         } else {
@@ -19,11 +18,11 @@ export class CommentsController {
     }
 
     async updateComment(req: Request<{ id: string }>, res: Response) {
-        const commentToUpdate = await this.commentsService.findCommentId(req.params.id)
+        const commentToUpdate = await this.commentsService.checkComment(req.params.id)
         if (commentToUpdate!.userId != req.user?.id) {
             return res.sendStatus(403)
         }
-        const comment = await this.commentsService.findCommentId(req.params.id)
+        const comment = await this.commentsService.checkComment(req.params.id)
         if (comment) {
             const id = req.params.id;
             const content = req.body.content;
@@ -43,22 +42,23 @@ export class CommentsController {
         }
     }
 
-    // async addLikeToComment(req: Request, res: Response) {
-    //     try {
-    //         const comment = await this.commentsService.findCommentId(req.params.id);
-    //         if (!comment) return res.sendStatus(404)
-    //         const commentId = req.params.id;
-    //         const userId = req.user.id;
-    //         const login = req.user.accountData.userName;
-    //         const {likeStatus} = req.body;
-    //         await this.commentsService.addLikeToComment(commentId, userId, login, likeStatus)
-    //     } catch (error) {
-    //         return res.status(500).send(error)
-    //     }
-    // }
+    async addLikeToComment(req: Request<{ id: string }, never, { likeStatus: string }, never>, res: Response) {
+        try {
+            const comment = await this.commentsService.findCommentId(req.params.id, req.user)
+            if (!comment) return res.sendStatus(404)
+            const commentId = req.params.id;
+            const userId = req.user.id;
+            const login = req.user.accountData.userName;
+            const {likeStatus} = req.body;
+            await this.commentsService.addLikeToComment(commentId, userId, login, likeStatus)
+            return res.sendStatus(204)
+        } catch (error) {
+            return res.status(500).send(error)
+        }
+    }
 
     async deleteComment(req: Request<{ id: string }>, res: Response) {
-        const commentToDelete = await this.commentsService.findCommentId(req.params.id)
+        const commentToDelete = await this.commentsService.checkComment(req.params.id)
         if (commentToDelete!.userId != req.user?.id) {
             return res.sendStatus(403)
 

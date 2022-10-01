@@ -1,13 +1,15 @@
 import {BloggersRepository} from "../repositories/bloggers-repository";
 import {BloggerType, BloggerViewType, CreateBloggerDto, PaginationBloggerType} from "../types/bloggersTypes";
-import {PaginationBloggerPostType, PaginationPostType} from "../types/postsTypes";
-import {ObjectId} from "mongodb";
+import {PaginationPostType, PostViewType} from "../types/postsTypes";
 import {PostsRepository} from "../repositories/posts-repository";
 import {injectable} from "inversify";
+import {UserViewResponse} from "../types/UsersTypes";
+import {LikesRepository} from "../repositories/like-repoository";
 
 @injectable()
 export class BloggersService {
-    constructor(protected bloggersRepository: BloggersRepository, protected postsRepository = PostsRepository) {}
+    constructor(protected bloggersRepository: BloggersRepository, protected postsRepository = PostsRepository, protected likesRepository: LikesRepository) {
+    }
 
     async getBloggers(page: number, pageSize: number, name: string | null): Promise<PaginationBloggerType> {
         const bloggerData = await this.bloggersRepository.getBloggers(page, pageSize, name)
@@ -18,12 +20,11 @@ export class BloggersService {
             "page": page,
             "pageSize": pageSize,
             "totalCount": totalCount,
-            "items": bloggerData
-            // "items": bloggerData.map(bloggerData => ({
-            //     id: bloggerData._id,
-            //     name: bloggerData.name,
-            //     youtubeUrl: bloggerData.youtubeUrl
-            // }))
+            "items": bloggerData.map(bloggerData => ({
+                id: bloggerData._id.toString(),
+                name: bloggerData.name,
+                youtubeUrl: bloggerData.youtubeUrl
+            }))
         }
     }
 
@@ -60,18 +61,52 @@ export class BloggersService {
         return await this.bloggersRepository.deleteBlogger(id)
     }
 
-    async getBloggerPosts(bloggerId: string, page: number, pageSize: number): Promise<PaginationBloggerPostType> {
-        const postData = await this.bloggersRepository.findPostsBlogger(bloggerId, page, pageSize)
+    async getBloggerPosts(bloggerId: string, page: number, pageSize: number, user: UserViewResponse | undefined): Promise<PaginationPostType> {
+        let postData = await this.bloggersRepository.findPostsBlogger(bloggerId, page, pageSize)
+        // console.log('POST DATA',postData)
         const totalCount = await this.bloggersRepository.countPostBlogger(bloggerId)
         const pagesCount = Math.ceil(await this.bloggersRepository.countPostBlogger(bloggerId) / pageSize)
+
+        let items: PostViewType[] = []
+        for (const post of postData) {
+            console.log('POST DAT I', postData)
+            const {likes, dislikes} = await this.likesRepository.getLikesAndDislikesCountByParentId((post._id).toString())
+            post.extendedLikesInfo.likesCount = likes
+            post.extendedLikesInfo.dislikesCount = dislikes
+            // console.log('USER POST BLOGGER',user)
+            let myStatus = !user ? 'None' : await this.likesRepository.getLikeStatusByUserId((post._id).toString(), (user._id).toString())
+            post.extendedLikesInfo.myStatus = myStatus
+            const newestLikes = await this.likesRepository.getNewestLikesByParentId((post._id).toString(), 3)
+            items.push({
+                id: post._id.toString(),
+                title: post.title,
+                shortDescription: post.shortDescription,
+                content: post.content,
+                bloggerId: post.bloggerId,
+                bloggerName: post.bloggerName,
+                addedAt: post.addedAt,
+                extendedLikesInfo: {
+                    likesCount: likes,
+                    dislikesCount: dislikes,
+                    myStatus,
+                    newestLikes
+                }
+            })
+
+        }
         return {
-            "pagesCount": pagesCount,
-            "page": page,
-            "pageSize": pageSize,
-            "totalCount": totalCount,
-            "items": postData
+            pagesCount: pagesCount,
+            page: page,
+            pageSize: pageSize,
+            totalCount: totalCount,
+            items
+
+            // return {
+            //     "pagesCount": pagesCount,
+            //     "page": page,
+            //     "pageSize": pageSize,
+            //     "totalCount": totalCount,
+            //     "items": postData
         }
     }
 }
-
-
