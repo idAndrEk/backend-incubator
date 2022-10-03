@@ -47,7 +47,6 @@ export class AuthController {
         }
         const user = await this.usersService.createUser(req.body.login, req.body.email, req.body.password)
         if (user) {
-            // if (user === '250') {
             return res.sendStatus(204)
         } else {
             return res.sendStatus(400)

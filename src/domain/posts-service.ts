@@ -153,10 +153,7 @@ export class PostsService {
 
         let items: CommentViewType[] = []
         for (const comment of commentData) {
-            const {
-                likes,
-                dislikes
-            } = await this.likesRepository.getLikesAndDislikesCountByParentId((comment._id).toString())
+            const {likes, dislikes} = await this.likesRepository.getLikesAndDislikesCountByParentId((comment._id).toString())
             comment.likesInfo.likesCount = likes
             comment.likesInfo.dislikesCount = dislikes
             let defaultMyStatus = 'None'

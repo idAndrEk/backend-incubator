@@ -5,7 +5,8 @@ import {injectable} from "inversify";
 
 @injectable()
 export class BloggersController {
-    constructor(protected bloggersService: BloggersService, protected postsService: PostsService) {}
+    constructor(protected bloggersService: BloggersService, protected postsService: PostsService) {
+    }
 
     async getBloggers(req: Request, res: Response) {
         const page = req.query.PageNumber || 1
@@ -35,11 +36,7 @@ export class BloggersController {
     }
 
     async updateBlogger(req: Request, res: Response) {
-        // const idBlogger = req.params.id;
-        // const nameBlogger = req.body.name;
-        // const youtubeUrlBlogger = req.body.youtubeUrl;
         const updateBlogger = await this.bloggersService.updateBlogger(req.params.id, req.body.name, req.body.youtubeUrl)
-        console.log(updateBlogger)
         if (updateBlogger) {
             return res.sendStatus(204)
         } else {
@@ -57,29 +54,29 @@ export class BloggersController {
     }
 
     async getBloggerPosts(req: Request, res: Response) {
-      try {
-          let page = req.query.PageNumber || 1
-          let pageSize = req.query.PageSize || 10
-          console.log('getBloggerPosts', `page: ${page}`, `pageSize: ${pageSize}`)
-          const bloggerId = req.params.id
-          const blogger = await this.bloggersService.getBlogger(bloggerId)
-          if (blogger) {
-              const bloggerPosts = await this.bloggersService.getBloggerPosts(bloggerId, +page, +pageSize, req.user)
-              return res.status(200).send(bloggerPosts)
-          } else {
-              const errors = [];
-              errors.push({message: 'Error bloggerId', field: 'bloggerId'})
-              if (errors.length) {
-                  res.status(404).json({
-                      errorsMessages: errors
-                  })
-                  return
-              }
-          }
-      } catch (error) {
-          console.log(error)
-          return res.status(500).send('ERROR')
-      }
+        try {
+            let page = req.query.PageNumber || 1
+            let pageSize = req.query.PageSize || 10
+            console.log('getBloggerPosts', `page: ${page}`, `pageSize: ${pageSize}`)
+            const bloggerId = req.params.id
+            const blogger = await this.bloggersService.getBlogger(bloggerId)
+            if (blogger) {
+                const bloggerPosts = await this.bloggersService.getBloggerPosts(bloggerId, +page, +pageSize, req.user)
+                return res.status(200).send(bloggerPosts)
+            } else {
+                const errors = [];
+                errors.push({message: 'Error bloggerId', field: 'bloggerId'})
+                if (errors.length) {
+                    res.status(404).json({
+                        errorsMessages: errors
+                    })
+                    return
+                }
+            }
+        } catch (error) {
+            console.log(error)
+            return res.status(500).send('ERROR')
+        }
     }
 
     async createPostBlogger(req: Request, res: Response) {

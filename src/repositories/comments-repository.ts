@@ -31,7 +31,7 @@ export class CommentsRepository {
     }
 
     async countPostComment(postId: string | null) {
-        const commentByPostCount = CommentModelClass.count({postId})
+        const commentByPostCount = CommentModelClass.countDocuments({postId})
         return commentByPostCount
     }
 
