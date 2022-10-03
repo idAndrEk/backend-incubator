@@ -9,12 +9,7 @@ export class PostsRepository {
         return count
     }
 
-    async countPostByBloggerId(bloggerId: string): Promise<number> {
-        const count = await PostModelClass.countDocuments({bloggerId})
-        return count
-    }
-
-    async getPosts(page: number, pageSize: number): Promise<PostType[]>{
+    async getPosts(page: number, pageSize: number): Promise<PostType[]> {
         const post = PostModelClass
             .find({})
             .skip((page - 1) * pageSize)
@@ -55,25 +50,7 @@ export class PostsRepository {
         return false
     }
 
-    async countPostComment(postId: string | null) {
-        let filter = {}
-        if (postId) {
-            filter = {$regex: postId}
-        }
-        return CommentModelClass.count(filter)
-    }
 
-    async findPostComment(postId: string | null, page: number, pageSize: number) {
-        let filter = {}
-        if (postId) {
-            filter = {$regex: postId}
-        }
-        return CommentModelClass
-            .find(filter)
-            .skip((page - 1) * pageSize)
-            .limit(pageSize)
-            .lean()
-    }
 }
 
 

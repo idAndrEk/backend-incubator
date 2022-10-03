@@ -7,7 +7,8 @@
     "dev": "nodemon --inspect dist/index.js",
     "watch": "tsc -w",
     "build": "tsc",
-    "start": "node dist/index.js"
+    "start": "node dist/index.js",
+    "test": "jest"
   },
   "dependencies": {
     "@types/bcrypt": "^5.0.0",
@@ -16,7 +17,6 @@
     "@types/jsonwebtoken": "^8.5.8",
     "@types/nodemailer": "^6.4.5",
     "bcrypt": "^5.0.1",
-    "body-parser": "^1.20.0",
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
     "date-fns": "^2.29.1",
@@ -39,6 +39,12 @@
     "ts-node": "^10.8.1",
     "ts-node-dev": "^2.0.0",
     "typescript": "^4.7.3"
+  },
+  "jest": {
+    "testEnvironment": "node",
+    "coveragePathIgnorePatterns": [
+      "/node_modules/"
+    ]
   },
   "repository": "https://github.com/idAndrEk/Bloggers-01-home.git",
   "author": "Andrey <AndrEkat96@yandex.ru>"

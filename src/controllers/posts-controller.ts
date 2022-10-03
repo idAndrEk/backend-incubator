@@ -104,7 +104,7 @@ export class PostsController {
         const postId = req.params.id
         const post = await this.postsService.checkPost(postId)
         if (post) {
-            const postComment = await this.postsService.getPostComment(postId, +page, +pageSize)
+            const postComment = await this.postsService.getPostComment(postId, +page, +pageSize, req.user)
             return res.status(200).send(postComment)
         } else {
             const errors = [];

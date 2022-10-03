@@ -22,4 +22,4 @@ postsRouter.post('/:id/comments', checkIdParamMiddleware, JwtAuthMiddleware, com
 postsRouter.put('/:id/like-status', JwtAuthMiddleware,likeStatusMiddleware, allValidation, postsController.addLikeToPost.bind(postsController))
 postsRouter.put('/:id', checkIdParamMiddleware, authMiddleware, postValidation, allValidation, postsController.updatePost.bind(postsController))
 postsRouter.delete('/:id', checkIdParamMiddleware, authMiddleware, postsController.deletePost.bind(postsController))
-postsRouter.get('/:id/comments', checkIdParamMiddleware, postsController.getCommentPost.bind(postsController))
+postsRouter.get('/:id/comments', checkIdParamMiddleware,checkUserTokenMiddleware, postsController.getCommentPost.bind(postsController))

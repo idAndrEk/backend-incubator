@@ -74,7 +74,6 @@ export class BloggersService {
             const {likes, dislikes} = await this.likesRepository.getLikesAndDislikesCountByParentId((post._id).toString())
             post.extendedLikesInfo.likesCount = likes
             post.extendedLikesInfo.dislikesCount = dislikes
-            // console.log('USER POST BLOGGER',user)
             let myStatus = !user ? 'None' : await this.likesRepository.getLikeStatusByUserId((post._id).toString(), (user._id).toString())
             post.extendedLikesInfo.myStatus = myStatus
             const newestLikes = await this.likesRepository.getNewestLikesByParentId((post._id).toString(), 3)

@@ -1,14 +1,15 @@
 import {PostsRepository} from "../repositories/posts-repository";
 import {CreatePostDto, PaginationPostType, PostType, PostViewType} from "../types/postsTypes";
-import {PaginationCommentType} from "../types/commentsTypes";
+import {CommentViewType, PaginationCommentType} from "../types/commentsTypes";
 import {BloggersRepository} from "../repositories/bloggers-repository";
 import {injectable} from "inversify";
 import {LikesRepository} from "../repositories/like-repoository";
 import {UserAccType, UserViewResponse} from "../types/UsersTypes";
+import {CommentsRepository} from "../repositories/comments-repository";
 
 @injectable()
 export class PostsService {
-    constructor(protected postsRepository: PostsRepository, protected bloggersRepository: BloggersRepository, protected likesRepository: LikesRepository) {
+    constructor(protected postsRepository: PostsRepository, protected bloggersRepository: BloggersRepository, protected commentsRepository: CommentsRepository, protected likesRepository: LikesRepository) {
     }
 
     async getPosts(page: number, pageSize: number, user: UserViewResponse | undefined): Promise<PaginationPostType> {
@@ -20,7 +21,10 @@ export class PostsService {
         let items: PostViewType[] = []
         for (let i = 0; i < postData.length; i++) {
             const post = postData[i]
-            const {likes, dislikes} = await this.likesRepository.getLikesAndDislikesCountByParentId((post._id).toString())
+            const {
+                likes,
+                dislikes
+            } = await this.likesRepository.getLikesAndDislikesCountByParentId((post._id).toString())
             post.extendedLikesInfo.likesCount = likes
             post.extendedLikesInfo.dislikesCount = dislikes
             let myStatus = !user ? 'None' : await this.likesRepository.getLikeStatusByUserId((post._id).toString(), (user._id).toString())
@@ -142,19 +146,42 @@ export class PostsService {
         return await this.postsRepository.deletePost(id)
     }
 
-    async getPostComment(postId: string, page: number, pageSize: number): Promise<PaginationCommentType> {
-        const commentData = await this.postsRepository.findPostComment(postId, page, pageSize);
-        const totalCount = await this.postsRepository.countPostComment(postId);
-        const pagesCount = Math.ceil(await this.postsRepository.countPostComment(postId) / pageSize);
+    async getPostComment(postId: string, page: number, pageSize: number, user: UserViewResponse | undefined): Promise<PaginationCommentType> {
+        const commentData = await this.commentsRepository.findPostComment(postId, page, pageSize);
+        const totalCount = await this.commentsRepository.countPostComment(postId);
+        const pagesCount = Math.ceil(await this.commentsRepository.countPostComment(postId) / pageSize);
+
+        let items: CommentViewType[] = []
+        for (const comment of commentData) {
+            const {
+                likes,
+                dislikes
+            } = await this.likesRepository.getLikesAndDislikesCountByParentId((comment._id).toString())
+            comment.likesInfo.likesCount = likes
+            comment.likesInfo.dislikesCount = dislikes
+            let defaultMyStatus = 'None'
+            if (user) {
+                defaultMyStatus = await this.likesRepository.getLikeStatusByUserId((comment._id).toString(), (user._id).toString())
+            }
+            items.push({
+                id: comment._id.toString(),
+                content: comment.content,
+                userId: comment.userId,
+                userLogin: comment.userLogin,
+                addedAt: comment.addedAt,
+                likesInfo: {
+                    likesCount: comment.likesInfo.likesCount,
+                    dislikesCount: comment.likesInfo.dislikesCount,
+                    myStatus: comment.likesInfo.myStatus
+                }
+            })
+        }
         return {
-
-
-            //TODO: !!!!!!!!!!!
-            "pagesCount": pagesCount,
-            "page": page,
-            "pageSize": pageSize,
-            "totalCount": totalCount,
-            "items": commentData
+            pagesCount: pagesCount,
+            page: page,
+            pageSize: pageSize,
+            totalCount: totalCount,
+            items
         }
     }
 }

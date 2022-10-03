@@ -1,5 +1,5 @@
 import {CommentType, CreateCommentDto} from "../types/commentsTypes";
-import {CommentModelClass, } from "./db";
+import {CommentModelClass,} from "./db";
 import {injectable} from "inversify";
 
 @injectable()
@@ -28,5 +28,19 @@ export class CommentsRepository {
         const comment = await CommentModelClass.deleteOne({id})
         if (comment) return true
         return false
+    }
+
+    async countPostComment(postId: string | null) {
+        const commentByPostCount = CommentModelClass.count({postId})
+        return commentByPostCount
+    }
+
+    async findPostComment(postId: string | null, page: number, pageSize: number): Promise<CommentType[]> {
+        const commentByPost = CommentModelClass
+            .find({postId})
+            .skip((page - 1) * pageSize)
+            .limit(pageSize)
+            .lean()
+        return commentByPost
     }
 }

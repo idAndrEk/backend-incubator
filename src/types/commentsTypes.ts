@@ -32,6 +32,6 @@ export type PaginationCommentType = {
     page: number
     pageSize: number
     totalCount: number
-    items: CommentType[]
+    items: CommentViewType[]
 }
 
