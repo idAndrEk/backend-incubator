@@ -62,6 +62,7 @@ export class PostsService {
         let defaultMyStatus = 'None'
         if (user) {
             defaultMyStatus = await this.likesRepository.getLikeStatusByUserId((post._id).toString(), (user._id).toString())
+            console.log(defaultMyStatus)
         }
         post.extendedLikesInfo.myStatus = defaultMyStatus
         const newestLikes = await this.likesRepository.getNewestLikesByParentId((post._id).toString(), 3)

@@ -9,7 +9,6 @@ export class LikesRepository {
     }
 
     async getLikesAndDislikesCountByParentId(parentId: string) {
-        console.log('LIKE REPOSITORY ,POST ID',parentId)
         const likes = await LikesModelClass.countDocuments({parentId, status: 'Like'})
         const dislikes = await LikesModelClass.countDocuments({parentId, status: 'Dislike'})
         return {likes, dislikes}
@@ -17,7 +16,6 @@ export class LikesRepository {
 
     async getLikeStatusByUserId(parentId: string, userId: string) {
         const result = await LikesModelClass.findOne({parentId, userId})
-        // console.log('!!!',result)
         if (result) return result.status
         return 'None'
     }
