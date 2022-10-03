@@ -54,11 +54,7 @@ export class BloggersRepository {
     }
 
     async countPostBlogger(bloggerId: string | null) {
-        let filter = {}
-        if (bloggerId) {
-            filter = {$regex: bloggerId}
-        }
-        const bloggerPostsCount = PostModelClass.countDocuments(filter)
+        const bloggerPostsCount = PostModelClass.countDocuments({bloggerId})
         return bloggerPostsCount
     }
 

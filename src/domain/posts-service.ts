@@ -13,10 +13,9 @@ export class PostsService {
 
     async getPosts(page: number, pageSize: number, user: UserViewResponse | undefined): Promise<PaginationPostType> {
         const postData = await this.postsRepository.getPosts(page, pageSize)
-        // console.log('POST DATA', postData)
+
         const pagesCount = Math.ceil(await this.postsRepository.countPost() / pageSize)
         const totalCount = await this.postsRepository.countPost()
-        // let likes = []
 
         let items: PostViewType[] = []
         for (let i = 0; i < postData.length; i++) {
@@ -148,6 +147,9 @@ export class PostsService {
         const totalCount = await this.postsRepository.countPostComment(postId);
         const pagesCount = Math.ceil(await this.postsRepository.countPostComment(postId) / pageSize);
         return {
+
+
+            //TODO: !!!!!!!!!!!
             "pagesCount": pagesCount,
             "page": page,
             "pageSize": pageSize,
@@ -157,37 +159,3 @@ export class PostsService {
     }
 }
 
-// let resultLikesArray = []
-// for (let like of newestLikes){
-//     resultLikesArray.push({
-//         addedAt: like.addedAt,
-//         userId: like.userId.toString(),
-//         login: like.login
-//     })
-// }
-// post.extendedLikesInfo.newestLikes = resultLikesArray
-// console.log(post.extendedLikesInfo.newestLikes)
-
-
-// async getPost(id: string, user: UserAccType | undefined): Promise<PostViewType | null> {
-//     let post = await this.postsRepository.getPost(id)
-//     if (!post) return null
-//     await this.likesRepository.getLikesCountByParentId((post._id).toString())
-//     await this.likesRepository.getDislikesCountByParentId((post._id).toString())
-//     await this.likesRepository.getLikeStatusByUserId((post._id).toString(), (user!._id).toString())
-//     return {
-//         id: post._id.toString(),
-//         title: post.title,
-//         shortDescription: post.shortDescription,
-//         content: post.content,
-//         bloggerId: post.bloggerId,
-//         bloggerName: post.bloggerName,
-//         addedAt: post.addedAt,
-//         extendedLikesInfo: {
-//             likesCount: post.extendedLikesInfo.likesCount,
-//             dislikesCount: post.extendedLikesInfo.dislikesCount,
-//             myStatus: post.extendedLikesInfo.myStatus,
-//             newestLikes: await this.likesRepository.getNewestLikesByParentId((post._id).toString(), 3)
-//         }
-//     }
-// }

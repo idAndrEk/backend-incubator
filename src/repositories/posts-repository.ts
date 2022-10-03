@@ -9,6 +9,11 @@ export class PostsRepository {
         return count
     }
 
+    async countPostByBloggerId(bloggerId: string): Promise<number> {
+        const count = await PostModelClass.countDocuments({bloggerId})
+        return count
+    }
+
     async getPosts(page: number, pageSize: number): Promise<PostType[]>{
         const post = PostModelClass
             .find({})

@@ -11,7 +11,8 @@ export class BloggersService {
     constructor(
         protected bloggersRepository: BloggersRepository,
         protected postsRepository: PostsRepository,
-        protected likesRepository: LikesRepository) {}
+        protected likesRepository: LikesRepository) {
+    }
 
     async getBloggers(page: number, pageSize: number, name: string | null): Promise<PaginationBloggerType> {
         const bloggerData = await this.bloggersRepository.getBloggers(page, pageSize, name)
@@ -65,18 +66,12 @@ export class BloggersService {
 
     async getBloggerPosts(bloggerId: string, page: number, pageSize: number, user: UserViewResponse | undefined): Promise<PaginationPostType> {
         let postData = await this.bloggersRepository.findPostsBlogger(bloggerId, page, pageSize)
-        // console.log('POST DATA',postData)
         const totalCount = await this.bloggersRepository.countPostBlogger(bloggerId)
         const pagesCount = Math.ceil(await this.bloggersRepository.countPostBlogger(bloggerId) / pageSize)
 
         let items: PostViewType[] = []
         for (const post of postData) {
-            // console.log('POST SERVICE, POST DATA', postData)
-            console.log('POST SERVICE, POST ID', post._id)
-            const {
-                likes,
-                dislikes
-            } = await this.likesRepository.getLikesAndDislikesCountByParentId((post._id).toString())
+            const {likes, dislikes} = await this.likesRepository.getLikesAndDislikesCountByParentId((post._id).toString())
             post.extendedLikesInfo.likesCount = likes
             post.extendedLikesInfo.dislikesCount = dislikes
             // console.log('USER POST BLOGGER',user)
@@ -98,7 +93,6 @@ export class BloggersService {
                     newestLikes
                 }
             })
-
         }
         return {
             pagesCount: pagesCount,
@@ -106,13 +100,6 @@ export class BloggersService {
             pageSize: pageSize,
             totalCount: totalCount,
             items
-
-            // return {
-            //     "pagesCount": pagesCount,
-            //     "page": page,
-            //     "pageSize": pageSize,
-            //     "totalCount": totalCount,
-            //     "items": postData
         }
     }
 }

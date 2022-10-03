@@ -89,8 +89,6 @@ export class PostsController {
         }
     }
 
-    // totalaction[] userId, data, likestatus // if (pull/push) method MAP
-
     async deletePost(req: Request, res: Response) {
         const idDeletedPost = await this.postsService.deletePost(req.params.id)
         if (idDeletedPost) {

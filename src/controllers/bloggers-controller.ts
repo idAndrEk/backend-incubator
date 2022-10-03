@@ -60,6 +60,7 @@ export class BloggersController {
       try {
           let page = req.query.PageNumber || 1
           let pageSize = req.query.PageSize || 10
+          console.log('getBloggerPosts', `page: ${page}`, `pageSize: ${pageSize}`)
           const bloggerId = req.params.id
           const blogger = await this.bloggersService.getBlogger(bloggerId)
           if (blogger) {
