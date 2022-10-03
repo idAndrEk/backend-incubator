@@ -8,8 +8,10 @@ import {LikesRepository} from "../repositories/like-repoository";
 
 @injectable()
 export class BloggersService {
-    constructor(protected bloggersRepository: BloggersRepository, protected postsRepository = PostsRepository, protected likesRepository: LikesRepository) {
-    }
+    constructor(
+        protected bloggersRepository: BloggersRepository,
+        protected postsRepository: PostsRepository,
+        protected likesRepository: LikesRepository) {}
 
     async getBloggers(page: number, pageSize: number, name: string | null): Promise<PaginationBloggerType> {
         const bloggerData = await this.bloggersRepository.getBloggers(page, pageSize, name)
@@ -69,8 +71,12 @@ export class BloggersService {
 
         let items: PostViewType[] = []
         for (const post of postData) {
-            console.log('POST DAT I', postData)
-            const {likes, dislikes} = await this.likesRepository.getLikesAndDislikesCountByParentId((post._id).toString())
+            // console.log('POST SERVICE, POST DATA', postData)
+            console.log('POST SERVICE, POST ID', post._id)
+            const {
+                likes,
+                dislikes
+            } = await this.likesRepository.getLikesAndDislikesCountByParentId((post._id).toString())
             post.extendedLikesInfo.likesCount = likes
             post.extendedLikesInfo.dislikesCount = dislikes
             // console.log('USER POST BLOGGER',user)

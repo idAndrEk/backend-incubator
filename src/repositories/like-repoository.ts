@@ -9,9 +9,9 @@ export class LikesRepository {
     }
 
     async getLikesAndDislikesCountByParentId(parentId: string) {
+        console.log('LIKE REPOSITORY ,POST ID',parentId)
         const likes = await LikesModelClass.countDocuments({parentId, status: 'Like'})
         const dislikes = await LikesModelClass.countDocuments({parentId, status: 'Dislike'})
-        // console.log('LIKE',parentId)
         return {likes, dislikes}
     }
 
@@ -22,27 +22,26 @@ export class LikesRepository {
         return 'None'
     }
 
-    async getLikeStatusByParentIdsANdUserId(parentIds: string[], userId: string) {
-        const result = await LikesModelClass.findOne({
-            parentId: {$in: parentIds},
-            userId
-        })
-        if (result) return result.status
-        return 'None'
-    }
-
     async getNewestLikesByParentId(parentId: string, count: number)/*: Promise <NewestLikes>*/ {
         const newestLikes = await LikesModelClass.find(
             {parentId, status: 'Like'},
             {_id: 0, __v: 0, parentId: 0, status: 0},
         )
-            .sort({'addedAt': 1})
+            .sort({'addedAt': -1}) //
             .limit(count)
             .lean()
         return newestLikes
     }
 }
 
+// async getLikeStatusByParentIdsANdUserId(parentIds: string[], userId: string) {
+//     const result = await LikesModelClass.findOne({
+//         parentId: {$in: parentIds},
+//         userId
+//     })
+//     if (result) return result.status
+//     return 'None'
+// }
 
 
 

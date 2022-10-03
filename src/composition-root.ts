@@ -28,6 +28,8 @@ container.bind<BloggersController>(BloggersController).to(BloggersController);
 container.bind<BloggersService>(BloggersService).to(BloggersService);
 container.bind<BloggersRepository>(BloggersRepository).to(BloggersRepository);
 
+container.bind<LikesRepository>(LikesRepository).to(LikesRepository)
+
 container.bind<PostsController>(PostsController).to(PostsController);
 container.bind<PostsService>(PostsService).to(PostsService);
 container.bind<PostsRepository>(PostsRepository).to(PostsRepository);
@@ -42,5 +44,4 @@ container.bind<UsersRepository>(UsersRepository).to(UsersRepository);
 
 container.bind<AuthController>(AuthController).to(AuthController);
 
-container.bind<LikesRepository>(LikesRepository).to(LikesRepository)
 
