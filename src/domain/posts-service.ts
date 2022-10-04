@@ -176,11 +176,11 @@ export class PostsService {
                 userId: comment.userId,
                 userLogin: comment.userLogin,
                 createdAt: comment.createdAt,
-                likesInfo: {
-                    likesCount: comment.likesInfo.likesCount,
-                    dislikesCount: comment.likesInfo.dislikesCount,
-                    myStatus
-                }
+                // likesInfo: {
+                //     likesCount: comment.likesInfo.likesCount,
+                //     dislikesCount: comment.likesInfo.dislikesCount,
+                //     myStatus
+                // }
             })
         }
         return {
