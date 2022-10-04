@@ -36,7 +36,7 @@ const postSchema = new mongoose.Schema<PostType>({
     content: {type: String, required: true},
     blogId: {type: String, required: true},
     bloggerName: {type: String, required: true},
-    addedAt: {type: Date, required: true},
+    createdAt: {type: Date, required: true},
     extendedLikesInfo: {type: extendedLikesInfoSchema}
 })
 
@@ -51,7 +51,7 @@ const commentSchema = new mongoose.Schema<CommentType>({
     content: {type: String, required: true},
     userId: {type: String, required: true},
     userLogin: {type: String, required: true},
-    addedAt: {type: Date, default: Date.now},
+    createdAt: {type: Date, default: Date.now},
     likesInfo: {type: likeInfoSchema}
 })
 
@@ -83,7 +83,7 @@ const tokenSchema = new mongoose.Schema<TokenType>({
 const likesSchema = new mongoose.Schema<LikesType>({
     parentId: {type: ObjectId, required: true},
     status: {type: String, required: true},
-    addedAt: {type: Date, required: true},
+    createdAt: {type: Date, required: true},
     userId: {type: ObjectId, required: true},
     login: {type: String, required: true},
 })

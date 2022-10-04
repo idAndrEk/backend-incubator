@@ -48,7 +48,7 @@ export class PostsService {
                 content: post.content,
                 blogId: post.blogId,
                 bloggerName: post.bloggerName,
-                addedAt: post.addedAt,
+                createdAt: post.createdAt,
                 extendedLikesInfo: {
                     likesCount: likes,
                     dislikesCount: dislikes,
@@ -87,7 +87,7 @@ export class PostsService {
             content: post.content,
             blogId: post.blogId,
             bloggerName: post.bloggerName,
-            addedAt: post.addedAt,
+            createdAt: post.createdAt,
             extendedLikesInfo: {
                 likesCount: post.extendedLikesInfo.likesCount,
                 dislikesCount: post.extendedLikesInfo.dislikesCount,
@@ -112,7 +112,7 @@ export class PostsService {
             shortDescription: shortDescription,
             content: content,
             blogId: blogId,
-            addedAt: new Date(),
+            createdAt: new Date(),
             extendedLikesInfo: {
                 likesCount: 0,
                 dislikesCount: 0,
@@ -128,7 +128,7 @@ export class PostsService {
             shortDescription: createdPost.shortDescription,
             content: createdPost.content,
             blogId: createdPost.blogId,
-            addedAt: createdPost.addedAt,
+            createdAt: createdPost.createdAt,
             extendedLikesInfo: {
                 likesCount: 0,
                 dislikesCount: 0,
@@ -175,7 +175,7 @@ export class PostsService {
                 content: comment.content,
                 userId: comment.userId,
                 userLogin: comment.userLogin,
-                addedAt: comment.addedAt,
+                createdAt: comment.createdAt,
                 likesInfo: {
                     likesCount: comment.likesInfo.likesCount,
                     dislikesCount: comment.likesInfo.dislikesCount,

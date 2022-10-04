@@ -12,7 +12,7 @@ export type ExtendedLikesInfo = {
 }
 
 export type NewestLikes = {
-    addedAt: Date
+    createdAt: Date
     userId: ObjectId
     login: string
 }
@@ -20,7 +20,7 @@ export type NewestLikes = {
 export type LikesType = {
     parentId: ObjectId
     status: string
-    addedAt: Date
+    createdAt: Date
     userId: ObjectId
     login: string
 }
@@ -55,7 +55,7 @@ export type LikesInfo = {
 //         content: post.content,
 //         blogId: post.blogId,
 //         bloggerName: post.bloggerName,
-//         addedAt: post.addedAt,
+//         createdAt: post.createdAt,
 //         extendedLikesInfo: {
 //             likesCount: likes,
 //             dislikesCount: dislikes,

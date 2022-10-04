@@ -27,7 +27,7 @@ export class CommentsService {
             content: comment.content,
             userId: comment.userId,
             userLogin: comment.userLogin,
-            addedAt: comment.addedAt,
+            createdAt: comment.createdAt,
             likesInfo: {
                 likesCount: comment.likesInfo.likesCount,
                 dislikesCount: comment.likesInfo.dislikesCount,
@@ -44,7 +44,7 @@ export class CommentsService {
             content: comment.content,
             userId: comment.userId,
             userLogin: comment.userLogin,
-            addedAt: comment.addedAt,
+            createdAt: comment.createdAt,
             likesInfo: {
                 likesCount: comment.likesInfo.likesCount,
                 dislikesCount: comment.likesInfo.dislikesCount,
@@ -60,7 +60,7 @@ export class CommentsService {
             content: content,
             userId: userId,
             userLogin: userLogin,
-            addedAt: new Date(),
+            createdAt: new Date(),
             likesInfo: {
                 likesCount: 0,
                 dislikesCount: 0,
@@ -73,7 +73,7 @@ export class CommentsService {
             content: isCommentCreate.content,
             userId: isCommentCreate.userId,
             userLogin: isCommentCreate.userLogin,
-            addedAt: isCommentCreate.addedAt,
+            createdAt: isCommentCreate.createdAt,
             likesInfo: isCommentCreate.likesInfo
         }
         return null

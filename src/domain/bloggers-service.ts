@@ -87,7 +87,7 @@ export class BloggersService {
                 content: post.content,
                 blogId: post.blogId,
                 bloggerName: post.bloggerName,
-                addedAt: post.addedAt,
+                createdAt: post.createdAt,
                 extendedLikesInfo: {
                     likesCount: likes,
                     dislikesCount: dislikes,

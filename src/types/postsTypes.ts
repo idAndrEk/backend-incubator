@@ -8,7 +8,7 @@ export type PostType = {
     content: string
     blogId: string
     bloggerName: string
-    addedAt: Date
+    createdAt: Date
     extendedLikesInfo: ExtendedLikesInfo
 }
 
@@ -27,7 +27,7 @@ export type PostViewType = {
     content: string
     blogId: string
     bloggerName: string
-    addedAt: Date
+    createdAt: Date
     extendedLikesInfo: ExtendedLikesInfo
 }
 
@@ -37,7 +37,7 @@ export type CreatePostDto = {
     content: string
     blogId: string
     bloggerName: string
-    addedAt: Date
+    createdAt: Date
     extendedLikesInfo: ExtendedLikesInfo
 }
 

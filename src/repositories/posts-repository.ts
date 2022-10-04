@@ -64,7 +64,7 @@ export class PostsRepository {
 //             content: true,
 //             blogId: true,
 //             bloggerName: true,
-//             addedAt: true,
+//             createdAt: true,
 //             extendedLikesInfo: true,
 //             _id: 0
 //         })
@@ -83,7 +83,7 @@ export class PostsRepository {
 //     //         content: true,
 //     //         blogId: true,
 //     //         bloggerName: true,
-//     //         addedAt: true,
+//     //         createdAt: true,
 //     //         extendedLikesInfo: true
 //     //     }
 //     // }])

@@ -4,7 +4,7 @@ import {LikesModelClass} from "./db";
 @injectable()
 export class LikesRepository {
     async addLikeOrDislikeOrNone(parentId: string, userId: string, login: string, status: string) {
-        await LikesModelClass.findOneAndUpdate({parentId, userId}, {status, addedAt: new Date(), login}, {upsert: true})
+        await LikesModelClass.findOneAndUpdate({parentId, userId}, {status, createdAt: new Date(), login}, {upsert: true})
         return
     }
 
@@ -25,7 +25,7 @@ export class LikesRepository {
             {parentId, status: 'Like'},
             {_id: 0, __v: 0, parentId: 0, status: 0},
         )
-            .sort({'addedAt': -1}) //
+            .sort({'createdAt': -1}) //
             .limit(count)
             .lean()
         return newestLikes
