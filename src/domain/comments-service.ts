@@ -54,8 +54,9 @@ export class CommentsService {
 
     }
 
-    async createComment(content: string, userId: string, userLogin: string): Promise<CommentViewType | null> {
+    async createComment(postId: string, content: string, userId: string, userLogin: string): Promise<CommentViewType | null> {
         const newComment: CreateCommentDto = {
+            postId: postId,
             content: content,
             userId: userId,
             userLogin: userLogin,

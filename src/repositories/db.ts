@@ -46,6 +46,7 @@ const likeInfoSchema = new mongoose.Schema({
 }, {_id: false})
 
 const commentSchema = new mongoose.Schema<CommentType>({
+    postId: {type: String, required: true},
     content: {type: String, required: true},
     userId: {type: String, required: true},
     userLogin: {type: String, required: true},

@@ -3,6 +3,7 @@ import {LikesInfo} from "./likeTypes";
 
 export type CommentType = {
     _id: ObjectId
+    postId: string
     content: string
     userId: string
     userLogin: string
@@ -20,6 +21,7 @@ export type CommentViewType = {
 }
 
 export type CreateCommentDto = {
+    postId: string
     content: string
     userId: string
     userLogin: string

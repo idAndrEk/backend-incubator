@@ -12,6 +12,7 @@ export class CommentsRepository {
     async creteComment(newComment: CreateCommentDto): Promise<CommentType | null> {
         try {
             const comment = new CommentModelClass(newComment)
+            console.log(newComment)
             return comment.save()
         } catch (e) {
             return null
@@ -37,7 +38,7 @@ export class CommentsRepository {
 
     async findPostComment(postId: string | null, page: number, pageSize: number): Promise<CommentType[]> {
         const commentByPost = CommentModelClass
-            .find({postId}, {postId: 0})
+            .find({postId})
             .skip((page - 1) * pageSize)
             .limit(pageSize)
             .lean()
