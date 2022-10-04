@@ -20,7 +20,8 @@ import {LikesType} from "../types/likeTypes";
 
 const bloggerSchema = new mongoose.Schema<BloggerType>({
     name: {type: String, required: true},
-    youtubeUrl: {type: String, required: true}
+    youtubeUrl: {type: String, required: true},
+    createdAt: {type: Date, required: true}
 })
 
 const extendedLikesInfoSchema = new mongoose.Schema({

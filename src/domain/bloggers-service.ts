@@ -26,7 +26,8 @@ export class BloggersService {
             "items": bloggerData.map(bloggerData => ({
                 id: bloggerData._id.toString(),
                 name: bloggerData.name,
-                youtubeUrl: bloggerData.youtubeUrl
+                youtubeUrl: bloggerData.youtubeUrl,
+                createdAt: new Date
             }))
         }
     }
@@ -37,20 +38,23 @@ export class BloggersService {
         return {
             id: blogger._id.toString(),
             name: blogger.name,
-            youtubeUrl: blogger.youtubeUrl
+            youtubeUrl: blogger.youtubeUrl,
+            createdAt: blogger.createdAt
         }
     }
 
     async createBlogger(name: string, youtubeUrl: string): Promise<BloggerViewType | null> {
         const newBlogger: CreateBloggerDto = {
             name: name,
-            youtubeUrl: youtubeUrl
+            youtubeUrl: youtubeUrl,
+            createdAt: new Date
         }
         const createdBlogger = await this.bloggersRepository.createBlogger(newBlogger)
         if (createdBlogger) return {
             id: createdBlogger._id.toString(),
             name: createdBlogger.name,
-            youtubeUrl: createdBlogger.youtubeUrl
+            youtubeUrl: createdBlogger.youtubeUrl,
+            createdAt: createdBlogger.createdAt
         }
         return null
     }
