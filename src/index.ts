@@ -20,7 +20,7 @@ app.set('trust proxy', true)
 
 const port = process.env.PORT || 5000
 
-app.use('/bloggers', bloggersRouter)
+app.use('/blogs', bloggersRouter)
 app.use('/posts', postsRouter)
 app.use('/users', usersRouter)
 app.use('/auth', authRouter)

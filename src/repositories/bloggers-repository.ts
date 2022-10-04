@@ -12,7 +12,7 @@ export class BloggersRepository {
         if (name) {
             filter = {name: {$regex: `.*${name}.*`}}
         }
-        const countBlogger = BloggerModelClass.countDocuments(filter)
+        const countBlogger = await BloggerModelClass.countDocuments(filter)
         return countBlogger
     }
 
@@ -21,7 +21,7 @@ export class BloggersRepository {
         if (name) {
             filter = {name: {$regex: `.*${name}.*`}}
         }
-        const blogger = BloggerModelClass
+        const blogger = await BloggerModelClass
             .find(filter)
             .skip((page - 1) * pageSize)
             .limit(pageSize)
@@ -30,7 +30,7 @@ export class BloggersRepository {
     }
 
     async getBloggerById(id: string): Promise<BloggerType | null> {
-        const blogger = BloggerModelClass.findById(id)
+        const blogger = await BloggerModelClass.findById(id)
         return blogger
     }
 
@@ -56,12 +56,12 @@ export class BloggersRepository {
     }
 
     async countPostBlogger(bloggerId: string | null) {
-        const bloggerPostsCount = PostModelClass.countDocuments({bloggerId})
+        const bloggerPostsCount = await PostModelClass.countDocuments({bloggerId})
         return bloggerPostsCount
     }
 
     async findPostsBlogger(bloggerId: string | null, page: number, pageSize: number): Promise<PostType[]> {
-        const postByBlogger = PostModelClass
+        const postByBlogger = await PostModelClass
             .find({bloggerId})
             .skip((page - 1) * pageSize)
             .limit(pageSize)

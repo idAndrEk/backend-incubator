@@ -4,6 +4,7 @@ import {injectable} from "inversify";
 
 @injectable()
 export class CommentsRepository {
+
     async findCommentId(id: string): Promise<CommentType | null> {
         const comment = await CommentModelClass.findById(id)
         return comment
