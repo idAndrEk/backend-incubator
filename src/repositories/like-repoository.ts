@@ -15,6 +15,7 @@ export class LikesRepository {
     }
 
     async getLikeStatusByUserId(parentId: string, userId: string) {
+        // console.log(parentId)
         const result = await LikesModelClass.findOne({parentId, userId})
         if (result) return result.status
         return 'None'

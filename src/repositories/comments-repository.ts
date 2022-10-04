@@ -5,14 +5,13 @@ import {injectable} from "inversify";
 @injectable()
 export class CommentsRepository {
     async findCommentId(id: string): Promise<CommentType | null> {
-        const comment = CommentModelClass.findById(id)
+        const comment = await CommentModelClass.findById(id)
         return comment
     }
 
     async creteComment(newComment: CreateCommentDto): Promise<CommentType | null> {
         try {
             const comment = new CommentModelClass(newComment)
-            console.log(newComment)
             return comment.save()
         } catch (e) {
             return null
@@ -32,12 +31,12 @@ export class CommentsRepository {
     }
 
     async countPostComment(postId: string | null) {
-        const commentByPostCount = CommentModelClass.countDocuments({postId})
+        const commentByPostCount = await CommentModelClass.countDocuments({postId})
         return commentByPostCount
     }
 
     async findPostComment(postId: string | null, page: number, pageSize: number): Promise<CommentType[]> {
-        const commentByPost = CommentModelClass
+        const commentByPost = await CommentModelClass
             .find({postId})
             .skip((page - 1) * pageSize)
             .limit(pageSize)

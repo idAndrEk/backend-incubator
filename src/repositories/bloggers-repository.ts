@@ -3,6 +3,8 @@ import {BloggerType, CreateBloggerDto} from "../types/bloggersTypes";
 import {PostType} from "../types/postsTypes";
 import {injectable} from "inversify";
 
+
+//TODO: AWAIT
 @injectable()
 export class BloggersRepository {
     async countBlogger(name: string | null) {

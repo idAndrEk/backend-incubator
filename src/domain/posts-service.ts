@@ -147,13 +147,17 @@ export class PostsService {
     }
 
     async getPostComment(postId: string, page: number, pageSize: number, user: UserViewResponse | undefined): Promise<PaginationCommentType> {
+        console.log("POST ID", postId)
         const commentData = await this.commentsRepository.findPostComment(postId, page, pageSize);
+        console.log("COMENT DATA",commentData)
         const totalCount = await this.commentsRepository.countPostComment(postId);
         const pagesCount = Math.ceil(await this.commentsRepository.countPostComment(postId) / pageSize);
-
         let items: CommentViewType[] = []
         for (const comment of commentData) {
-            const {likes, dislikes} = await this.likesRepository.getLikesAndDislikesCountByParentId((comment._id).toString())
+            const {
+                likes,
+                dislikes
+            } = await this.likesRepository.getLikesAndDislikesCountByParentId((comment._id).toString())
             comment.likesInfo.likesCount = likes
             comment.likesInfo.dislikesCount = dislikes
             let defaultMyStatus = 'None'
