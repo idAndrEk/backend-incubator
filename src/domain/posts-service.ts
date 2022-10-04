@@ -162,14 +162,14 @@ export class PostsService {
         const pagesCount = Math.ceil(await this.commentsRepository.countPostComment(postId) / pageSize);
         let items: CommentViewType[] = []
         for (const comment of commentData) {
-            const {
-                likes,
-                dislikes
-            } = await this.likesRepository.getLikesAndDislikesCountByParentId((comment._id).toString())
-            comment.likesInfo.likesCount = likes
-            comment.likesInfo.dislikesCount = dislikes
-            let myStatus = !user ? 'None' : await this.likesRepository.getLikeStatusByUserId((comment._id).toString(), (user._id).toString())
-            comment.likesInfo.myStatus = myStatus
+            // const {
+            //     likes,
+            //     dislikes
+            // } = await this.likesRepository.getLikesAndDislikesCountByParentId((comment._id).toString())
+            // comment.likesInfo.likesCount = likes
+            // comment.likesInfo.dislikesCount = dislikes
+            // let myStatus = !user ? 'None' : await this.likesRepository.getLikeStatusByUserId((comment._id).toString(), (user._id).toString())
+            // comment.likesInfo.myStatus = myStatus
             items.push({
                 id: comment._id.toString(),
                 content: comment.content,
