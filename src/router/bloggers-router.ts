@@ -13,12 +13,12 @@ const bloggersController = container.resolve(BloggersController)
 export const bloggersRouter = Router({})
 
 bloggersRouter.get('/', bloggersController.getBloggers.bind(bloggersController))
-bloggersRouter.get('/:id', checkIdParamMiddleware, bloggersController.getBlogger.bind(bloggersController))
-bloggersRouter.post('/', authMiddleware, BloggerValidation, allValidation, bloggersController.createBlogger.bind(bloggersController))
-bloggersRouter.put('/:id', checkIdParamMiddleware, authMiddleware, BloggerValidation, allValidation, bloggersController.updateBlogger.bind(bloggersController))
-bloggersRouter.delete('/:id', checkIdParamMiddleware, authMiddleware, bloggersController.deleteBlogger.bind(bloggersController))
+bloggersRouter.get('/:id', /*checkIdParamMiddleware,*/ bloggersController.getBlogger.bind(bloggersController))
 bloggersRouter.get('/:id/posts', checkUserTokenMiddleware, checkIdParamMiddleware, bloggersController.getBloggerPosts.bind(bloggersController))
-bloggersRouter.post('/:id/posts', checkIdParamMiddleware, authMiddleware, postValidation, allValidation, bloggersController.createPostBlogger.bind(bloggersController))
+bloggersRouter.post('/', authMiddleware, BloggerValidation, allValidation, bloggersController.createBlogger.bind(bloggersController))
+bloggersRouter.post('/:id/posts', /*checkIdParamMiddleware,*/ authMiddleware, postValidation, allValidation, bloggersController.createPostBlogger.bind(bloggersController))
+bloggersRouter.put('/:id', /*checkIdParamMiddleware,*/ authMiddleware, BloggerValidation, allValidation, bloggersController.updateBlogger.bind(bloggersController))
+bloggersRouter.delete('/:id', /*checkIdParamMiddleware,*/ authMiddleware, bloggersController.deleteBlogger.bind(bloggersController))
 
 
 
