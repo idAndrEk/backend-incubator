@@ -34,7 +34,7 @@ const postSchema = new mongoose.Schema<PostType>({
     title: {type: String, required: true},
     shortDescription: {type: String, required: true},
     content: {type: String, required: true},
-    bloggerId: {type: String, required: true},
+    blogId: {type: String, required: true},
     bloggerName: {type: String, required: true},
     addedAt: {type: Date, required: true},
     extendedLikesInfo: {type: extendedLikesInfoSchema}

@@ -37,7 +37,7 @@ export class BloggersController {
             const bloggerName = req.body.name;
             const bloggerYoutubeUrl = req.body.youtubeUrl;
             const newBlogger = await this.bloggersService.createBlogger(bloggerName, bloggerYoutubeUrl);
-            if (!newBlogger) return res.status(500).send('something went wrong')
+            if (!newBlogger) return res.status(400).send('incorrect values')
             return res.status(201).send(newBlogger)
         } catch (error) {
             console.log(error)
@@ -72,14 +72,14 @@ export class BloggersController {
             let page = req.query.PageNumber || 1
             let pageSize = req.query.PageSize || 10
             // console.log('getBloggerPosts', `page: ${page}`, `pageSize: ${pageSize}`)
-            const bloggerId = req.params.id
-            const blogger = await this.bloggersService.getBlogger(bloggerId)
+            const blogId = req.params.id
+            const blogger = await this.bloggersService.getBlogger(blogId)
             if (blogger) {
-                const bloggerPosts = await this.bloggersService.getBloggerPosts(bloggerId, +page, +pageSize, req.user)
+                const bloggerPosts = await this.bloggersService.getBloggerPosts(blogId, +page, +pageSize, req.user)
                 return res.status(200).send(bloggerPosts)
             } else {
                 const errors = [];
-                errors.push({message: 'Error bloggerId', field: 'bloggerId'})
+                errors.push({message: 'Error blogId', field: 'blogId'})
                 if (errors.length) {
                     res.status(404).json({
                         errorsMessages: errors
@@ -95,14 +95,14 @@ export class BloggersController {
 
     async createPostBlogger(req: Request, res: Response) {
         try {
-            const bloggerId = req.params.id;
+            const blogId = req.params.id;
             const titlePost = req.body.title;
             const shortDescriptionPost = req.body.shortDescription;
             const contentPost = req.body.content;
-            const newPostBlogger = await this.postsService.createPost(titlePost, shortDescriptionPost, contentPost, bloggerId)
+            const newPostBlogger = await this.postsService.createPost(titlePost, shortDescriptionPost, contentPost, blogId)
             if (!newPostBlogger) {
                 const errors = [];
-                errors.push({message: 'Error bloggerId', field: 'bloggerId'})
+                errors.push({message: 'Error blogId', field: 'blogId'})
                 res.status(404).json({
                     errorsMessages: errors
                 })

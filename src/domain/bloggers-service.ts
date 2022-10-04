@@ -67,10 +67,10 @@ export class BloggersService {
         return await this.bloggersRepository.deleteBlogger(id)
     }
 
-    async getBloggerPosts(bloggerId: string, page: number, pageSize: number, user: UserViewResponse | undefined): Promise<PaginationPostType> {
-        let postData = await this.bloggersRepository.findPostsBlogger(bloggerId, page, pageSize)
-        const totalCount = await this.bloggersRepository.countPostBlogger(bloggerId)
-        const pagesCount = Math.ceil(await this.bloggersRepository.countPostBlogger(bloggerId) / pageSize)
+    async getBloggerPosts(blogId: string, page: number, pageSize: number, user: UserViewResponse | undefined): Promise<PaginationPostType> {
+        let postData = await this.bloggersRepository.findPostsBlogger(blogId, page, pageSize)
+        const totalCount = await this.bloggersRepository.countPostBlogger(blogId)
+        const pagesCount = Math.ceil(await this.bloggersRepository.countPostBlogger(blogId) / pageSize)
 
         let items: PostViewType[] = []
         for (const post of postData) {
@@ -85,7 +85,7 @@ export class BloggersService {
                 title: post.title,
                 shortDescription: post.shortDescription,
                 content: post.content,
-                bloggerId: post.bloggerId,
+                blogId: post.blogId,
                 bloggerName: post.bloggerName,
                 addedAt: post.addedAt,
                 extendedLikesInfo: {

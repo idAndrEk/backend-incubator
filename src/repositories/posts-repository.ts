@@ -33,12 +33,12 @@ export class PostsRepository {
         }
     }
 
-    async updatePost(id: string, title: string, shortDescription: string, content: string, bloggerId: string): Promise<boolean | null> {
+    async updatePost(id: string, title: string, shortDescription: string, content: string, blogId: string): Promise<boolean | null> {
         const post = await PostModelClass.findByIdAndUpdate(id, {
             title,
             shortDescription,
             content,
-            bloggerId
+            blogId
         })
         if (post) return true
         return false
@@ -62,7 +62,7 @@ export class PostsRepository {
 //             title: true,
 //             shortDescription: true,
 //             content: true,
-//             bloggerId: true,
+//             blogId: true,
 //             bloggerName: true,
 //             addedAt: true,
 //             extendedLikesInfo: true,
@@ -81,7 +81,7 @@ export class PostsRepository {
 //     //         title: true,
 //     //         shortDescription: true,
 //     //         content: true,
-//     //         bloggerId: true,
+//     //         blogId: true,
 //     //         bloggerName: true,
 //     //         addedAt: true,
 //     //         extendedLikesInfo: true

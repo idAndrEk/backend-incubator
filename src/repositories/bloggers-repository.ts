@@ -55,14 +55,14 @@ export class BloggersRepository {
         return false
     }
 
-    async countPostBlogger(bloggerId: string | null) {
-        const bloggerPostsCount = await PostModelClass.countDocuments({bloggerId})
+    async countPostBlogger(blogId: string | null) {
+        const bloggerPostsCount = await PostModelClass.countDocuments({blogId})
         return bloggerPostsCount
     }
 
-    async findPostsBlogger(bloggerId: string | null, page: number, pageSize: number): Promise<PostType[]> {
+    async findPostsBlogger(blogId: string | null, page: number, pageSize: number): Promise<PostType[]> {
         const postByBlogger = await PostModelClass
-            .find({bloggerId})
+            .find({blogId})
             .skip((page - 1) * pageSize)
             .limit(pageSize)
             .lean()

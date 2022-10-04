@@ -43,11 +43,11 @@ export class PostsController {
             const titlePost = req.body.title;
             const shortDescriptionPost = req.body.shortDescription;
             const contentPost = req.body.content;
-            const bloggerId = req.body.bloggerId;
-            const newPost = await this.postsService.createPost(titlePost, shortDescriptionPost, contentPost, bloggerId)
+            const blogId = req.body.blogId;
+            const newPost = await this.postsService.createPost(titlePost, shortDescriptionPost, contentPost, blogId)
             if (!newPost) {
                 const errors = [];
-                errors.push({message: 'Error bloggerId', field: 'bloggerId'})
+                errors.push({message: 'Error blogId', field: 'blogId'})
                 if (errors.length) {
                     res.status(400).json({
                         errorsMessages: errors
@@ -64,19 +64,19 @@ export class PostsController {
 
     async updatePost(req: Request, res: Response) {
         try {
-            const blogger = await this.bloggersService.getBlogger(req.body.bloggerId);
+            const blogger = await this.bloggersService.getBlogger(req.body.blogId);
             if (blogger) {
                 const postId = req.params.id;
                 const titlePost = req.body.title;
                 const shortDescriptionPost = req.body.shortDescription;
                 const contentPost = req.body.content;
-                const bloggerId = req.body.bloggerId;
-                const result = await this.postsService.updatePost(postId, titlePost, shortDescriptionPost, contentPost, bloggerId)
+                const blogId = req.body.blogId;
+                const result = await this.postsService.updatePost(postId, titlePost, shortDescriptionPost, contentPost, blogId)
                 if (result) return res.sendStatus(204)
                 return res.sendStatus(404)
             }
             const errors = [];
-            errors.push({message: 'Error bloggerId', field: 'bloggerId'})
+            errors.push({message: 'Error blogId', field: 'blogId'})
             if (errors.length) {
                 res.status(400).json({
                     errorsMessages: errors

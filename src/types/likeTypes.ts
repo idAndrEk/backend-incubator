@@ -53,7 +53,7 @@ export type LikesInfo = {
 //         title: post.title,
 //         shortDescription: post.shortDescription,
 //         content: post.content,
-//         bloggerId: post.bloggerId,
+//         blogId: post.blogId,
 //         bloggerName: post.bloggerName,
 //         addedAt: post.addedAt,
 //         extendedLikesInfo: {
