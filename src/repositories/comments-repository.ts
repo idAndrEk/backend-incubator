@@ -37,7 +37,7 @@ export class CommentsRepository {
 
     async findPostComment(postId: string | null, page: number, pageSize: number): Promise<CommentType[]> {
         const commentByPost = CommentModelClass
-            .find({postId})
+            .find({postId}, {postId: 0})
             .skip((page - 1) * pageSize)
             .limit(pageSize)
             .lean()

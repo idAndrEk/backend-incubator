@@ -46,7 +46,6 @@ export class BloggersService {
             name: name,
             youtubeUrl: youtubeUrl
         }
-
         const createdBlogger = await this.bloggersRepository.createBlogger(newBlogger)
         if (createdBlogger) return {
             id: createdBlogger._id.toString(),

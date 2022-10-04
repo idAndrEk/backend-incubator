@@ -34,17 +34,16 @@
   },
   "devDependencies": {
     "@types/express": "^4.17.13",
+    "@types/jest": "^29.1.1",
     "@types/node": "^18.0.0",
+    "@types/supertest": "^2.0.12",
+    "jest": "^29.1.2",
     "nodemon": "^2.0.16",
+    "supertest": "^6.3.0",
+    "ts-jest": "^29.0.3",
     "ts-node": "^10.8.1",
     "ts-node-dev": "^2.0.0",
     "typescript": "^4.7.3"
-  },
-  "jest": {
-    "testEnvironment": "node",
-    "coveragePathIgnorePatterns": [
-      "/node_modules/"
-    ]
   },
   "repository": "https://github.com/idAndrEk/Bloggers-01-home.git",
   "author": "Andrey <AndrEkat96@yandex.ru>"

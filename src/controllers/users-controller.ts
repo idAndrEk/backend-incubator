@@ -13,7 +13,8 @@ export class UsersController {
             const pageSize = req.query.PageSize || 10
             const users = await this.usersService.getUsers(+page, +pageSize)
             res.send(users)
-        } catch (e) {
+        } catch (error) {
+            console.log(error)
             return res.send('Error')
         }
     }
@@ -26,7 +27,8 @@ export class UsersController {
             } else {
                 res.status(404).send('Not found')
             }
-        } catch (e) {
+        } catch (error) {
+            console.log(error)
             return res.send('Error')
         }
     }
@@ -39,8 +41,8 @@ export class UsersController {
             } else {
                 return res.sendStatus(401)
             }
-        } catch (e) {
-            console.log(e)
+        } catch (error) {
+            console.log(error)
             return res.send('Error')
         }
     }
@@ -53,7 +55,8 @@ export class UsersController {
             } else {
                 return res.sendStatus(204)
             }
-        } catch (e) {
+        } catch (error) {
+            console.log(error)
             return res.send('Error')
         }
     }
