@@ -69,7 +69,7 @@ export class CommentsController {
             if (commentToDelete!.userId != req.user?.id) return res.sendStatus(403)
             const deleteCommentId = await this.commentsService.deleteComment(req.params.id)
             if (deleteCommentId) return res.sendStatus(204)
-            return res.sendStatus(200)
+            return res.sendStatus(404)
         } catch (error) {
             console.log(error)
             return res.send('Error')
