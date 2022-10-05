@@ -10,7 +10,7 @@ export class BloggersController {
 
     async getBloggers(req: Request, res: Response) {
         try {
-            const page = req.query.page || 1
+            const page = req.query.pageNumber || 1
             const pageSize = req.query.pageSize || 10
             const name = req.query.SearchNameTerm || null
             const bloggers = await this.bloggersService.getBloggers(+page, +pageSize, name ? name.toString() : null)
