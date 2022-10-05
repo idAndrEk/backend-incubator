@@ -26,8 +26,9 @@ export class PostsRepository {
 
     async createPost(newPost: CreatePostDto): Promise<PostType | null> {
         try {
-            const post = await new PostModelClass(newPost)
-            return post.save()
+            const post =  new PostModelClass(newPost)
+            await post.save()
+            return post
         } catch (e) {
             return null
         }

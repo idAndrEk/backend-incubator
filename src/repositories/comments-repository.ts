@@ -12,8 +12,9 @@ export class CommentsRepository {
 
     async creteComment(newComment: CreateCommentDto): Promise<CommentType | null> {
         try {
-            const comment = await new CommentModelClass(newComment)
-            return comment.save()
+            const comment =  new CommentModelClass(newComment)
+            await comment.save()
+            return comment
         } catch (e) {
             return null
         }

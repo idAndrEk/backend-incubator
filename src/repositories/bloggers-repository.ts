@@ -37,7 +37,8 @@ export class BloggersRepository {
     async createBlogger(newBlogger: CreateBloggerDto): Promise<BloggerType | null> {
         try {
             const bloggerInstance = new BloggerModelClass(newBlogger);
-            return bloggerInstance.save()
+            await bloggerInstance.save()
+            return bloggerInstance
         } catch (e) {
             return null
         }
