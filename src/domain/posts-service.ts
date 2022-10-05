@@ -189,8 +189,8 @@ export class PostsService {
             pagesCount: pagesCount,
             page: page,
             pageSize: pageSize,
-            // sortBy: sortBy,
-            // sortDirection: sortDirection,
+            sortBy: sortBy,
+            sortDirection: sortDirection,
             totalCount: totalCount,
             // items
         }
