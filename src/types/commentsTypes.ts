@@ -7,7 +7,7 @@ export type CommentType = {
     content: string
     userId: string
     userLogin: string
-    createdAt: Date
+    createdAt: string
     likesInfo: LikesInfo
 }
 
@@ -16,7 +16,7 @@ export type CommentViewType = {
     content: string
     userId: string
     userLogin: string
-    createdAt: Date
+    createdAt: string
     // likesInfo: LikesInfo
 }
 
@@ -25,7 +25,7 @@ export type CreateCommentDto = {
     content: string
     userId: string
     userLogin: string
-    createdAt: Date
+    createdAt: string
     // likesInfo: LikesInfo
 }
 

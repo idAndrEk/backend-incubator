@@ -60,7 +60,7 @@ export class CommentsService {
             content: content,
             userId: userId,
             userLogin: userLogin,
-            createdAt: new Date(),
+            createdAt: (new Date()).toString(),
             // likesInfo: {
             //     likesCount: 0,
             //     dislikesCount: 0,

@@ -4,20 +4,20 @@ export type BloggerType = {
     _id: ObjectId
     name: string
     youtubeUrl: string
-    createdAt: Date
+    createdAt: string
 }
 
 export type BloggerViewType = {
     id: string
     name: string
     youtubeUrl: string
-    createdAt: Date
+    createdAt: string
 }
 
 export type CreateBloggerDto = {
     name: string
     youtubeUrl: string
-    createdAt: Date
+    createdAt: string
 }
 
 export type PaginationBloggerType = {
