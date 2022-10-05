@@ -9,8 +9,8 @@ export class UsersController {
 
     async getUsers(req: Request, res: Response) {
         try {
-            const page = req.query.PageNumber || 1
-            const pageSize = req.query.PageSize || 10
+            const page = req.query.page || 1
+            const pageSize = req.query.pageSize || 10
             const users = await this.usersService.getUsers(+page, +pageSize)
             res.send(users)
         } catch (error) {

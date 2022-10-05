@@ -118,8 +118,8 @@ export class PostsController {
 
     async getCommentPost(req: Request, res: Response) {
         try {
-            let page = req.query.PageNumber || 1
-            let pageSize = req.query.PageSize || 10
+            let page = req.query.page || 1
+            let pageSize = req.query.pageSize || 10
             const postId = req.params.id
             const post = await this.postsService.checkPost(postId)
             if (post) {
