@@ -17,6 +17,7 @@ export class PostsService {
 
         const pagesCount = Math.ceil(await this.postsRepository.countPost() / pageSize)
         const totalCount = await this.postsRepository.countPost()
+        //TODO: ADD MAP
         /*
         const allLikes = []
             //все лайки всех постов

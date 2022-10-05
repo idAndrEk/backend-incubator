@@ -41,6 +41,7 @@ export class CommentsRepository {
         const commentByPost = await CommentModelClass
             .find({postId})
             .skip((page - 1) * pageSize)
+            .sort({'createdAt': -1})
             .limit(pageSize)
             .lean()
         return commentByPost
