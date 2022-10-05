@@ -33,7 +33,9 @@ export type PaginationCommentType = {
     pagesCount: number
     page: number
     pageSize: number
+    // sortBy: string
+    // sortDirection: string
     totalCount: number
-    items: CommentViewType[]
+    // items: CommentViewType[]
 }
 

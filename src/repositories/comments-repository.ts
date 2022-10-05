@@ -1,6 +1,7 @@
 import {CommentType, CreateCommentDto} from "../types/commentsTypes";
 import {CommentModelClass,} from "./db";
 import {injectable} from "inversify";
+import {SortDirection} from "../controllers/posts-controller";
 
 @injectable()
 export class CommentsRepository {
@@ -37,11 +38,11 @@ export class CommentsRepository {
         return commentByPostCount
     }
 
-    async findPostComment(postId: string | null, page: number, pageSize: number): Promise<CommentType[]> {
+    async findPostComment(postId: string | null, page: number, pageSize: number, sortBy: string, sortDirection: SortDirection): Promise<CommentType[]> {
         const commentByPost = await CommentModelClass
             .find({postId})
             .skip((page - 1) * pageSize)
-            .sort({'createdAt': 1})
+            .sort({[sortBy]: sortDirection === SortDirection.Asc ? 1 : -1})
             .limit(pageSize)
             .lean()
         return commentByPost

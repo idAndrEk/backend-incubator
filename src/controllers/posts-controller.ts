@@ -4,7 +4,11 @@ import {BloggersService} from "../domain/bloggers-service";
 import {Request, Response} from "express";
 import {injectable} from "inversify";
 import {LikesRepository} from "../repositories/like-repoository";
-
+import {PaginationType} from "../types/paginationType";
+export enum SortDirection {
+    Asc = 'asc',
+    Desc = 'desc'
+}
 @injectable()
 export class PostsController {
 
@@ -116,14 +120,19 @@ export class PostsController {
         }
     }
 
-    async getCommentPost(req: Request, res: Response) {
+
+    async getCommentPost(req: Request<{id: string}, {}, {}, PaginationType>, res: Response) {
         try {
             let page = req.query.pageNumber || 1
             let pageSize = req.query.pageSize || 10
+            let sortBy = req.query.sortBy || 'createdAt'
+            let sortDirection: SortDirection =
+                typeof req.query.sortDirection === 'string' ? req.query.sortDirection : SortDirection.Desc
+            // const user = req.user
             const postId = req.params.id
             const post = await this.postsService.checkPost(postId)
             if (post) {
-                const postComment = await this.postsService.getPostComment(postId, +page, +pageSize, req.user)
+                const postComment = await this.postsService.getPostComment(postId, +page, +pageSize, sortBy, sortDirection)
                 return res.status(200).send(postComment)
             } else {
                 const errors = [];
