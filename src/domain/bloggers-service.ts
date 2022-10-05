@@ -27,7 +27,7 @@ export class BloggersService {
                 id: bloggerData._id.toString(),
                 name: bloggerData.name,
                 youtubeUrl: bloggerData.youtubeUrl,
-                createdAt: (new Date).toString()
+                createdAt: new Date
             }))
         }
     }
@@ -47,7 +47,7 @@ export class BloggersService {
         const newBlogger: CreateBloggerDto = {
             name: name,
             youtubeUrl: youtubeUrl,
-            createdAt: (new Date).toString()
+            createdAt: new Date
         }
         const createdBlogger = await this.bloggersRepository.createBlogger(newBlogger)
         if (createdBlogger) return {

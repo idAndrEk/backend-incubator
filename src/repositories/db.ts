@@ -21,8 +21,7 @@ import {LikesType} from "../types/likeTypes";
 const bloggerSchema = new mongoose.Schema<BloggerType>({
     name: {type: String, required: true},
     youtubeUrl: {type: String, required: true},
-    createdAt: {type: String, required: true},
-    // createdAt: {type: Date, required: true}
+    createdAt: {type: Date, required: true}
 })
 
 const extendedLikesInfoSchema = new mongoose.Schema({
@@ -52,8 +51,7 @@ const commentSchema = new mongoose.Schema<CommentType>({
     content: {type: String, required: true},
     userId: {type: String, required: true},
     userLogin: {type: String, required: true},
-    createdAt: {type: String, required: true},
-    // createdAt: {type: Date, default: Date.now},
+    createdAt: {type: Date, default: Date.now},
     likesInfo: {type: likeInfoSchema}
 })
 
