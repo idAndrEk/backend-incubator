@@ -13,6 +13,6 @@ export enum SortDirection {
 }
 
 export enum SortBy {
-    Name= 'name',
+    Name = 'name',
     CreatedAt = 'createdAt'
 }

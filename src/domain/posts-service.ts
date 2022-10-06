@@ -158,7 +158,7 @@ export class PostsService {
         return await this.postsRepository.deletePost(id)
     }
 
-    async getPostComment(postId: string, page: number, pageSize: number,sortBy: SortBy, sortDirection: SortDirection/*, user: UserViewResponse | undefined*/): Promise<PaginationCommentType> {
+    async getPostComment(postId: string, page: number, pageSize: number,sortBy: string, sortDirection: SortDirection/*, user: UserViewResponse | undefined*/): Promise<PaginationCommentType> {
         const commentData = await this.commentsRepository.findPostComment(postId, page, pageSize, sortBy, sortDirection);
         const totalCount = await this.commentsRepository.countPostComment(postId);
         const pagesCount = Math.ceil(await this.commentsRepository.countPostComment(postId) / pageSize);
