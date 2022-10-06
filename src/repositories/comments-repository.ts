@@ -14,7 +14,7 @@ export class CommentsRepository {
 
     async creteComment(newComment: CreateCommentDto): Promise<CommentType | null> {
         try {
-            const comment =  new CommentModelClass(newComment)
+            const comment = new CommentModelClass(newComment)
             await comment.save()
             return comment
         } catch (e) {
@@ -30,7 +30,7 @@ export class CommentsRepository {
     }
 
     async deleteComment(id: string): Promise<boolean> {
-        const comment = await CommentModelClass.findByIdAndDelete(id)
+        const comment = await CommentModelClass.deleteOne({_id: id})
         if (comment) return true
         return false
     }
