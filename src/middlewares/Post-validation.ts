@@ -18,7 +18,11 @@ export const postValidation = [
         .isString()
         .trim()
         .isLength({max: 1000, min: 3})
-        .withMessage('Error content')
+        .withMessage('Error content'),
+    body('blogId')
+        .notEmpty()
+        .isString()
+        .trim()
     ]
 
 

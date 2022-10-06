@@ -12,7 +12,7 @@ export const BloggerValidation = [
         .isString()
         .trim()
         .isLength({max: 100, min: 1})
-        .matches('^https:\/\/([a-zA-Z0-9_-]+\.)+[a-zA-Z0-9_-]+(\/[a-zA-Z0-9_-]+)*\/?$')
+        .matches('^https://([a-zA-Z0-9_-]+\\.)+[a-zA-Z0-9_-]+(\\/[a-zA-Z0-9_-]+)*\\/?$')
         .withMessage('Error youtubeUrl')
     ]
 
