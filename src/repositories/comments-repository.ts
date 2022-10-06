@@ -8,7 +8,7 @@ export class CommentsRepository {
 
     async findCommentId(id: string): Promise<CommentType | null> {
         // console.log(id)
-        const comment = await CommentModelClass.findOne({_id: id})
+        const comment = await CommentModelClass.findById(id)
         return comment
     }
 
@@ -30,9 +30,14 @@ export class CommentsRepository {
     }
 
     async deleteComment(id: string): Promise<boolean> {
-        const comment = await CommentModelClass.deleteOne({_id: id})
-        if (comment) return true
-        return false
+
+        const deleteResult = await CommentModelClass.findByIdAndDelete(id)
+        if(!deleteResult) return false
+        return true
+
+        // const comment = await CommentModelClass.deleteOne({_id: id})
+        // if (comment) return true
+        // return false
     }
 
     async countPostComment(postId: string | null) {
