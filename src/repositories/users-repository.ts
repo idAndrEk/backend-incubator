@@ -20,7 +20,7 @@ export class UsersRepository {
     }
 
     async getUser(id: string): Promise<UserAccType | null> {
-        return UserModelClass.findById({_id: id})
+        return UserModelClass.findById(id)
     }
 
     // async createUser(newUser: UserType): Promise<UserAccType> {
