@@ -30,7 +30,7 @@ export class CommentsRepository {
     }
 
     async deleteComment(id: string): Promise<boolean> {
-        const comment = await CommentModelClass.deleteOne({_id: id})
+        const comment = await CommentModelClass.findByIdAndDelete({_id: id})
         if (comment) return true
         return false
     }
