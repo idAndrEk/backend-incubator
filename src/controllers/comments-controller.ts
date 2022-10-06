@@ -22,6 +22,7 @@ export class CommentsController {
     async updateComment(req: Request<{ id: string }>, res: Response) {
         try {
             const commentToUpdate = await this.commentsService.checkComment(req.params.id)
+            if (!commentToUpdate) return res.sendStatus(404)
             if (commentToUpdate!.userId != req.user?.id) return res.sendStatus(403)
             const comment = await this.commentsService.checkComment(req.params.id)
             if (comment) {
