@@ -24,7 +24,7 @@ export class CommentsRepository {
 
     async updateComment(id: string, content: string): Promise<boolean | null> {
         console.log(id)
-        const comment = await CommentModelClass.findOneAndUpdate({_id: id}, {content})
+        const comment = await CommentModelClass.findByIdAndUpdate(id, {content})
         if (comment) return true
         return false
     }
