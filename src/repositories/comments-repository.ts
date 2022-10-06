@@ -7,7 +7,8 @@ import {SortBy, SortDirection} from "../types/paginationType";
 export class CommentsRepository {
 
     async findCommentId(id: string): Promise<CommentType | null> {
-        const comment = await CommentModelClass.findById(id)
+        // console.log(id)
+        const comment = await CommentModelClass.findById({_id: id})
         return comment
     }
 
@@ -22,13 +23,14 @@ export class CommentsRepository {
     }
 
     async updateComment(id: string, content: string): Promise<boolean | null> {
-        const comment = await CommentModelClass.updateOne({id}, {content})
+        console.log(id)
+        const comment = await CommentModelClass.findByIdAndUpdate({_id: id}, {content})
         if (comment) return true
         return false
     }
 
     async deleteComment(id: string): Promise<boolean> {
-        const comment = await CommentModelClass.deleteOne({id})
+        const comment = await CommentModelClass.deleteOne({_id: id})
         if (comment) return true
         return false
     }
