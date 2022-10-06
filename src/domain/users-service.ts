@@ -53,7 +53,9 @@ export class UsersService {
         await emailAdapter.sendEmailConfirmationMessage(user.emailConfirmation.confirmationCode, user.accountData.email)
         const userResponse = {
             id: user._id,
-            login: user.accountData.userName
+            login: user.accountData.userName,
+            email: user.accountData.email,
+            createdAt: user.accountData.createdAt
         }
         if (userResponse) return userResponse
         return null
