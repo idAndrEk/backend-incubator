@@ -1,7 +1,7 @@
-import {UserAccType, UserResponse} from "../types/UsersTypes";
-import {UserModelClass} from "./db";
+import {UserAccType, UserResponse} from "../../types/UsersTypes";
+import {UserModelClass} from "../db";
 import {injectable} from "inversify";
-import {SortDirection} from "../types/paginationType";
+import {SortDirection} from "../../types/paginationType";
 
 @injectable()
 export class UsersRepository {

@@ -10,20 +10,20 @@ import {CommentsRepository} from "./repositories/comments/comments-repository";
 import {CommentsService} from "./domain/comments-service";
 import {CommentsController} from "./controllers/comments-controller";
 import {UsersService} from "./domain/users-service";
-import {UsersRepository} from "./repositories/users-repository";
+import {UsersRepository} from "./repositories/users/users-repository";
 import {UsersController} from "./controllers/users-controller";
 import {AuthController} from "./controllers/auth-controller"
 import {JwtService} from "./application/jwt-service";
 import {LikesRepository} from "./repositories/like-repoository";
 import {BlogsQueryRepository} from "./repositories/blogs/blogsQueryRepository";
 import {PostsQueryRepository} from "./repositories/posts/postsQueryRepository";
+import {CommentsQueryRepository} from "./repositories/comments/commentsQueryRepository";
 
 export const jwtService = new JwtService()
 
 const usersRepository = new UsersRepository
 
 export const usersService = new UsersService(usersRepository)
-
 
 export const likesRepository = new LikesRepository
 
@@ -46,6 +46,8 @@ container.bind<PostsQueryRepository>(PostsQueryRepository).to(PostsQueryReposito
 container.bind<CommentsController>(CommentsController).to(CommentsController);
 container.bind<CommentsService>(CommentsService).to(CommentsService);
 container.bind<CommentsRepository>(CommentsRepository).to(CommentsRepository);
+
+container.bind<CommentsQueryRepository>(CommentsQueryRepository).to(CommentsQueryRepository);
 
 container.bind<UsersController>(UsersController).to(UsersController);
 container.bind<UsersService>(UsersService).to(UsersService);

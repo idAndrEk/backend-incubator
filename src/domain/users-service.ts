@@ -1,5 +1,5 @@
 import {PaginationUserType, UserAccType, UserResponse} from "../types/UsersTypes";
-import {UsersRepository} from "../repositories/users-repository";
+import {UsersRepository} from "../repositories/users/users-repository";
 import {v4 as uuidv4} from "uuid";
 import add from "date-fns/add";
 import {emailAdapter} from "../adapters/email-adapter";

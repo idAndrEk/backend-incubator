@@ -1,4 +1,4 @@
-import {CommentType, CommentViewType} from "../../types/commentsTypes";
+import {CommentViewType} from "../../types/commentsTypes";
 import {CommentModelClass} from "../db";
 import {injectable} from "inversify";
 import {UserViewResponse} from "../../types/UsersTypes";
