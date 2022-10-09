@@ -8,14 +8,15 @@ import bcrypt from "bcrypt";
 import {jwtRepository} from "../repositories/jwt-repository";
 import {jwtService} from "../composition-root";
 import {injectable} from "inversify";
+import {SortDirection} from "../types/paginationType";
 
 @injectable()
 export class UsersService {
 
     constructor(protected usersRepository: UsersRepository) {}
 
-    async getUsers(page: number, pageSize: number): Promise<Omit<PaginationUserType, "email">> {
-        const usersData = await this.usersRepository.getUsers(page, pageSize)
+    async getUsers(page: number, pageSize: number, sortBy: string, sortDirection: SortDirection): Promise<Omit<PaginationUserType, "email">> {
+        const usersData = await this.usersRepository.getUsers(page, pageSize, sortBy, sortDirection)
         const pagesCount = Math.ceil(await this.usersRepository.countComment() / pageSize)
         const totalCount = await this.usersRepository.countComment()
         return {

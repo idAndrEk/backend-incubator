@@ -1,7 +1,7 @@
-import {BloggersRepository} from "../repositories/bloggers-repository";
-import {BloggerType, BloggerViewType, CreateBloggerDto, PaginationBloggerType} from "../types/bloggersTypes";
+import {BloggersRepository} from "../repositories/blogs/bloggers-repository";
+import {BloggerViewType, CreateBloggerDto} from "../types/bloggersTypes";
 import {PaginationPostType, PostViewType} from "../types/postsTypes";
-import {PostsRepository} from "../repositories/posts-repository";
+import {PostsRepository} from "../repositories/posts/posts-repository";
 import {injectable} from "inversify";
 import {UserViewResponse} from "../types/UsersTypes";
 import {LikesRepository} from "../repositories/like-repoository";
@@ -14,34 +14,34 @@ export class BloggersService {
         protected likesRepository: LikesRepository) {
     }
 
-    async getBloggers(page: number, pageSize: number, name: string | null): Promise<PaginationBloggerType> {
-        const bloggerData = await this.bloggersRepository.getBloggers(page, pageSize, name)
-        const pagesCount = Math.ceil(await this.bloggersRepository.countBlogger(name) / pageSize)
-        const totalCount = await this.bloggersRepository.countBlogger(name)
-        return {
-            "pagesCount": pagesCount,
-            "page": page,
-            "pageSize": pageSize,
-            "totalCount": totalCount,
-            "items": bloggerData.map(bloggerData => ({
-                id: bloggerData._id.toString(),
-                name: bloggerData.name,
-                youtubeUrl: bloggerData.youtubeUrl,
-                createdAt: new Date
-            }))
-        }
-    }
+    // async getBloggers(page: number, pageSize: number, name: string | null, sortBy: string, sortDirection: SortDirection): Promise<PaginationBloggerType> {
+    //     const bloggerData = await this.bloggersRepository.getBloggers(page, pageSize, name, sortBy, sortDirection)
+    //     const pagesCount = Math.ceil(await this.bloggersRepository.countBlogger(name) / pageSize)
+    //     const totalCount = await this.bloggersRepository.countBlogger(name)
+    //     return {
+    //         "pagesCount": pagesCount,
+    //         "page": page,
+    //         "pageSize": pageSize,
+    //         "totalCount": totalCount,
+    //         "items": bloggerData.map(bloggerData => ({
+    //             id: bloggerData._id.toString(),
+    //             name: bloggerData.name,
+    //             youtubeUrl: bloggerData.youtubeUrl,
+    //             createdAt: new Date
+    //         }))
+    //     }
+    // }
 
-    async getBlogger(id: string): Promise<BloggerViewType | null> {
-        const blogger = await this.bloggersRepository.getBloggerById(id)
-        if (!blogger) return null
-        return {
-            id: blogger._id.toString(),
-            name: blogger.name,
-            youtubeUrl: blogger.youtubeUrl,
-            createdAt: blogger.createdAt
-        }
-    }
+    // async getBlogger(id: string): Promise<BloggerViewType | null> {
+    //     const blogger = await this.bloggersRepository.getBloggerById(id)
+    //     if (!blogger) return null
+    //     return {
+    //         id: blogger._id.toString(),
+    //         name: blogger.name,
+    //         youtubeUrl: blogger.youtubeUrl,
+    //         createdAt: blogger.createdAt
+    //     }
+    // }
 
     async createBlogger(name: string, youtubeUrl: string): Promise<BloggerViewType | null> {
         const newBlogger: CreateBloggerDto = {

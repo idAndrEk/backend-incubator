@@ -1,6 +1,7 @@
 import {UserAccType, UserResponse} from "../types/UsersTypes";
 import {UserModelClass} from "./db";
 import {injectable} from "inversify";
+import {SortDirection} from "../types/paginationType";
 
 @injectable()
 export class UsersRepository {
@@ -10,11 +11,12 @@ export class UsersRepository {
         return count
     }
 
-    async getUsers(page: number, pageSize: number): Promise<UserResponse[]> {
+    async getUsers(page: number, pageSize: number, sortBy: string, sortDirection: SortDirection): Promise<UserResponse[]> {
         const user = UserModelClass
             .aggregate()
             .project({id: '$_id', login: '$accountData.userName', _id:0})
             .skip((page - 1) * pageSize)
+            .sort({[sortBy]: sortDirection === SortDirection.Asc ? 1 : -1})
             .limit(pageSize)
         return user
     }

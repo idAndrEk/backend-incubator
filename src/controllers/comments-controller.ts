@@ -1,16 +1,17 @@
 import {CommentsService} from "../domain/comments-service";
 import {Request, Response} from "express";
 import {injectable} from "inversify";
+import {CommentsQueryRepository} from "../repositories/comments/commentsQueryRepository";
 
 @injectable()
 export class CommentsController {
 
-    constructor(protected commentsService: CommentsService) {
-    }
+    constructor(protected commentsService: CommentsService,
+                protected commentsQueryRepository: CommentsQueryRepository) {}
 
     async getComment(req: Request, res: Response) {
         try {
-            const comment = await this.commentsService.findCommentId(req.params.id, req.user);
+            const comment = await this.commentsQueryRepository.getComment(req.params.id, req.user);
             if (!comment) return res.status(404).send('Not found')
             return res.status(200).send(comment)
         } catch (error) {
@@ -21,10 +22,10 @@ export class CommentsController {
 
     async updateComment(req: Request<{ id: string }>, res: Response) {
         try {
-            const commentToUpdate = await this.commentsService.checkComment(req.params.id)
+            const commentToUpdate = await this.commentsQueryRepository.checkComment(req.params.id)
             if (!commentToUpdate) return res.sendStatus(404)
             if (commentToUpdate!.userId != req.user?.id) return res.sendStatus(403)
-            const comment = await this.commentsService.checkComment(req.params.id)
+            const comment = await this.commentsQueryRepository.checkComment(req.params.id)
             if (comment) {
                 const id = req.params.id;
                 const content = req.body.content;
@@ -48,7 +49,7 @@ export class CommentsController {
 
     async addLikeToComment(req: Request<{ id: string }, never, { likeStatus: string }, never>, res: Response) {
         try {
-            const comment = await this.commentsService.findCommentId(req.params.id, req.user)
+            const comment = await this.commentsQueryRepository.getComment(req.params.id, req.user)
             if (!comment) return res.sendStatus(404)
             const commentId = req.params.id;
             const userId = req.user.id;
@@ -64,7 +65,7 @@ export class CommentsController {
 
     async deleteComment(req: Request<{ id: string }>, res: Response) {
         try {
-            const commentToDelete = await this.commentsService.checkComment(req.params.id)
+            const commentToDelete = await this.commentsQueryRepository.checkComment(req.params.id)
             if (!commentToDelete) return res.sendStatus(404)
             if (commentToDelete!.userId != req.user?.id) return res.sendStatus(403)
             const deleteCommentId = await this.commentsService.deleteComment(req.params.id)

@@ -1,58 +1,12 @@
-import {CommentType, CommentViewType, CreateCommentDto} from "../types/commentsTypes";
-import {CommentsRepository} from "../repositories/comments-repository";
+import {CommentViewType, CreateCommentDto} from "../types/commentsTypes";
+import {CommentsRepository} from "../repositories/comments/comments-repository";
 import {injectable} from "inversify";
-import {LikesInfo} from "../types/likeTypes";
 import {LikesRepository} from "../repositories/like-repoository";
-import {UserViewResponse} from "../types/UsersTypes";
 
 @injectable()
 export class CommentsService {
 
-    constructor(protected commentsRepository: CommentsRepository, protected likesRepository: LikesRepository) {
-    }
-
-    async findCommentId(id: string, user: UserViewResponse | undefined): Promise<CommentViewType | null> {
-        const comment = await this.commentsRepository.findCommentId(id)
-        if (!comment) return null
-        // const {likes, dislikes} = await this.likesRepository.getLikesAndDislikesCountByParentId((comment._id).toString())
-        // comment.likesInfo.likesCount = likes
-        // comment.likesInfo.dislikesCount = dislikes
-        // let defaultMyStatus = 'None'
-        // if (user) {
-        //     defaultMyStatus = await this.likesRepository.getLikeStatusByUserId((comment._id).toString(), (user._id).toString())
-        // }
-        // comment.likesInfo.myStatus = defaultMyStatus
-        return {
-            id: comment._id.toString(),
-            content: comment.content,
-            userId: comment.userId,
-            userLogin: comment.userLogin,
-            createdAt: comment.createdAt,
-            // likesInfo: {
-            //     likesCount: comment.likesInfo.likesCount,
-            //     dislikesCount: comment.likesInfo.dislikesCount,
-            //     myStatus: comment.likesInfo.myStatus
-            // }
-        }
-    }
-
-    async checkComment(id: string): Promise<CommentViewType | null> {
-        const comment = await this.commentsRepository.findCommentId(id)
-        if (!comment) return null
-        return {
-            id: comment._id.toString(),
-            content: comment.content,
-            userId: comment.userId,
-            userLogin: comment.userLogin,
-            createdAt: comment.createdAt,
-            // likesInfo: {
-            //     likesCount: comment.likesInfo.likesCount,
-            //     dislikesCount: comment.likesInfo.dislikesCount,
-            //     myStatus: comment.likesInfo.myStatus
-            // }
-        }
-
-    }
+    constructor(protected commentsRepository: CommentsRepository, protected likesRepository: LikesRepository) {}
 
     async createComment(postId: string, content: string, userId: string, userLogin: string): Promise<CommentViewType | null> {
         const newComment: CreateCommentDto = {

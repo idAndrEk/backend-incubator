@@ -2,28 +2,34 @@ import {PostsService} from "../domain/posts-service";
 import {BloggersService} from "../domain/bloggers-service";
 import {Request, Response} from "express";
 import {injectable} from "inversify";
+import {SortDirection} from "../types/paginationType";
+import {BlogsQueryRepository} from "../repositories/blogs/blogsQueryRepository";
 
 @injectable()
 export class BloggersController {
-    constructor(protected bloggersService: BloggersService, protected postsService: PostsService) {
+    constructor(protected bloggersService: BloggersService,
+                protected postsService: PostsService,
+                protected blogsQueryRepository: BlogsQueryRepository) {
     }
 
-    async getBloggers(req: Request, res: Response) {
+    async getBlogs(req: Request, res: Response) {
         try {
             const page = req.query.pageNumber || 1
             const pageSize = req.query.pageSize || 10
-            const name = req.query.SearchNameTerm || null
-            const bloggers = await this.bloggersService.getBloggers(+page, +pageSize, name ? name.toString() : null)
-            return res.status(200).send(bloggers)
+            let sortBy = req.query.sortBy ?? "createdAt"
+            let sortDirection: SortDirection = req.query.sortDirection === 'asc' ? SortDirection.Asc : SortDirection.Desc
+            const searchNameTerm = req.query.SearchNameTerm || null
+            const getBlogs = await this.blogsQueryRepository.getBlogs(+page, +pageSize, searchNameTerm ? searchNameTerm.toString() : null, sortBy.toString(), sortDirection)
+            return res.status(200).send(getBlogs)
         } catch (error) {
             console.log(error)
             return res.send('Error')
         }
     }
 
-    async getBlogger(req: Request, res: Response) {
+    async getBlog(req: Request, res: Response) {
         try {
-            const blogger = await this.bloggersService.getBlogger(req.params.id)
+            const blogger = await this.blogsQueryRepository.getBlog(req.params.id)
             if (!blogger) return res.status(404).send('Not found')
             return res.status(200).send(blogger)
         } catch (error) {
@@ -73,7 +79,7 @@ export class BloggersController {
             let pageSize = req.query.PageSize || 10
             // console.log('getBloggerPosts', `page: ${page}`, `pageSize: ${pageSize}`)
             const blogId = req.params.id
-            const blogger = await this.bloggersService.getBlogger(blogId)
+            const blogger = await this.blogsQueryRepository.getBlog(blogId)
             if (blogger) {
                 const bloggerPosts = await this.bloggersService.getBloggerPosts(blogId, +page, +pageSize, req.user)
                 return res.status(200).send(bloggerPosts)

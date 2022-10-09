@@ -1,36 +1,38 @@
-import {BloggerModelClass, PostModelClass} from "./db";
-import {BloggerType, CreateBloggerDto} from "../types/bloggersTypes";
-import {PostType} from "../types/postsTypes";
+import {BloggerModelClass, PostModelClass} from "../db";
+import {BloggerType, CreateBloggerDto} from "../../types/bloggersTypes";
+import {PostType} from "../../types/postsTypes";
 import {injectable} from "inversify";
+import {SortDirection} from "../../types/paginationType";
 
 @injectable()
 export class BloggersRepository {
-    async countBlogger(name: string | null) {
-        let filter = {}
-        if (name) {
-            filter = {name: {$regex: `.*${name}.*`}}
-        }
-        const countBlogger = await BloggerModelClass.countDocuments(filter)
-        return countBlogger
-    }
+    // async countBlogger(name: string | null) {
+    //     let filter = {}
+    //     if (name) {
+    //         filter = {name: {$regex: `.*${name}.*`}}
+    //     }
+    //     const countBlogger = await BloggerModelClass.countDocuments(filter)
+    //     return countBlogger
+    // }
+    //
+    // async getBloggers(page: number, pageSize: number, name: string | null, sortBy: string, sortDirection: SortDirection): Promise<BloggerType[]> {
+    //     let filter = {}
+    //     if (name) {
+    //         filter = {name: {$regex: `.*${name}.*`}}
+    //     }
+    //     const blogger = await BloggerModelClass
+    //         .find(filter)
+    //         .skip((page - 1) * pageSize)
+    //         .sort({[sortBy]: sortDirection === SortDirection.Asc ? 1 : -1})
+    //         .limit(pageSize)
+    //     .lean()
+    //     return blogger
+    // }
 
-    async getBloggers(page: number, pageSize: number, name: string | null): Promise<BloggerType[]> {
-        let filter = {}
-        if (name) {
-            filter = {name: {$regex: `.*${name}.*`}}
-        }
-        const blogger = await BloggerModelClass
-            .find(filter)
-            .skip((page - 1) * pageSize)
-            .limit(pageSize)
-        // .lean()
-        return blogger
-    }
-
-    async getBloggerById(id: string): Promise<BloggerType | null> {
-        const blogger = await BloggerModelClass.findById(id)
-        return blogger
-    }
+    // async getBloggerById(id: string): Promise<BloggerType | null> {
+    //     const blogger = await BloggerModelClass.findById(id)
+    //     return blogger
+    // }
 
     async createBlogger(newBlogger: CreateBloggerDto): Promise<BloggerType | null> {
         try {

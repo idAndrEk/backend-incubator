@@ -1,43 +1,28 @@
-import {CommentType, CreateCommentDto} from "../types/commentsTypes";
-import {CommentModelClass,} from "./db";
+import {CommentType, CreateCommentDto} from "../../types/commentsTypes";
+import {CommentModelClass,} from "../db";
 import {injectable} from "inversify";
-import {SortBy, SortDirection} from "../types/paginationType";
+import {SortDirection} from "../../types/paginationType";
 
 @injectable()
 export class CommentsRepository {
 
-    async findCommentId(id: string): Promise<CommentType | null> {
-        // console.log(id)
-        const comment = await CommentModelClass.findById(id)
-        return comment
-    }
-
     async creteComment(newComment: CreateCommentDto): Promise<CommentType | null> {
-        try {
-            const comment = new CommentModelClass(newComment)
-            await comment.save()
-            return comment
-        } catch (e) {
-            return null
-        }
+        const comment = new CommentModelClass(newComment)
+        await comment.save()
+        return comment
+        if (!comment) return null
     }
 
     async updateComment(id: string, content: string): Promise<boolean | null> {
-        console.log(id)
         const comment = await CommentModelClass.findByIdAndUpdate(id, {content})
         if (comment) return true
         return false
     }
 
     async deleteComment(id: string): Promise<boolean> {
-
         const deleteResult = await CommentModelClass.findByIdAndDelete(id)
-        if(!deleteResult) return false
+        if (!deleteResult) return false
         return true
-
-        // const comment = await CommentModelClass.deleteOne({_id: id})
-        // if (comment) return true
-        // return false
     }
 
     async countPostComment(postId: string | null) {

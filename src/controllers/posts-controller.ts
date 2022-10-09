@@ -5,6 +5,8 @@ import {Request, Response} from "express";
 import {injectable} from "inversify";
 import {LikesRepository} from "../repositories/like-repoository";
 import {SortBy, SortDirection} from "../types/paginationType";
+import {BlogsQueryRepository} from "../repositories/blogs/blogsQueryRepository";
+import {PostsQueryRepository} from "../repositories/posts/postsQueryRepository";
 
 @injectable()
 export class PostsController {
@@ -12,15 +14,17 @@ export class PostsController {
     constructor(protected postsService: PostsService,
                 protected bloggersService: BloggersService,
                 protected commentsService: CommentsService,
-                protected likesRepository: LikesRepository
-    ) {
-    }
+                protected likesRepository: LikesRepository,
+                protected blogsQueryRepository: BlogsQueryRepository,
+                protected postsQueryRepository: PostsQueryRepository) {}
 
     async getPosts(req: Request, res: Response) {
         try {
             const page = req.query.PageNumber || 1
             const pageSize = req.query.PageSize || 10
-            const posts = await this.postsService.getPosts(+page, +pageSize, req.user)
+            let sortBy = req.query.sortBy ?? "createdAt"
+            let sortDirection: SortDirection = req.query.sortDirection === 'asc' ? SortDirection.Asc : SortDirection.Desc
+            const posts = await this.postsQueryRepository.getPosts(+page, +pageSize, req.user, sortBy.toString(), sortDirection)
             return res.status(200).send(posts)
         } catch (error) {
             console.log(error)
@@ -30,7 +34,7 @@ export class PostsController {
 
     async getPost(req: Request, res: Response) {
         try {
-            const post = await this.postsService.getPost(req.params.id, req.user);
+            const post = await this.postsQueryRepository.getPost(req.params.id, req.user);
             if (post) return res.status(200).send(post)
             return res.status(404).send('Not found')
         } catch (error) {
@@ -65,7 +69,7 @@ export class PostsController {
 
     async updatePost(req: Request, res: Response) {
         try {
-            const blogger = await this.bloggersService.getBlogger(req.body.blogId);
+            const blogger = await this.blogsQueryRepository.getBlog(req.body.blogId);
             if (blogger) {
                 const postId = req.params.id;
                 const titlePost = req.body.title;
@@ -92,7 +96,7 @@ export class PostsController {
 
     async addLikeToPost(req: Request<{ id: string }, never, { likeStatus: string }, never>, res: Response) {
         try {
-            const post = await this.postsService.getPost(req.params.id, req.user);
+            const post = await this.postsQueryRepository.getPost(req.params.id, req.user);
             if (!post) return res.sendStatus(404)
             const postId = req.params.id;
             const userId = req.user.id;
@@ -117,18 +121,16 @@ export class PostsController {
         }
     }
 
-
     async getCommentPost(req: Request, res: Response) {
         try {
             let page = req.query.pageNumber || 1
             let pageSize = req.query.pageSize || 10
-            //if(sort)//
             let sortBy = req.query.sortBy ?? "createdAt"
             // let sortBy = req.query.sortBy === 'name' ? SortBy.Name : SortBy.CreatedAt
             let sortDirection: SortDirection = req.query.sortDirection === 'asc' ? SortDirection.Asc : SortDirection.Desc
             // const user = req.user
             const postId = req.params.id
-            const post = await this.postsService.checkPost(postId)
+            const post = await this.postsQueryRepository.checkPost(postId)
             if (post) {
                 const postComment = await this.postsService.getPostComment(postId, +page, +pageSize, sortBy.toString(), sortDirection)
                 return res.status(200).send(postComment)
@@ -149,7 +151,7 @@ export class PostsController {
     async createComment(req: Request, res: Response) {
         try {
             const postId = req.params.id;
-            const post = await this.postsService.checkPost(postId);
+            const post = await this.postsQueryRepository.checkPost(postId);
             if (!post) return res.sendStatus(404)
             const content = req.body.content;
             const userId = req.user.id;

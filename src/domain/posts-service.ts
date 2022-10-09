@@ -1,112 +1,24 @@
-import {PostsRepository} from "../repositories/posts-repository";
+import {PostsRepository} from "../repositories/posts/posts-repository";
 import {CreatePostDto, PaginationPostType, PostType, PostViewType} from "../types/postsTypes";
 import {CommentViewType, PaginationCommentType} from "../types/commentsTypes";
-import {BloggersRepository} from "../repositories/bloggers-repository";
+import {BloggersRepository} from "../repositories/blogs/bloggers-repository";
 import {injectable} from "inversify";
 import {LikesRepository} from "../repositories/like-repoository";
-import {UserAccType, UserViewResponse} from "../types/UsersTypes";
-import {CommentsRepository} from "../repositories/comments-repository";
-import {SortBy, SortDirection} from "../types/paginationType";
+import {UserViewResponse} from "../types/UsersTypes";
+import {CommentsRepository} from "../repositories/comments/comments-repository";
+import {SortDirection} from "../types/paginationType";
+import {BlogsQueryRepository} from "../repositories/blogs/blogsQueryRepository";
 
 @injectable()
 export class PostsService {
-    constructor(protected postsRepository: PostsRepository, protected bloggersRepository: BloggersRepository, protected commentsRepository: CommentsRepository, protected likesRepository: LikesRepository) {
-    }
-
-    async getPosts(page: number, pageSize: number, user: UserViewResponse | undefined): Promise<PaginationPostType> {
-        const postData = await this.postsRepository.getPosts(page, pageSize)
-
-        const pagesCount = Math.ceil(await this.postsRepository.countPost() / pageSize)
-        const totalCount = await this.postsRepository.countPost()
-        //TODO: ADD MAP
-        /*
-        const allLikes = []
-            //все лайки всех постов
-        //пробежать по всем лайками и засетать myStatus
-
-            const postsWithLikes = postData.map((post) => {
-                const likes = allLikes.filter((like)=> like.status === 'like' && like.parentId.toString() === post._id.toString() )
-                //dislikes
-                //find для myStatus
-                // для newwestLike sort by addetAt
-            })
-*/
-        let items: PostViewType[] = []
-        for (let i = 0; i < postData.length; i++) {
-            const post = postData[i]
-            const {
-                likes,
-                dislikes
-            } = await this.likesRepository.getLikesAndDislikesCountByParentId((post._id).toString())
-            post.extendedLikesInfo.likesCount = likes
-            post.extendedLikesInfo.dislikesCount = dislikes
-            let myStatus = !user ? 'None' : await this.likesRepository.getLikeStatusByUserId((post._id).toString(), (user._id).toString())
-            post.extendedLikesInfo.myStatus = myStatus
-            const newestLikes = await this.likesRepository.getNewestLikesByParentId((post._id).toString(), 3)
-            items.push({
-                id: post._id.toString(),
-                title: post.title,
-                shortDescription: post.shortDescription,
-                content: post.content,
-                blogId: post.blogId,
-                bloggerName: post.bloggerName,
-                createdAt: post.createdAt,
-                extendedLikesInfo: {
-                    likesCount: likes,
-                    dislikesCount: dislikes,
-                    myStatus,
-                    newestLikes
-                }
-            })
-        }
-        return {
-            pagesCount: pagesCount,
-            page: page,
-            pageSize: pageSize,
-            totalCount: totalCount,
-            items
-        }
-    }
-
-    async getPost(id: string, user: UserViewResponse | undefined): Promise<PostViewType | null> {
-        let post = await this.postsRepository.getPost(id)
-        if (!post) return null
-        const {likes, dislikes} = await this.likesRepository.getLikesAndDislikesCountByParentId((post._id).toString())
-        post.extendedLikesInfo.likesCount = likes
-        post.extendedLikesInfo.dislikesCount = dislikes
-        let defaultMyStatus = 'None'
-        if (user) {
-            defaultMyStatus = await this.likesRepository.getLikeStatusByUserId((post._id).toString(), (user._id).toString())
-            console.log(defaultMyStatus)
-        }
-        post.extendedLikesInfo.myStatus = defaultMyStatus
-        const newestLikes = await this.likesRepository.getNewestLikesByParentId((post._id).toString(), 3)
-        post.extendedLikesInfo.newestLikes = newestLikes
-        return {
-            id: post._id.toString(),
-            title: post.title,
-            shortDescription: post.shortDescription,
-            content: post.content,
-            blogId: post.blogId,
-            bloggerName: post.bloggerName,
-            createdAt: post.createdAt,
-            extendedLikesInfo: {
-                likesCount: post.extendedLikesInfo.likesCount,
-                dislikesCount: post.extendedLikesInfo.dislikesCount,
-                myStatus: post.extendedLikesInfo.myStatus,
-                newestLikes
-            }
-        }
-    }
-
-    async checkPost(id: string): Promise<PostType | null> {
-        let post = await this.postsRepository.getPost(id)
-        if (!post) return null
-        return post
-    }
+    constructor(protected postsRepository: PostsRepository,
+                protected bloggersRepository: BloggersRepository,
+                protected commentsRepository: CommentsRepository,
+                protected likesRepository: LikesRepository,
+                protected blogsQueryRepository: BlogsQueryRepository) {}
 
     async createPost(title: string, shortDescription: string, content: string, blogId: string): Promise<PostViewType | null> {
-        const blogger = await this.bloggersRepository.getBloggerById(blogId);
+        const blogger = await this.blogsQueryRepository.getBlog(blogId);
         if (!blogger) return null
         const newPost: CreatePostDto = {
             title: title,
@@ -158,7 +70,7 @@ export class PostsService {
         return await this.postsRepository.deletePost(id)
     }
 
-    async getPostComment(postId: string, page: number, pageSize: number,sortBy: string, sortDirection: SortDirection/*, user: UserViewResponse | undefined*/): Promise<PaginationCommentType> {
+    async getPostComment(postId: string, page: number, pageSize: number, sortBy: string, sortDirection: SortDirection/*, user: UserViewResponse | undefined*/): Promise<PaginationCommentType> {
         const commentData = await this.commentsRepository.findPostComment(postId, page, pageSize, sortBy, sortDirection);
         const totalCount = await this.commentsRepository.countPostComment(postId);
         const pagesCount = Math.ceil(await this.commentsRepository.countPostComment(postId) / pageSize);

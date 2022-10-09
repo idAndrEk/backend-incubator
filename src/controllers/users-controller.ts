@@ -1,6 +1,7 @@
 import {UsersService} from "../domain/users-service";
 import {Request, Response} from "express";
 import {injectable} from "inversify";
+import {SortDirection} from "../types/paginationType";
 
 @injectable()
 export class UsersController {
@@ -11,7 +12,9 @@ export class UsersController {
         try {
             const page = req.query.pageNumber || 1
             const pageSize = req.query.pageSize || 10
-            const users = await this.usersService.getUsers(+page, +pageSize)
+            let sortBy = req.query.sortBy ?? "createdAt"
+            let sortDirection: SortDirection = req.query.sortDirection === 'asc' ? SortDirection.Asc : SortDirection.Desc
+            const users = await this.usersService.getUsers(+page, +pageSize, sortBy.toString(), sortDirection)
             res.send(users)
         } catch (error) {
             console.log(error)
