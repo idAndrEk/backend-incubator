@@ -1,10 +1,10 @@
 import {CommentsService} from "../domain/comments-service";
 import {PostsService} from "../domain/posts-service";
-import {BloggersService} from "../domain/bloggers-service";
+import {BlogsService} from "../domain/blogs-service";
 import {Request, Response} from "express";
 import {injectable} from "inversify";
 import {LikesRepository} from "../repositories/like-repoository";
-import {SortBy, SortDirection} from "../types/paginationType";
+import {SortDirection} from "../types/paginationType";
 import {BlogsQueryRepository} from "../repositories/blogs/blogsQueryRepository";
 import {PostsQueryRepository} from "../repositories/posts/postsQueryRepository";
 
@@ -12,7 +12,7 @@ import {PostsQueryRepository} from "../repositories/posts/postsQueryRepository";
 export class PostsController {
 
     constructor(protected postsService: PostsService,
-                protected bloggersService: BloggersService,
+                protected bloggersService: BlogsService,
                 protected commentsService: CommentsService,
                 protected likesRepository: LikesRepository,
                 protected blogsQueryRepository: BlogsQueryRepository,

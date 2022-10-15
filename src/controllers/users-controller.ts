@@ -2,11 +2,13 @@ import {UsersService} from "../domain/users-service";
 import {Request, Response} from "express";
 import {injectable} from "inversify";
 import {SortDirection} from "../types/paginationType";
+import {UsersQueryRepository} from "../repositories/users/usersQueryRepository";
 
 @injectable()
 export class UsersController {
 
-    constructor(protected usersService : UsersService) {}
+    constructor(protected usersService : UsersService,
+                protected usersQueryRepository: UsersQueryRepository) {}
 
     async getUsers(req: Request, res: Response) {
         try {
@@ -14,7 +16,7 @@ export class UsersController {
             const pageSize = req.query.pageSize || 10
             let sortBy = req.query.sortBy ?? "createdAt"
             let sortDirection: SortDirection = req.query.sortDirection === 'asc' ? SortDirection.Asc : SortDirection.Desc
-            const users = await this.usersService.getUsers(+page, +pageSize, sortBy.toString(), sortDirection)
+            const users = await this.usersQueryRepository.getUsers(+page, +pageSize, sortBy.toString(), sortDirection)
             res.send(users)
         } catch (error) {
             console.log(error)
@@ -24,7 +26,7 @@ export class UsersController {
 
     async getUser(req: Request, res: Response) {
         try {
-            const user = await this.usersService.getUser(req.params.id)
+            const user = await this.usersQueryRepository.getUser(req.params.id)
             if (user) {
                 res.status(200).send(user)
             } else {
@@ -38,6 +40,7 @@ export class UsersController {
 
     async createUser(req: Request, res: Response) {
         try {
+
             const user = await this.usersService.createUser(req.body.login, req.body.email, req.body.password)
             if (user) {
                 return res.status(201).send(user)

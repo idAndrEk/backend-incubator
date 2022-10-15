@@ -3,6 +3,8 @@ import {ObjectId} from "mongodb";
 export type UserResponse = {
     id: ObjectId
     login: string
+    email: string
+    createdAt: Date
 }
 
 export type UserViewResponse = {

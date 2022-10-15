@@ -9,6 +9,7 @@ import {authRouter} from "./router/auth-router";
 import {commentsRouter} from "./router/comments-router";
 import {testingRouter} from "./router/testing-router";
 import cookieParser from "cookie-parser";
+import {securityRouter} from "./router/devices-router";
 
 const app = express()
 
@@ -26,6 +27,7 @@ app.use('/users', usersRouter)
 app.use('/auth', authRouter)
 app.use('/comments', commentsRouter)
 app.use('/testing', testingRouter)
+app.use('/security', securityRouter)
 
 const startApp = async () => {
     await runDb()

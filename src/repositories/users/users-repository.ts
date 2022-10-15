@@ -1,33 +1,10 @@
-import {UserAccType, UserResponse} from "../../types/UsersTypes";
-import {UserModelClass} from "../db";
+import {UserAccType} from "../../types/UsersTypes";
+import {DevicesModelClass, UserModelClass} from "../db";
 import {injectable} from "inversify";
-import {SortDirection} from "../../types/paginationType";
+import {DeviseType} from "../../types/divaseTypes";
 
 @injectable()
 export class UsersRepository {
-
-    async countComment(): Promise<number> {
-        const count = await UserModelClass.countDocuments({})
-        return count
-    }
-
-    async getUsers(page: number, pageSize: number, sortBy: string, sortDirection: SortDirection): Promise<UserResponse[]> {
-        const user = UserModelClass
-            .aggregate()
-            .project({id: '$_id', login: '$accountData.userName', _id:0})
-            .skip((page - 1) * pageSize)
-            .sort({[sortBy]: sortDirection === SortDirection.Asc ? 1 : -1})
-            .limit(pageSize)
-        return user
-    }
-
-    async getUser(id: string): Promise<UserAccType | null> {
-        return UserModelClass.findById(id)
-    }
-
-    // async createUser(newUser: UserType): Promise<UserAccType> {
-    //     return await usersCollection.insertOne(newUser)
-    // },
 
     async createUser(newUser: UserAccType): Promise<UserAccType | null> {
         try {
@@ -72,20 +49,13 @@ export class UsersRepository {
         if (updateConfirm) return true
         return false
     }
+
+    async addDevices(newDevices: DeviseType): Promise<DeviseType> {
+        const devices = new DevicesModelClass(newDevices)
+        await devices.save()
+        return devices
+    }
 }
 
-
-// async getAllUsersByToken(user: UserAccType) {
-//     return await UserModel.find({})
-// }
-
-
-// async saveRequestBD(ip: string, endpoint: string, date: number) {
-//     return await requestIpData.countDocuments({
-//         ip,
-//         endpoint,
-//         date
-//     })
-// }
 
 

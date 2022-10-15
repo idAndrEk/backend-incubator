@@ -1,5 +1,8 @@
 import {NextFunction, Request, Response} from "express";
-import {jwtService, usersService} from "../composition-root";
+import {container, jwtService} from "../composition-root";
+import {UsersQueryRepository} from "../repositories/users/usersQueryRepository";
+
+const usersQueryRepository = container.resolve(UsersQueryRepository)
 
 export const JwtAuthMiddleware = async (req: Request, res: Response, next: NextFunction) => {
     const authorizationHeader = req.headers.authorization;
@@ -11,7 +14,7 @@ export const JwtAuthMiddleware = async (req: Request, res: Response, next: NextF
     const userId = await jwtService.validateAccessToken(accessToken)
     if (!userId) return res.sendStatus(401)
 
-    const user = await usersService.getUser(userId)
+    const user = await usersQueryRepository.getUser(userId)
     if (!user) return res.sendStatus(401)
 
     req.user = user;
@@ -27,7 +30,7 @@ export const JwtRefreshAuthMiddleware = async (req: Request, res: Response, next
 
     await jwtService.logout(requestRefreshToken) // remove
 
-    const user = await usersService.getUser(userId)
+    const user = await usersQueryRepository.getUser(userId)
     if (!user) return res.sendStatus(401)
 
     req.user = user;
@@ -44,7 +47,7 @@ export const checkUserTokenMiddleware = async (req: Request, res: Response, next
     const userId = await jwtService.validateAccessToken(accessToken)
     if (!userId) return next()
 
-    const user = await usersService.getUser(userId)
+    const user = await usersQueryRepository.getUser(userId)
     if (!user) return next()
 
     req.user = user;

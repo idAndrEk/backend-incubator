@@ -1,5 +1,8 @@
 import {NextFunction, Request, Response} from "express";
-import {jwtService, usersService} from "../composition-root";
+import {container, jwtService} from "../composition-root";
+import {UsersQueryRepository} from "../repositories/users/usersQueryRepository";
+
+const usersQueryRepository = container.resolve(UsersQueryRepository)
 
 export const authMiddleware = (req: Request, res: Response, next: NextFunction) => {
     const authHeader = req.headers.authorization
@@ -17,7 +20,7 @@ export const authMiddlewareUser = async (req: Request, res: Response, next: Next
     const token = req.headers.authorization.split(' ')[1];
     const userId = await jwtService.getUserIdByToken(token);
     if (userId) {
-        const user = await usersService.getUser(userId)
+        const user = await usersQueryRepository.getUser(userId)
         req.user = user;
         return next()
     }

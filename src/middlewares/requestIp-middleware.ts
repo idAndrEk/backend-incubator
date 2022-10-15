@@ -11,7 +11,6 @@ export const requestInput = async (req: Request, res: Response, next: NextFuncti
     await InputModelClass.insertMany(input)
     const startDate = +(new Date()) - 10000
     const count = await InputModelClass.countDocuments({ // вынести в слой
-    // const count  = await usersRepository.saveRequestBD({
         ip: req.ip,
         endpoint: req.url,
         date: {$gt: startDate}
@@ -19,6 +18,7 @@ export const requestInput = async (req: Request, res: Response, next: NextFuncti
     if (count > 5) {
         return res.sendStatus(429)
     }
+    // await InputModelClass.insertMany(input)
     return next()
 }
 

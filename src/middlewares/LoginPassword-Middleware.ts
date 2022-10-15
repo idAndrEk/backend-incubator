@@ -1,5 +1,8 @@
 import {Request, Response, NextFunction} from "express";
-import {usersService} from "../composition-root";
+import {container,} from "../composition-root";
+import {UsersService} from "../domain/users-service";
+
+const usersService = container.resolve(UsersService)
 
 export const LoginPasswordMiddleware = async (req: Request, res: Response, next: NextFunction) => {
     const user = await usersService.checkCredential(req.body.login)

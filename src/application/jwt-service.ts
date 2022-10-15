@@ -4,10 +4,10 @@ import {UserAccType} from '../types/UsersTypes'
 import {jwtRepository} from "../repositories/jwt-repository";
 
 export class JwtService {
-    constructor() {
-    }
+
     async createAccessJWT(user: UserAccType) {
         const token = jwt.sign({userId: user._id}, envSetting.JWT_ACCESS, {expiresIn: '10s'})
+        // const token = jwt.sign({userId: user._id, deviseId}, envSetting.JWT_ACCESS, {expiresIn: '10s'})
         return token
     }
 

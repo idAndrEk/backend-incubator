@@ -1,16 +1,17 @@
 import {PostsService} from "../domain/posts-service";
-import {BloggersService} from "../domain/bloggers-service";
+import {BlogsService} from "../domain/blogs-service";
 import {Request, Response} from "express";
 import {injectable} from "inversify";
 import {SortDirection} from "../types/paginationType";
 import {BlogsQueryRepository} from "../repositories/blogs/blogsQueryRepository";
+import {PostsQueryRepository} from "../repositories/posts/postsQueryRepository";
 
 @injectable()
 export class BloggersController {
-    constructor(protected bloggersService: BloggersService,
+    constructor(protected blogsService: BlogsService,
                 protected postsService: PostsService,
-                protected blogsQueryRepository: BlogsQueryRepository) {
-    }
+                protected blogsQueryRepository: BlogsQueryRepository,
+                protected postsQueryRepository: PostsQueryRepository) {}
 
     async getBlogs(req: Request, res: Response) {
         try {
@@ -42,7 +43,7 @@ export class BloggersController {
         try {
             const bloggerName = req.body.name;
             const bloggerYoutubeUrl = req.body.youtubeUrl;
-            const newBlogger = await this.bloggersService.createBlogger(bloggerName, bloggerYoutubeUrl);
+            const newBlogger = await this.blogsService.createBlog(bloggerName, bloggerYoutubeUrl);
             if (!newBlogger) return res.status(400).send('incorrect values')
             return res.status(201).send(newBlogger)
         } catch (error) {
@@ -53,7 +54,7 @@ export class BloggersController {
 
     async updateBlogger(req: Request, res: Response) {
         try {
-            const updateBlogger = await this.bloggersService.updateBlogger(req.params.id, req.body.name, req.body.youtubeUrl)
+            const updateBlogger = await this.blogsService.updateBlogger(req.params.id, req.body.name, req.body.youtubeUrl)
             if (updateBlogger) return res.sendStatus(204)
             return res.sendStatus(404)
         } catch (error) {
@@ -64,7 +65,7 @@ export class BloggersController {
 
     async deleteBlogger(req: Request, res: Response) {
         try {
-            const isDeleted = await this.bloggersService.deleteBlogger(req.params.id)
+            const isDeleted = await this.blogsService.deleteBlogger(req.params.id)
             if (isDeleted) return res.sendStatus(204)
             return res.sendStatus(404)
         } catch (error) {
@@ -81,7 +82,7 @@ export class BloggersController {
             const blogId = req.params.id
             const blogger = await this.blogsQueryRepository.getBlog(blogId)
             if (blogger) {
-                const bloggerPosts = await this.bloggersService.getBloggerPosts(blogId, +page, +pageSize, req.user)
+                const bloggerPosts = await this.postsQueryRepository.findPostsBlogger(blogId, +page, +pageSize, req.user)
                 return res.status(200).send(bloggerPosts)
             } else {
                 const errors = [];

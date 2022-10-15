@@ -1,4 +1,4 @@
-import {PaginationUserType, UserAccType, UserResponse} from "../types/UsersTypes";
+import {UserAccType, UserResponse} from "../types/UsersTypes";
 import {UsersRepository} from "../repositories/users/users-repository";
 import {v4 as uuidv4} from "uuid";
 import add from "date-fns/add";
@@ -8,29 +8,12 @@ import bcrypt from "bcrypt";
 import {jwtRepository} from "../repositories/jwt-repository";
 import {jwtService} from "../composition-root";
 import {injectable} from "inversify";
-import {SortDirection} from "../types/paginationType";
+import {DeviseType} from "../types/divaseTypes";
 
 @injectable()
 export class UsersService {
 
-    constructor(protected usersRepository: UsersRepository) {}
-
-    async getUsers(page: number, pageSize: number, sortBy: string, sortDirection: SortDirection): Promise<Omit<PaginationUserType, "email">> {
-        const usersData = await this.usersRepository.getUsers(page, pageSize, sortBy, sortDirection)
-        const pagesCount = Math.ceil(await this.usersRepository.countComment() / pageSize)
-        const totalCount = await this.usersRepository.countComment()
-        return {
-            "pagesCount": pagesCount,
-            "page": page,
-            "pageSize": pageSize,
-            "totalCount": totalCount,
-            "items": usersData
-        }
-    }
-
-    async getUser(id: string): Promise<UserAccType | null> {
-        const user = await this.usersRepository.getUser(id)
-        return user
+    constructor(protected usersRepository: UsersRepository) {
     }
 
     async createUser(login: string, email: string, password: string): Promise<UserResponse | null> {
@@ -113,6 +96,16 @@ export class UsersService {
         const token = await jwtService.createRefreshJWT(user)
         await jwtRepository.addTokenToDB(token)
         return token
+    }
+
+    async addDevices(ip: string, title: string): Promise<any> {
+        const devices = {
+            ip: ip,
+            title: title,
+            lastActiveDate: new Date,
+            deviceId: uuidv4()
+        }
+        await this.usersRepository.addDevices(devices)
     }
 }
 

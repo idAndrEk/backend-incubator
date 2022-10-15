@@ -1,7 +1,7 @@
 import "reflect-metadata";
 import {Container} from "inversify";
 import {BloggersRepository} from "./repositories/blogs/bloggers-repository";
-import {BloggersService} from "./domain/bloggers-service";
+import {BlogsService} from "./domain/blogs-service";
 import {BloggersController} from "./controllers/bloggers-controller";
 import {PostsRepository} from "./repositories/posts/posts-repository";
 import {PostsService} from "./domain/posts-service";
@@ -18,21 +18,23 @@ import {LikesRepository} from "./repositories/like-repoository";
 import {BlogsQueryRepository} from "./repositories/blogs/blogsQueryRepository";
 import {PostsQueryRepository} from "./repositories/posts/postsQueryRepository";
 import {CommentsQueryRepository} from "./repositories/comments/commentsQueryRepository";
+import {UsersQueryRepository} from "./repositories/users/usersQueryRepository";
+import {DevicesController} from "./controllers/devices-controller";
+import {DevicesService} from "./domain/devices-service";
+import {DevicesRepository} from "./repositories/devices-repository";
 
 export const jwtService = new JwtService()
+// export const likesRepository = new LikesRepository
+// const usersRepository = new UsersRepository
+// export const usersService = new UsersService(usersRepository)
+// export const usersQueryRepository = new UsersQueryRepository
 
-const usersRepository = new UsersRepository
-
-export const usersService = new UsersService(usersRepository)
-
-export const likesRepository = new LikesRepository
 
 export const container = new Container();
 
 container.bind<BloggersController>(BloggersController).to(BloggersController);
-container.bind<BloggersService>(BloggersService).to(BloggersService);
+container.bind<BlogsService>(BlogsService).to(BlogsService);
 container.bind<BloggersRepository>(BloggersRepository).to(BloggersRepository);
-
 container.bind<BlogsQueryRepository>(BlogsQueryRepository).to(BlogsQueryRepository);
 
 container.bind<LikesRepository>(LikesRepository).to(LikesRepository);
@@ -40,19 +42,21 @@ container.bind<LikesRepository>(LikesRepository).to(LikesRepository);
 container.bind<PostsController>(PostsController).to(PostsController);
 container.bind<PostsService>(PostsService).to(PostsService);
 container.bind<PostsRepository>(PostsRepository).to(PostsRepository);
-
 container.bind<PostsQueryRepository>(PostsQueryRepository).to(PostsQueryRepository);
 
 container.bind<CommentsController>(CommentsController).to(CommentsController);
 container.bind<CommentsService>(CommentsService).to(CommentsService);
 container.bind<CommentsRepository>(CommentsRepository).to(CommentsRepository);
-
 container.bind<CommentsQueryRepository>(CommentsQueryRepository).to(CommentsQueryRepository);
 
 container.bind<UsersController>(UsersController).to(UsersController);
 container.bind<UsersService>(UsersService).to(UsersService);
 container.bind<UsersRepository>(UsersRepository).to(UsersRepository);
+container.bind<UsersQueryRepository>(UsersQueryRepository).to(UsersQueryRepository);
 
 container.bind<AuthController>(AuthController).to(AuthController);
 
+container.bind<DevicesController>(DevicesController).to(DevicesController)
+container.bind<DevicesService>(DevicesService).to(DevicesService)
+container.bind<DevicesRepository>(DevicesRepository).to(DevicesRepository)
 

@@ -1,5 +1,5 @@
 import {SortDirection} from "../../types/paginationType";
-import {BloggerType, BloggerViewType, PaginationBloggerType} from "../../types/bloggersTypes";
+import {BloggerViewType, PaginationBloggerType} from "../../types/bloggersTypes";
 import {BloggerModelClass} from "../db";
 import {injectable} from "inversify";
 import {getCountPage, getSkipPage} from "../../helpers/getPage";
@@ -21,7 +21,7 @@ export class BlogsQueryRepository {
             .lean()
         const totalCount = await BloggerModelClass.countDocuments(filter)
         return {
-            "pagesCount": getCountPage(totalCount ,pageSize),
+            "pagesCount": getCountPage(totalCount, pageSize),
             "page": page,
             "pageSize": pageSize,
             "totalCount": totalCount,
@@ -44,5 +44,4 @@ export class BlogsQueryRepository {
             createdAt: blogs.createdAt
         }
     }
-
 }

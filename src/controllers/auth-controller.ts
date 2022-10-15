@@ -1,18 +1,25 @@
 import {UsersService} from "../domain/users-service";
 import {Request, Response} from "express";
-import {jwtService} from "../composition-root";
 import {injectable} from "inversify";
+import {jwtService} from "../composition-root";
 
 @injectable()
 export class AuthController {
 
-    constructor(protected usersService: UsersService) {
-    }
+    constructor(protected usersService: UsersService) {}
 
     async login(req: Request, res: Response) {
         try {
+            const ip = req.ip
+            const title = req.headers["user-agent"]
             const accessToken = await this.usersService.createAccessToken(req?.user.accountData.userName)
             const refreshToken = await this.usersService.createRefreshToken(req?.user.accountData.userName)
+            const devicesDB = await this.usersService.addDevices(ip, title as string)
+            // console.log(req.headers["user-agent"]);
+            // console.log(req.user)
+            // console.log(req.ip)
+            //добавить userId deviseId
+            //создать коллекцию, где добавляю остальное
             return res.status(200).cookie('refreshToken', refreshToken, {
                 httpOnly: true,
                 secure: true
