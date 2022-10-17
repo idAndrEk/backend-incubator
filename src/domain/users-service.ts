@@ -8,7 +8,7 @@ import bcrypt from "bcrypt";
 import {jwtRepository} from "../repositories/jwt-repository";
 import {jwtService} from "../composition-root";
 import {injectable} from "inversify";
-import {DeviseType} from "../types/divaseTypes";
+import {DevicesType} from "../types/divaseTypes";
 
 @injectable()
 export class UsersService {
@@ -90,6 +90,13 @@ export class UsersService {
         return token
     }
 
+    async createDevicesIdAccessToken(login: string, deviceId: string) {
+        const user = await this.checkCredential(login)
+        if (!user) return null
+        const token = await jwtService.createDevicesAccessJWT(user, deviceId)
+        return token
+    }
+
     async createRefreshToken(login: string) {
         const user = await this.checkCredential(login)
         if (!user) return null
@@ -98,14 +105,16 @@ export class UsersService {
         return token
     }
 
-    async addDevices(ip: string, title: string): Promise<any> {
+    async addDevices(ip: string, title: string, login: string): Promise<any> {
         const devices = {
             ip: ip,
             title: title,
             lastActiveDate: new Date,
-            deviceId: uuidv4()
+            deviceId: uuidv4(),
+            login: login,
         }
         await this.usersRepository.addDevices(devices)
+        return devices.deviceId
     }
 }
 

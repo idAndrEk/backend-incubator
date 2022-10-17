@@ -1,7 +1,7 @@
 import {UserAccType} from "../../types/UsersTypes";
 import {DevicesModelClass, UserModelClass} from "../db";
 import {injectable} from "inversify";
-import {DeviseType} from "../../types/divaseTypes";
+import {DevicesDtoType, DevicesType} from "../../types/divaseTypes";
 
 @injectable()
 export class UsersRepository {
@@ -50,7 +50,7 @@ export class UsersRepository {
         return false
     }
 
-    async addDevices(newDevices: DeviseType): Promise<DeviseType> {
+    async addDevices(newDevices: DevicesDtoType): Promise<DevicesType> {
         const devices = new DevicesModelClass(newDevices)
         await devices.save()
         return devices

@@ -10,7 +10,8 @@ export class DevicesController {
 
     async getDevices(req: Request, res: Response) {
         try {
-          const devices = await this.devicesService.getDevices()
+            const login = req.user.login
+            const devices = await this.devicesService.getDevices(login)
             return res.status(200).send(devices)
         } catch (error) {
             console.log(error)

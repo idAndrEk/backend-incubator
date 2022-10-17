@@ -7,7 +7,7 @@ import {TokenType, UserAccType} from "../types/UsersTypes";
 import {InputType} from "../types/InputTypes";
 import mongoose from "mongoose";
 import {LikesType} from "../types/likeTypes";
-import {DeviseType} from "../types/divaseTypes";
+import {DevicesDtoType, DevicesType} from "../types/divaseTypes";
 
 // const client = new MongoClient(envSetting.MongoURI);
 // export const db = client.db("home-blogger");
@@ -88,11 +88,12 @@ const likesSchema = new mongoose.Schema<LikesType>({
     login: {type: String, required: true},
 })
 
-const deviseSchema = new mongoose.Schema<DeviseType>({
+const deviseSchema = new mongoose.Schema<DevicesDtoType>({
     ip: {type: String, required: true},
     title: {type: String, required: true},
     lastActiveDate: {type: Date, required: true},
-    deviceId: {type: String, required: true}
+    deviceId: {type: String, required: true},
+    login: {type: String, required: true},
 })
 
 export const BloggerModelClass = mongoose.model('bloggers', bloggerSchema)

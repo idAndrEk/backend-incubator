@@ -1,14 +1,14 @@
 import {injectable} from "inversify";
 import {DevicesRepository} from "../repositories/devices-repository";
-import {DeviseType} from "../types/divaseTypes";
+import {DevicesType} from "../types/divaseTypes";
 
 @injectable()
 export class DevicesService {
     constructor(protected devicesRepository: DevicesRepository) {
     }
 
-    async getDevices(): Promise<DeviseType[]> {
-        const devices = await this.devicesRepository.getDevices()
+    async getDevices(login: string): Promise<DevicesType[]> {
+        const devices = await this.devicesRepository.getDevices(login)
         // console.log(devices)
         return devices.map(devicesAll => ({
             ip: devicesAll.ip,

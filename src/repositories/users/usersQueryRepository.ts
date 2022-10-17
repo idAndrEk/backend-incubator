@@ -20,7 +20,6 @@ export class UsersQueryRepository {
             .skip(getSkipPage(page, pageSize))
             .sort({[sortBy]: sortDirection === SortDirection.Asc ? 1 : -1})
             .limit(pageSize)
-        console.log(usersData)
         const totalCount = await UserModelClass.countDocuments({})
         return {
             "pagesCount": getCountPage(totalCount, pageSize),

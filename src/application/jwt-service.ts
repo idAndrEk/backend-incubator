@@ -6,13 +6,17 @@ import {jwtRepository} from "../repositories/jwt-repository";
 export class JwtService {
 
     async createAccessJWT(user: UserAccType) {
-        const token = jwt.sign({userId: user._id}, envSetting.JWT_ACCESS, {expiresIn: '10s'})
-        // const token = jwt.sign({userId: user._id, deviseId}, envSetting.JWT_ACCESS, {expiresIn: '10s'})
+        const token = jwt.sign({userId: user._id}, envSetting.JWT_ACCESS, {expiresIn: '10h'})
+        return token
+    }
+
+    async createDevicesAccessJWT(user: UserAccType, deviceId: string) {
+        const token = jwt.sign({userId: user._id, deviceId}, envSetting.JWT_ACCESS, {expiresIn: '10h'})
         return token
     }
 
     async createRefreshJWT(user: UserAccType) {
-        const token = jwt.sign({userId: user._id}, envSetting.JWT_REFRESH, {expiresIn: '20s'})
+        const token = jwt.sign({userId: user._id}, envSetting.JWT_REFRESH, {expiresIn: '20m'})
         return token
     }
 
@@ -29,6 +33,15 @@ export class JwtService {
         try {
             const jwtPayload: any = jwt.verify(token, envSetting.JWT_ACCESS);
             return jwtPayload.userId;
+        } catch (e) {
+            return null
+        }
+    }
+
+    async deviceIdAccessToken(token: string): Promise<string | null> {
+        try {
+            const jwtPayload: any = jwt.verify(token, envSetting.JWT_ACCESS);
+            return jwtPayload.deviceId;
         } catch (e) {
             return null
         }

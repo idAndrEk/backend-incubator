@@ -1,12 +1,12 @@
 import {injectable} from "inversify";
 import {DevicesModelClass} from "./db";
-import {DeviseType} from "../types/divaseTypes";
+import {DevicesType} from "../types/divaseTypes";
 
 @injectable()
 export class DevicesRepository {
 
-    async getDevices(): Promise<DeviseType[]> {
-        const devices = await DevicesModelClass.find({})
+    async getDevices(login: string): Promise<DevicesType[]> {
+        const devices = await DevicesModelClass.find({login})
         return devices
     }
 }

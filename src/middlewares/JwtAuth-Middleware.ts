@@ -1,6 +1,7 @@
 import {NextFunction, Request, Response} from "express";
 import {container, jwtService} from "../composition-root";
 import {UsersQueryRepository} from "../repositories/users/usersQueryRepository";
+import {log} from "util";
 
 const usersQueryRepository = container.resolve(UsersQueryRepository)
 
