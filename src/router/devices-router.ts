@@ -11,4 +11,6 @@ securityRouter.get('/devices',
 
 securityRouter.delete('/devices',
     devicesController.deleteSessions.bind(devicesController))
-// securityRouter.delete('/devices', devicesController.terminateById.bind(authController))
+
+securityRouter.delete('/devices',
+    devicesController.deleteSession.bind(devicesController))

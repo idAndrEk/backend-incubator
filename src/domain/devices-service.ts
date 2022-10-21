@@ -22,4 +22,8 @@ export class DevicesService {
         return await this.devicesRepository.deleteSessionsDb(userId, devicesId)
     }
 
+    async deleteSession(devicesId: string): Promise<boolean> {
+        return await this.devicesRepository.deleteSessionDb(devicesId)
+    }
+
 }

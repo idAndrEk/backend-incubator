@@ -25,7 +25,6 @@ export class DevicesController {
 
     async deleteSessions(req: Request, res: Response) {
         try {
-            console.log("COOKIES", req.cookies.refreshToken)
             if (!req.cookies.refreshToken) return res.sendStatus(401)
             const payload = await jwtService.deviceIdRefreshJToken(req.cookies.refreshToken)
             if (!payload) return res.sendStatus(401)
@@ -34,6 +33,20 @@ export class DevicesController {
             const isDeleted = await this.devicesService.deleteSessions(userId, deviceId)
             if (isDeleted) return res.sendStatus(204)
         } catch (error) {
+            console.log(error)
+            return res.send('Error')
+        }
+    }
+
+    async deleteSession(req: Request, res: Response) {
+        try {
+            if (!req.cookies.refreshToken) return res.sendStatus(401)
+            const payload = await jwtService.deviceIdRefreshJToken(req.cookies.refreshToken)
+            if (!payload) return res.sendStatus(401)
+            const deviceId = payload.deviceId
+            const isDeleted = await this.devicesService.deleteSession(deviceId)
+            if (isDeleted) return res.sendStatus(204)
+                    } catch (error) {
             console.log(error)
             return res.send('Error')
         }
