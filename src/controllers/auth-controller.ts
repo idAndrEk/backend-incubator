@@ -17,13 +17,7 @@ export class AuthController {
             const devicesDB = await this.usersService.addDevices(ip, title as string, userId)
             const accessToken = await this.usersService.createAccessToken(req?.user.accountData.userName)
             const refreshToken = await this.usersService.createDevicesIdRefreshToken(req?.user.accountData.userName, devicesDB)
-            // console.log(userLogin)
-            // console.log(devicesDB)
-            // console.log(accessToken)
-            // console.log(req.headers["user-agent"]);
-            // console.log(req.user)
-            // console.log(req.ip)
-            //добавить userId deviseId
+            console.log(refreshToken)
             return res.status(200).cookie('refreshToken', refreshToken, {
                 httpOnly: true,
                 secure: true

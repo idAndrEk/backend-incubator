@@ -41,6 +41,7 @@ export class JwtService {
 
     async deviceIdRefreshJToken(token: string): Promise<{ userId: string, deviceId: string } | null> {
         try {
+            console.log(token)
             const jwtPayload: any = jwt.verify(token, envSetting.JWT_REFRESH);
             return {
                 userId: jwtPayload.userId,

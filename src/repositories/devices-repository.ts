@@ -17,7 +17,7 @@ export class DevicesRepository {
     }
 
     async deleteSessionDb(devicesId: string): Promise<boolean> {
-        const deleteResult = await DevicesModelClass.findByIdAndDelete(devicesId)
+        const deleteResult = await DevicesModelClass.findByIdAndDelete({devicesId})
         if (deleteResult) return true
         return false
     }

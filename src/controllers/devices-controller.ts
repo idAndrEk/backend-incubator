@@ -43,7 +43,9 @@ export class DevicesController {
             if (!req.cookies.refreshToken) return res.sendStatus(401)
             const payload = await jwtService.deviceIdRefreshJToken(req.cookies.refreshToken)
             if (!payload) return res.sendStatus(401)
-            const deviceId = payload.deviceId
+            console.log(payload)
+            const deviceId = req.params.id
+            console.log(deviceId)
             const isDeleted = await this.devicesService.deleteSession(deviceId)
             if (isDeleted) return res.sendStatus(204)
                     } catch (error) {
