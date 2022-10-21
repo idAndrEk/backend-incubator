@@ -1,13 +1,14 @@
 import {BloggersRepository} from "../repositories/blogs/bloggers-repository";
 import {BloggerViewType, CreateBloggerDto} from "../types/bloggersTypes";
 import {PostsRepository} from "../repositories/posts/posts-repository";
-import {injectable} from "inversify";
+import {inject, injectable} from "inversify";
 import {LikesRepository} from "../repositories/like-repoository";
 
-@injectable()
+@injectable() // добавить
 export class BlogsService {
     constructor(
-        protected bloggersRepository: BloggersRepository,
+        // protected bloggersRepository: BloggersRepository, // проделать blogs
+        @inject(BloggersRepository) protected bloggersRepository: BloggersRepository, // проделать blogs
         protected postsRepository: PostsRepository,
         protected likesRepository: LikesRepository) {
     }

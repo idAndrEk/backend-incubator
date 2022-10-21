@@ -1,6 +1,5 @@
 import express from "express";
 import cors from "cors";
-import bodyParser from "body-parser";
 import {bloggersRouter} from "./router/bloggers-router";
 import {postsRouter} from "./router/posts-router";
 import {usersRouter} from "./router/users-router";
@@ -12,10 +11,10 @@ import cookieParser from "cookie-parser";
 import {securityRouter} from "./router/devices-router";
 
 const app = express()
-
+app.use(cookieParser())
 app.use(cors())
 app.use(express.json())
-app.use(cookieParser())
+
 
 app.set('trust proxy', true)
 

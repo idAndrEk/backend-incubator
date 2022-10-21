@@ -2,21 +2,22 @@ import jwt from 'jsonwebtoken'
 import {envSetting} from "../env_setting";
 import {UserAccType} from '../types/UsersTypes'
 import {jwtRepository} from "../repositories/jwt-repository";
+import {validationResult} from "express-validator";
 
 export class JwtService {
 
-    async createAccessJWT(user: UserAccType) {
+    async createAccessJWT(user: UserAccType) { // +++
         const token = jwt.sign({userId: user._id}, envSetting.JWT_ACCESS, {expiresIn: '10h'})
         return token
     }
 
-    async createDevicesAccessJWT(user: UserAccType, deviceId: string) {
-        const token = jwt.sign({userId: user._id, deviceId}, envSetting.JWT_ACCESS, {expiresIn: '10h'})
+    async createRefreshJWT(user: UserAccType) { // --- |
+        const token = jwt.sign({userId: user._id}, envSetting.JWT_REFRESH, {expiresIn: '20h'})
         return token
     }
 
-    async createRefreshJWT(user: UserAccType) {
-        const token = jwt.sign({userId: user._id}, envSetting.JWT_REFRESH, {expiresIn: '20m'})
+    async createDevicesIdRefreshJWT(user: UserAccType, deviceId: string) {
+        const token = jwt.sign({userId: user._id, deviceId}, envSetting.JWT_REFRESH, {expiresIn: '20h'})
         return token
     }
 
@@ -38,10 +39,13 @@ export class JwtService {
         }
     }
 
-    async deviceIdAccessToken(token: string): Promise<string | null> {
+    async deviceIdRefreshJToken(token: string): Promise<{ userId: string, deviceId: string } | null> {
         try {
-            const jwtPayload: any = jwt.verify(token, envSetting.JWT_ACCESS);
-            return jwtPayload.deviceId;
+            const jwtPayload: any = jwt.verify(token, envSetting.JWT_REFRESH);
+            return {
+                userId: jwtPayload.userId,
+                deviceId: jwtPayload.deviceId
+            }
         } catch (e) {
             return null
         }
@@ -50,7 +54,7 @@ export class JwtService {
     async validateRefreshToken(token: string): Promise<string | null> {
         try {
             const jwtPayload: any = jwt.verify(token, envSetting.JWT_REFRESH);
-            return jwtPayload.userId;
+            return jwtPayload.userId
         } catch (e) {
             return null
         }

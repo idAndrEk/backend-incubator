@@ -1,7 +1,6 @@
 import {NextFunction, Request, Response} from "express";
 import {container, jwtService} from "../composition-root";
 import {UsersQueryRepository} from "../repositories/users/usersQueryRepository";
-import {log} from "util";
 
 const usersQueryRepository = container.resolve(UsersQueryRepository)
 
@@ -29,7 +28,7 @@ export const JwtRefreshAuthMiddleware = async (req: Request, res: Response, next
     const userId = await jwtService.ValidateDbRefreshToken(requestRefreshToken)
     if (!userId) return res.sendStatus(401)
 
-    await jwtService.logout(requestRefreshToken) // remove
+    await jwtService.logout(requestRefreshToken) // перезаписываем дату выдачи
 
     const user = await usersQueryRepository.getUser(userId)
     if (!user) return res.sendStatus(401)
@@ -54,3 +53,6 @@ export const checkUserTokenMiddleware = async (req: Request, res: Response, next
     req.user = user;
     return next()
 }
+
+
+

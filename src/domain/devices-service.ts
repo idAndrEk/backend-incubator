@@ -7,8 +7,8 @@ export class DevicesService {
     constructor(protected devicesRepository: DevicesRepository) {
     }
 
-    async getDevices(login: string): Promise<DevicesType[]> {
-        const devices = await this.devicesRepository.getDevices(login)
+    async getDevices(userId: string): Promise<DevicesType[]> {
+        const devices = await this.devicesRepository.getDevices(userId)
         // console.log(devices)
         return devices.map(devicesAll => ({
             ip: devicesAll.ip,
@@ -17,4 +17,9 @@ export class DevicesService {
             deviceId: devicesAll.deviceId
         }))
     }
+
+    async deleteSessions(userId: string, devicesId: string): Promise<boolean> {
+        return await this.devicesRepository.deleteSessionsDb(userId, devicesId)
+    }
+
 }

@@ -10,5 +10,5 @@ export type DevicesDtoType = {
     title: string
     lastActiveDate: Date
     deviceId: string
-    login: string
+    userId: string
 }

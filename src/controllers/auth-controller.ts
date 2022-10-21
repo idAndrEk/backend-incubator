@@ -2,8 +2,6 @@ import {UsersService} from "../domain/users-service";
 import {Request, Response} from "express";
 import {injectable} from "inversify";
 import {jwtService} from "../composition-root";
-import jwt from "jsonwebtoken";
-import {envSetting} from "../env_setting";
 
 @injectable()
 export class AuthController {
@@ -15,11 +13,10 @@ export class AuthController {
         try {
             const ip = req.ip
             const title = req.headers["user-agent"]
-            const login = req.body.login
-            const devicesDB = await this.usersService.addDevices(ip, title as string, login)
+            const userId = req.user.id
+            const devicesDB = await this.usersService.addDevices(ip, title as string, userId)
             const accessToken = await this.usersService.createAccessToken(req?.user.accountData.userName)
-            // const accessToken = await this.usersService.createDevicesIdAccessToken(req?.user.accountData.userName, devicesDB)
-            const refreshToken = await this.usersService.createRefreshToken(req?.user.accountData.userName)
+            const refreshToken = await this.usersService.createDevicesIdRefreshToken(req?.user.accountData.userName, devicesDB)
             // console.log(userLogin)
             // console.log(devicesDB)
             // console.log(accessToken)

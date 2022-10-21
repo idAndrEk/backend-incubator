@@ -8,7 +8,6 @@ import bcrypt from "bcrypt";
 import {jwtRepository} from "../repositories/jwt-repository";
 import {jwtService} from "../composition-root";
 import {injectable} from "inversify";
-import {DevicesType} from "../types/divaseTypes";
 
 @injectable()
 export class UsersService {
@@ -73,8 +72,8 @@ export class UsersService {
         await emailAdapter.sendEmailConfirmationMessage(NewConfirmationCode, user.accountData.email)
     }
 
-    async checkCredential(login: string): Promise<UserAccType | null> {
-        const user = await this.usersRepository.findByLogin(login)
+    async checkCredential(userId: string): Promise<UserAccType | null> {
+        const user = await this.usersRepository.findByLogin(userId)
         if (!user) return null
         return user
     }
@@ -90,13 +89,6 @@ export class UsersService {
         return token
     }
 
-    async createDevicesIdAccessToken(login: string, deviceId: string) {
-        const user = await this.checkCredential(login)
-        if (!user) return null
-        const token = await jwtService.createDevicesAccessJWT(user, deviceId)
-        return token
-    }
-
     async createRefreshToken(login: string) {
         const user = await this.checkCredential(login)
         if (!user) return null
@@ -105,13 +97,23 @@ export class UsersService {
         return token
     }
 
-    async addDevices(ip: string, title: string, login: string): Promise<any> {
+    async createDevicesIdRefreshToken(userId: string,  deviceId: string) {
+        const user = await this.checkCredential(userId)
+        if (!user) return null
+        const token = await jwtService.createDevicesIdRefreshJWT(user, deviceId)
+        await jwtRepository.addTokenToDB(token)
+        return token
+    }
+
+    async addDevices(ip: string, title: string, userId: string): Promise<any> {
         const devices = {
             ip: ip,
             title: title,
             lastActiveDate: new Date,
             deviceId: uuidv4(),
-            login: login,
+            userId: userId,
+            //issued at
+            //expire time
         }
         await this.usersRepository.addDevices(devices)
         return devices.deviceId
