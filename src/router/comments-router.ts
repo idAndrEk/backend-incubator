@@ -12,9 +12,26 @@ const commentsController = container.resolve(CommentsController)
 
 export const commentsRouter = Router({})
 
-commentsRouter.get('/:id', checkUserTokenMiddleware, checkIdParamMiddleware, commentsController.getComment.bind(commentsController))
-commentsRouter.put('/:id/like-status', JwtAuthMiddleware, likeStatusMiddleware, allValidation, commentsController.addLikeToComment.bind(commentsController))
-commentsRouter.put('/:id', checkIdParamMiddleware, authMiddlewareUser, commentValidation, allValidation, commentsController.updateComment.bind(commentsController))
-commentsRouter.delete('/:id', checkIdParamMiddleware, authMiddlewareUser, commentsController.deleteComment.bind(commentsController))
+commentsRouter.get('/:id', checkUserTokenMiddleware,
+    checkIdParamMiddleware,
+    commentsController.getComment.bind(commentsController))
+
+commentsRouter.put('/:id/like-status',
+    JwtAuthMiddleware,
+    likeStatusMiddleware,
+    allValidation,
+    commentsController.addLikeToComment.bind(commentsController))
+
+commentsRouter.put('/:id',
+    checkIdParamMiddleware,
+    authMiddlewareUser,
+    commentValidation,
+    allValidation,
+    commentsController.updateComment.bind(commentsController))
+
+commentsRouter.delete('/:id',
+    checkIdParamMiddleware,
+    authMiddlewareUser,
+    commentsController.deleteComment.bind(commentsController))
 
 

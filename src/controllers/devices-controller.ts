@@ -2,11 +2,13 @@ import {injectable} from "inversify";
 import {Request, Response} from "express";
 import {DevicesService} from "../domain/devices-service";
 import {jwtService} from "../composition-root";
+import {UsersQueryRepository} from "../repositories/users/usersQueryRepository";
 
 @injectable()
 export class DevicesController {
 
-    constructor(protected devicesService: DevicesService) {
+    constructor(protected devicesService: DevicesService,
+                protected usersQueryRepository: UsersQueryRepository) {
     }
 
     async getDevices(req: Request, res: Response) {
@@ -43,9 +45,10 @@ export class DevicesController {
             if (!req.cookies.refreshToken) return res.sendStatus(401)
             const payload = await jwtService.deviceIdRefreshJToken(req.cookies.refreshToken)
             if (!payload) return res.sendStatus(401)
-            console.log(payload)
+            const userId = payload.userId
+            const userIdDb = await this.usersQueryRepository.getUser(userId)
+            if (!userIdDb) return res.sendStatus(403)
             const deviceId = req.params.id
-            console.log(deviceId)
             const isDeleted = await this.devicesService.deleteSession(deviceId)
             if (isDeleted) return res.sendStatus(204)
                     } catch (error) {
