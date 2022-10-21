@@ -15,7 +15,7 @@ export const requestInput = async (req: Request, res: Response, next: NextFuncti
         endpoint: req.url,
         date: {$gt: startDate}
     })
-    if (count >= 5) {
+    if (count > 4) {
         return res.sendStatus(429)
     }
     // await InputModelClass.insertMany(input)
