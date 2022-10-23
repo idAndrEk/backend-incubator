@@ -7,17 +7,17 @@ import {validationResult} from "express-validator";
 export class JwtService {
 
     async createAccessJWT(user: UserAccType) { // +++
-        const token = jwt.sign({userId: user._id}, envSetting.JWT_ACCESS, {expiresIn: '10s'})
+        const token = jwt.sign({userId: user._id}, envSetting.JWT_ACCESS, {expiresIn: '10h'})
         return token
     }
 
     async createRefreshJWT(user: UserAccType) { // --- |
-        const token = jwt.sign({userId: user._id}, envSetting.JWT_REFRESH, {expiresIn: '20s'})
+        const token = jwt.sign({userId: user._id}, envSetting.JWT_REFRESH, {expiresIn: '20h'})
         return token
     }
 
     async createDevicesIdRefreshJWT(user: UserAccType, deviceId: string) {
-        const token = jwt.sign({userId: user._id, deviceId}, envSetting.JWT_REFRESH, {expiresIn: '20s'})
+        const token = jwt.sign({userId: user._id, deviceId}, envSetting.JWT_REFRESH, {expiresIn: '20h'})
         return token
     }
 
@@ -41,7 +41,6 @@ export class JwtService {
 
     async deviceIdRefreshJToken(token: string): Promise<{ userId: string, deviceId: string } | null> {
         try {
-            console.log(token)
             const jwtPayload: any = jwt.verify(token, envSetting.JWT_REFRESH);
             return {
                 userId: jwtPayload.userId,
