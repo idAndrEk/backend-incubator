@@ -11,12 +11,12 @@ export class JwtService {
     }
 
     async createRefreshJWT(user: UserAccType) { // --- |
-        const token = jwt.sign({userId: user._id}, envSetting.JWT_REFRESH, {expiresIn: '20s'})
+        const token = jwt.sign({userId: user._id}, envSetting.JWT_REFRESH, {expiresIn: '2m'})
         return token
     }
 
     async createDevicesIdRefreshJWT(user: UserAccType, deviceId: string) {
-        const token = jwt.sign({userId: user._id, deviceId}, envSetting.JWT_REFRESH, {expiresIn: '20s'})
+        const token = jwt.sign({userId: user._id, deviceId}, envSetting.JWT_REFRESH, {expiresIn: '2m'})
         return token
     }
 
