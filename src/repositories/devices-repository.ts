@@ -18,7 +18,7 @@ export class DevicesRepository {
     }
 
     async deleteSessionsDb(userId: string, devicesId: string): Promise<boolean> {
-        const deleteResult = await DevicesModelClass.deleteMany({userId, deviceId:{$ne: devicesId}})
+        const deleteResult = await DevicesModelClass.deleteMany({userId: userId, deviceId:{$ne: devicesId}})
         if (deleteResult) return true
         return false
     }

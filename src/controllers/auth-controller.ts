@@ -22,7 +22,8 @@ export class AuthController {
             const payload = await jwtService.deviceIdRefreshJToken(refreshToken as string)
             const issuedAt = payload?.iat
             const expireTime = payload?.exp
-            const devicesDB = await this.usersService.addDevices(ip, title as string, userId, issuedAt!, expireTime!)
+            const devicesDB = await this.usersService.addDevices(ip, title as string,devicesId, userId, issuedAt!, expireTime!)
+            console.log(devicesId)
             return res.status(200).cookie('refreshToken', refreshToken, {
                 httpOnly: true,
                 secure: true

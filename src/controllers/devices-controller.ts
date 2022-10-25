@@ -48,16 +48,10 @@ export class DevicesController {
             const payload = await jwtService.deviceIdRefreshJToken(req.cookies.refreshToken)
             if (!payload) return res.sendStatus(401)
             const devicesId = req.params.id
-            // if (devicesId.match(/^[0-9a-fA-F]{24}$/))
             const deviceIdDb = await this.devicesRepository.getDevice(devicesId)
-            console.log("deviceIdDb", deviceIdDb)
-            const userId = payload.userId
-            console.log(userId)
             if (!deviceIdDb) return res.sendStatus(404)
-            // const userIdDb = deviceIdDb.find(u => u.userId === devicesId)
-            // console.log(userIdDb)
+            const userId = payload.userId
             if (userId != deviceIdDb!.userId) return res.sendStatus(403)
-            // return res.send("test")
             const isDeleted = await this.devicesService.deleteSession(devicesId)
             if (isDeleted) return res.sendStatus(204)
         } catch (error) {

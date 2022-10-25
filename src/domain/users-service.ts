@@ -97,7 +97,7 @@ export class UsersService {
         return token
     }
 
-    async createDevicesIdRefreshToken(userId: string,  deviceId: string) {
+    async createDevicesIdRefreshToken(userId: string, deviceId: string) {
         const user = await this.checkCredential(userId)
         if (!user) return null
         const token = await jwtService.createDevicesIdRefreshJWT(user, deviceId)
@@ -105,17 +105,17 @@ export class UsersService {
         return token
     }
 
-    async devicesIdDb (){
+    async devicesIdDb() {
         const devicesId = uuidv4()
         return devicesId
     }
 
-    async addDevices(ip: string, title: string, userId: string,issuedAt: Date, expireTime:Date): Promise<any> {
+    async addDevices(ip: string, title: string, devicesId: string, userId: string, issuedAt: Date, expireTime: Date): Promise<any> {
         const devices = {
             ip: ip,
             title: title,
             lastActiveDate: new Date,
-            deviceId: uuidv4(),
+            deviceId: devicesId,
             userId: userId,
             issuedAt,
             expireTime

@@ -1,7 +1,10 @@
 import {Router, Request, Response} from "express";
 import {
     BloggerModelClass,
-    CommentModelClass, DevicesModelClass, InputModelClass, LikesModelClass,
+    CommentModelClass,
+    DevicesModelClass,
+    InputModelClass,
+    LikesModelClass,
     PostModelClass,
     TokenModelClass,
     UserModelClass,
