@@ -11,4 +11,6 @@ export type DevicesDtoType = {
     lastActiveDate: Date
     deviceId: string
     userId: string
+    issuedAt: Date
+    expireTime:Date
 }

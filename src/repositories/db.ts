@@ -94,6 +94,8 @@ const deviseSchema = new mongoose.Schema<DevicesDtoType>({
     lastActiveDate: {type: Date, required: true},
     deviceId: {type: String, required: true},
     userId: {type: String, required: true},
+    issuedAt:{type: Date, required: true},
+    expireTime:{type: Date, required: true},
 })
 
 export const BloggerModelClass = mongoose.model('bloggers', bloggerSchema)

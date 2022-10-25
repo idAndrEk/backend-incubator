@@ -2,6 +2,8 @@ import {UsersService} from "../domain/users-service";
 import {Request, Response} from "express";
 import {injectable} from "inversify";
 import {jwtService} from "../composition-root";
+import jwt from "jsonwebtoken";
+import {envSetting} from "../env_setting";
 
 @injectable()
 export class AuthController {
@@ -11,13 +13,16 @@ export class AuthController {
 
     async login(req: Request, res: Response) {
         try {
+            const devicesId = await this.usersService.devicesIdDb()
+            const accessToken = await this.usersService.createAccessToken(req?.user.accountData.userName)
+            const refreshToken = await this.usersService.createDevicesIdRefreshToken(req?.user.accountData.userName, devicesId)
             const ip = req.ip
             const title = req.headers["user-agent"]
             const userId = req.user.id
-            const devicesDB = await this.usersService.addDevices(ip, title as string, userId)
-            const accessToken = await this.usersService.createAccessToken(req?.user.accountData.userName)
-            const refreshToken = await this.usersService.createDevicesIdRefreshToken(req?.user.accountData.userName, devicesDB)
-            console.log(refreshToken)
+            const payload = await jwtService.deviceIdRefreshJToken(refreshToken as string)
+            const issuedAt = payload?.iat
+            const expireTime = payload?.exp
+            const devicesDB = await this.usersService.addDevices(ip, title as string, userId, issuedAt!, expireTime!)
             return res.status(200).cookie('refreshToken', refreshToken, {
                 httpOnly: true,
                 secure: true
@@ -42,8 +47,9 @@ export class AuthController {
 
     async refreshToken(req: Request, res: Response) {
         try {
+            const oldRefreshToken = req.cookies.refreshToken()
             const accessToken = await this.usersService.createAccessToken(req?.user.accountData.userName)
-            const refreshToken = await this.usersService.createRefreshToken(req?.user.accountData.userName)
+            const refreshToken = await this.usersService.createRefreshToken(req?.user.accountData.userName, oldRefreshToken)
             return res.status(200).cookie('refreshToken', refreshToken, {
                 httpOnly: true,
                 secure: true

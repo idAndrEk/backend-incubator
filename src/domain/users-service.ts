@@ -89,11 +89,11 @@ export class UsersService {
         return token
     }
 
-    async createRefreshToken(login: string) {
+    async createRefreshToken(login: string, oldRefreshToken: string) {
         const user = await this.checkCredential(login)
         if (!user) return null
         const token = await jwtService.createRefreshJWT(user)
-        await jwtRepository.addTokenToDB(token)
+        await jwtRepository.addTokenToDB(oldRefreshToken)
         return token
     }
 
@@ -105,18 +105,23 @@ export class UsersService {
         return token
     }
 
-    async addDevices(ip: string, title: string, userId: string): Promise<any> {
+    async devicesIdDb (){
+        const devicesId = uuidv4()
+        return devicesId
+    }
+
+    async addDevices(ip: string, title: string, userId: string,issuedAt: Date, expireTime:Date): Promise<any> {
         const devices = {
             ip: ip,
             title: title,
             lastActiveDate: new Date,
             deviceId: uuidv4(),
             userId: userId,
-            //issued at
-            //expire time
+            issuedAt,
+            expireTime
         }
         await this.usersRepository.addDevices(devices)
-        return devices.deviceId
+        // return devices.deviceId
     }
 }
 
