@@ -49,7 +49,7 @@ export class AuthController {
         try {
             const oldRefreshToken = req.cookies.refreshToken
             console.log(req.user)
-            const accessToken = await this.usersService.createAccessToken(req.user)
+            const accessToken = await this.usersService.createAccessToken(req.user.login)
             console.log(accessToken)
             const refreshToken = await this.usersService.createRefreshToken(req.user, oldRefreshToken)
             console.log(refreshToken)
