@@ -9,7 +9,6 @@ export class UsersRepository {
     async createUser(newUser: UserAccType): Promise<UserAccType | null> {
         try {
             const user = new UserModelClass(newUser)
-            console.log(user)
             return user.save()
         } catch (e) {
             return null
@@ -23,7 +22,9 @@ export class UsersRepository {
     }
 
     async findByLogin(login: string): Promise<UserAccType | null> {
-        const byLogin = await UserModelClass.findOne({'accountData.userName': login})
+        // console.log(login)
+        // const byLogin = await UserModelClass.findOne({'accountData.userName': login})
+        const byLogin = await UserModelClass.findOne({'accountData.login': login})
         return byLogin
     }
 

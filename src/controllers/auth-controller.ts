@@ -14,11 +14,12 @@ export class AuthController {
     async login(req: Request, res: Response) {
         try {
             const devicesId = await this.usersService.devicesIdDb()
-            const accessToken = await this.usersService.createAccessToken(req?.user.accountData.userName)
-            const refreshToken = await this.usersService.createDevicesIdRefreshToken(req?.user.accountData.userName, devicesId)
+            const accessToken = await this.usersService.createAccessToken(req?.user.accountData.login)
+            const refreshToken = await this.usersService.createDevicesIdRefreshToken(req?.user, devicesId)
             const ip = req.ip
             const title = req.headers["user-agent"]
-            const userId = req.user.id
+            const userId = req.user._id.toString()
+            // console.log(userId)
             const payload = await jwtService.deviceIdRefreshJToken(refreshToken as string)
             const issuedAt = payload?.iat
             const expireTime = payload?.exp
@@ -48,11 +49,8 @@ export class AuthController {
     async refreshToken(req: Request, res: Response) {
         try {
             const oldRefreshToken = req.cookies.refreshToken
-            console.log(req.user)
             const accessToken = await this.usersService.createAccessToken(req.user.login)
-            console.log(accessToken)
             const refreshToken = await this.usersService.createRefreshToken(req.user, oldRefreshToken)
-            console.log(refreshToken)
             return res.status(200).cookie('refreshToken', refreshToken, {
                 httpOnly: true,
                 secure: true

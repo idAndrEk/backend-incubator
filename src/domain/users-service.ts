@@ -49,6 +49,7 @@ export class UsersService {
     }
 
     async getUserByLogin(login: string): Promise<UserAccType | null> {
+        console.log(login, 'getUserByLogin')
         return await this.usersRepository.findByLogin(login);
     }
 
@@ -72,36 +73,34 @@ export class UsersService {
         await emailAdapter.sendEmailConfirmationMessage(NewConfirmationCode, user.accountData.email)
     }
 
-    async checkCredential(userId: string): Promise<UserAccType | null> {
-        const user = await this.usersRepository.findByLogin(userId)
-        if (!user) return null
-        return user
-    }
+    // async checkCredential(login: string): Promise<UserAccType | null> {
+    //     // console.log(login)
+    //     const user = await this.usersRepository.findByLogin(login)
+    //     if (!user) return null
+    //     return user
+    // }
 
     async checkPassword(password: string, hash: string) {
         return await bcrypt.compare(password, hash)
     }
 
     async createAccessToken(login: string) {
-        const user = await this.checkCredential(login)
+        const user = await this.getUserByLogin(login)
         if (!user) return null
         const token = await jwtService.createAccessJWT(user)
         return token
     }
 
     async createRefreshToken(login: string, oldRefreshToken: string) {
-        const user = await this.checkCredential(login)
+        const user = await this.getUserByLogin(login)
         if (!user) return null
         const token = await jwtService.createRefreshJWT(user)
         await jwtRepository.addTokenToDB(oldRefreshToken)
         return token
     }
 
-    async createDevicesIdRefreshToken(userId: string, deviceId: string) {
-        const user = await this.checkCredential(userId)
-        if (!user) return null
+    async createDevicesIdRefreshToken(user: UserAccType, deviceId: string) {
         const token = await jwtService.createDevicesIdRefreshJWT(user, deviceId)
-        // await jwtRepository.addTokenToDB(token)
         return token
     }
 
