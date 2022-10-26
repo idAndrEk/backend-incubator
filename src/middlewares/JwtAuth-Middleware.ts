@@ -25,7 +25,7 @@ export const JwtRefreshAuthMiddleware = async (req: Request, res: Response, next
     const requestRefreshToken = req.cookies.refreshToken
     if (!requestRefreshToken) return res.sendStatus(401)
 
-    const userId = await jwtService.ValidateDbRefreshToken(requestRefreshToken)
+    const userId = await jwtService.validateRefreshToken(requestRefreshToken)
     if (!userId) return res.sendStatus(401)
 
     const user = await usersQueryRepository.getUser(userId)

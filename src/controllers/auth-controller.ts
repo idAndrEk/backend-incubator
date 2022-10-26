@@ -19,7 +19,6 @@ export class AuthController {
             const ip = req.ip
             const title = req.headers["user-agent"]
             const userId = req.user._id.toString()
-            // console.log(userId)
             const payload = await jwtService.deviceIdRefreshJToken(refreshToken as string)
             const issuedAt = payload?.iat
             const expireTime = payload?.exp
@@ -50,7 +49,7 @@ export class AuthController {
         try {
             const oldRefreshToken = req.cookies.refreshToken
             const accessToken = await this.usersService.createAccessToken(req.user.login)
-            const refreshToken = await this.usersService.createRefreshToken(req.user, oldRefreshToken)
+            const refreshToken = await this.usersService.createRefreshToken(req.user.login, oldRefreshToken)
             return res.status(200).cookie('refreshToken', refreshToken, {
                 httpOnly: true,
                 secure: true
