@@ -13,7 +13,7 @@ export type UserViewResponse = {
 }
 
 type AccountData = {
-    userName: string
+    login: string
     email: string
     passwordHash: string
     createdAt: Date

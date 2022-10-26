@@ -12,7 +12,7 @@ export class UsersQueryRepository {
             .aggregate()
             .project({
                 id: '$_id',
-                login: '$accountData.userName',
+                login: '$accountData.login',
                 email: '$accountData.email',
                 createdAt: '$accountData.createdAt',
                 _id: 0
@@ -35,7 +35,7 @@ export class UsersQueryRepository {
         if (!user) return null
         return {
             id: user._id,
-            login: user.accountData.userName,
+            login: user.accountData.login,
             email: user.accountData.email,
             createdAt: user.accountData.createdAt
         }

@@ -28,8 +28,6 @@ export const JwtRefreshAuthMiddleware = async (req: Request, res: Response, next
     const userId = await jwtService.ValidateDbRefreshToken(requestRefreshToken)
     if (!userId) return res.sendStatus(401)
 
-    await jwtService.logout(requestRefreshToken) // перезаписываем дату выдачи
-
     const user = await usersQueryRepository.getUser(userId)
     if (!user) return res.sendStatus(401)
 

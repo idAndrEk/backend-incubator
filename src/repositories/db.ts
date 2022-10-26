@@ -58,7 +58,7 @@ const commentSchema = new mongoose.Schema<CommentType>({
 
 const userSchema = new mongoose.Schema<UserAccType>({
     accountData: {
-        userName: {type: String, required: true},
+        login: {type: String, required: true},
         email: {type: String, required: true},
         passwordHash: {type: String, required: true},
         createdAt: Date

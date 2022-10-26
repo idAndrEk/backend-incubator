@@ -20,7 +20,7 @@ export class UsersService {
         const user: UserAccType = {
             _id: new ObjectId(),
             accountData: {
-                userName: login,
+                login: login,
                 email,
                 passwordHash,
                 createdAt: new Date()
@@ -36,7 +36,7 @@ export class UsersService {
         await emailAdapter.sendEmailConfirmationMessage(user.emailConfirmation.confirmationCode, user.accountData.email)
         const userResponse = {
             id: user._id,
-            login: user.accountData.userName,
+            login: user.accountData.login,
             email: user.accountData.email,
             createdAt: user.accountData.createdAt
         }
@@ -101,7 +101,7 @@ export class UsersService {
         const user = await this.checkCredential(userId)
         if (!user) return null
         const token = await jwtService.createDevicesIdRefreshJWT(user, deviceId)
-        await jwtRepository.addTokenToDB(token)
+        // await jwtRepository.addTokenToDB(token)
         return token
     }
 

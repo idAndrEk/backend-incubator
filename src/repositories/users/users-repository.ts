@@ -9,6 +9,7 @@ export class UsersRepository {
     async createUser(newUser: UserAccType): Promise<UserAccType | null> {
         try {
             const user = new UserModelClass(newUser)
+            console.log(user)
             return user.save()
         } catch (e) {
             return null
