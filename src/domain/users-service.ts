@@ -49,7 +49,6 @@ export class UsersService {
     }
 
     async getUserByLogin(login: string): Promise<UserAccType | null> {
-        console.log(login, 'getUserByLogin')
         return await this.usersRepository.findByLogin(login);
     }
 

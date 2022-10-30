@@ -25,4 +25,8 @@ export class DevicesService {
         return await this.devicesRepository.deleteSessionDb(devicesId)
     }
 
+    async updateLastActiveDate(userId: string, deviceId: string, ){
+        return this.devicesRepository.updateLastActiveDate(userId, deviceId)
+    }
+
 }

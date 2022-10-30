@@ -4,6 +4,7 @@ import {injectable} from "inversify";
 import {jwtService} from "../composition-root";
 import jwt from "jsonwebtoken";
 import {envSetting} from "../env_setting";
+import {validationResult} from "express-validator";
 
 @injectable()
 export class AuthController {
@@ -22,7 +23,7 @@ export class AuthController {
             const payload = await jwtService.deviceIdRefreshJToken(refreshToken as string)
             const issuedAt = payload?.iat
             const expireTime = payload?.exp
-            const devicesDB = await this.usersService.addDevices(ip, title as string,devicesId, userId, issuedAt!, expireTime!)
+            const devicesDB = await this.usersService.addDevices(ip, title as string, devicesId, userId, issuedAt!, expireTime!)
             return res.status(200).cookie('refreshToken', refreshToken, {
                 httpOnly: true,
                 secure: true
@@ -48,6 +49,12 @@ export class AuthController {
     async refreshToken(req: Request, res: Response) {
         try {
             const oldRefreshToken = req.cookies.refreshToken
+            // valid
+            // payload -> deviceId
+            // blockOld refresh
+            // create new refresh with device id
+            // update lastConnection date to device
+            // return new refresh token
             const accessToken = await this.usersService.createAccessToken(req.user.login)
             const refreshToken = await this.usersService.createRefreshToken(req.user.login, oldRefreshToken)
             return res.status(200).cookie('refreshToken', refreshToken, {

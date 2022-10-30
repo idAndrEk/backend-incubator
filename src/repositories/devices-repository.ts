@@ -29,4 +29,7 @@ export class DevicesRepository {
         return false
     }
 
+    async updateLastActiveDate(userId: string, deviceId: string) {
+        return DevicesModelClass.updateOne({userId, deviceId}, {$set: {lastActiveDate: new Date()}});
+    }
 }
