@@ -9,13 +9,13 @@ export const requestInput = async (req: Request, res: Response, next: NextFuncti
         date: +(new Date())
     }
     // await InputModelClass.insertMany(input)
-    const startDate = +(new Date()) - 8000
+    const startDate = +(new Date()) - 10000
     const count = await InputModelClass.countDocuments({
         ip: req.ip,
         endpoint: req.url,
         date: {$gt: startDate}
     })
-    if (count >= 5) {
+    if (count > 4) {
         return res.sendStatus(429)
     }
     await InputModelClass.insertMany(input)
