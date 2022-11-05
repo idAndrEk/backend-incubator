@@ -90,10 +90,10 @@ export class UsersService {
         return token
     }
 
-    async createRefreshToken(login: string, oldRefreshToken: string) {
+    async createRefreshToken(login: string, oldRefreshToken: string, deviceId: string) {
         const user = await this.getUserByLogin(login)
         if (!user) return null
-        const token = await jwtService.createRefreshJWT(user)
+        const token = await jwtService.createDevicesIdRefreshJWT(user, deviceId)
         await jwtRepository.addTokenToDB(oldRefreshToken)
         return token
     }
