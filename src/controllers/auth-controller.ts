@@ -19,7 +19,6 @@ export class AuthController {
             const devicesId = await this.usersService.devicesIdDb()
             const accessToken = await this.usersService.createAccessToken(req?.user.accountData.login)
             const refreshToken = await this.usersService.createDevicesIdRefreshToken(req?.user, devicesId)
-            console.log(refreshToken)
             const ip = req.ip
             const title = req.headers["user-agent"]
             const userId = req.user._id.toString()
@@ -53,12 +52,6 @@ export class AuthController {
         try {
             const oldRefreshToken = req.cookies.refreshToken
             const payload = await jwtService.deviceIdRefreshJToken(oldRefreshToken as string)
-            // valid +
-            // payload -> deviceId +
-            // blockOld refresh +
-            // create new refresh with device id
-            // update lastConnection date to device
-            // return new refresh token
             const userId = payload?.userId
             const devicesId = payload?.deviceId
             const updateDateDevicesId = await this.devicesService.updateLastActiveDate(userId as string, devicesId as string)
