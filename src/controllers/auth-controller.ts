@@ -5,11 +5,13 @@ import {jwtService} from "../composition-root";
 import jwt from "jsonwebtoken";
 import {envSetting} from "../env_setting";
 import {validationResult} from "express-validator";
+import {DevicesService} from "../domain/devices-service";
 
 @injectable()
 export class AuthController {
 
-    constructor(protected usersService: UsersService) {
+    constructor(protected usersService: UsersService,
+                protected devicesService: DevicesService) {
     }
 
     async login(req: Request, res: Response) {
@@ -51,14 +53,15 @@ export class AuthController {
         try {
             const oldRefreshToken = req.cookies.refreshToken
             const payload = await jwtService.deviceIdRefreshJToken(oldRefreshToken as string)
-            console.log(payload)
             // valid +
             // payload -> deviceId +
             // blockOld refresh +
             // create new refresh with device id
             // update lastConnection date to device
             // return new refresh token
+            const userId = payload?.userId
             const devicesId = payload?.deviceId
+            const updateDateDevicesId = await this.devicesService.updateLastActiveDate(userId as string, devicesId as string)
             const accessToken = await this.usersService.createAccessToken(req.user.login)
             const refreshToken = await this.usersService.createRefreshToken(req.user.login, oldRefreshToken, devicesId as string)
             return res.status(200).cookie('refreshToken', refreshToken, {
