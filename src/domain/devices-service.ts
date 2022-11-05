@@ -21,11 +21,11 @@ export class DevicesService {
         return await this.devicesRepository.deleteSessionsDb(userId, devicesId)
     }
 
-    async deleteSession(devicesId: string): Promise<boolean> {
-        return await this.devicesRepository.deleteSessionDb(devicesId)
+    async deleteSession(userId: string, devicesId: string): Promise<boolean> {
+        return await this.devicesRepository.deleteSessionDb(userId, devicesId)
     }
 
-    async updateLastActiveDate(userId: string, deviceId: string, ){
+    async updateLastActiveDate(userId: string, deviceId: string,) {
         return this.devicesRepository.updateLastActiveDate(userId, deviceId)
     }
 

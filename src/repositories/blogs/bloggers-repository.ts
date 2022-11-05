@@ -1,8 +1,6 @@
-import {BloggerModelClass, PostModelClass} from "../db";
+import {BloggerModelClass} from "../db";
 import {BloggerType, CreateBloggerDto} from "../../types/bloggersTypes";
-import {PostType} from "../../types/postsTypes";
 import {injectable} from "inversify";
-import {SortDirection} from "../../types/paginationType";
 
 @injectable()
 export class BloggersRepository {

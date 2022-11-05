@@ -18,13 +18,14 @@ export class DevicesRepository {
     }
 
     async deleteSessionsDb(userId: string, devicesId: string): Promise<boolean> {
-        const deleteResult = await DevicesModelClass.deleteMany({userId: userId, deviceId:{$ne: devicesId}})
+        const deleteResult = await DevicesModelClass.deleteMany({userId: userId, deviceId: {$ne: devicesId}})
         if (deleteResult) return true
         return false
     }
 
-    async deleteSessionDb(devicesId: string): Promise<boolean> {
-        const deleteResult = await DevicesModelClass.deleteOne({devicesId})
+    async deleteSessionDb(userId: string, devicesId: string): Promise<boolean> {
+        console.log(devicesId)
+        const deleteResult = await DevicesModelClass.deleteOne({userId: userId, deviceId: devicesId})
         if (deleteResult) return true
         return false
     }
