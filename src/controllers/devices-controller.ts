@@ -52,7 +52,6 @@ export class DevicesController {
             if (!deviceIdDb) return res.sendStatus(404)
             const userId = payload.userId
             if (userId != deviceIdDb!.userId) return res.sendStatus(403)
-            console.log(devicesId)
             const isDeleted = await this.devicesService.deleteSession(userId, devicesId)
             if (isDeleted) return res.sendStatus(204)
         } catch (error) {
