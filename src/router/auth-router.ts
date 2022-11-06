@@ -17,8 +17,8 @@ const authController = container.resolve(AuthController)
 export const authRouter = Router({})
 
 authRouter.post('/login',
-    LoginPasswordMiddleware,
     requestInput,
+    LoginPasswordMiddleware,
     authController.login.bind(authController))
 
 authRouter.post('/logout',

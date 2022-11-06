@@ -7,7 +7,6 @@ export class DevicesRepository {
 
     async getDevices(userId: string): Promise<DevicesDtoType[]> {
         const devices = await DevicesModelClass.find({userId})
-        console.log(devices)
         return devices
     }
 
