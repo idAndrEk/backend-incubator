@@ -10,11 +10,6 @@ export class JwtService {
         return token
     }
 
-    async createRefreshJWT(user: UserAccType) { // --- |
-        const token = jwt.sign({userId: user._id}, envSetting.JWT_REFRESH, {expiresIn: `${envSetting.REFRESH_TOKEN_EXPIRES_IN}`})
-        return token
-    }
-
     async createDevicesIdRefreshJWT(user: UserAccType, deviceId: string) {
         const token = jwt.sign({userId: user._id, deviceId}, envSetting.JWT_REFRESH, {expiresIn: `${envSetting.REFRESH_TOKEN_EXPIRES_IN}`})
         return token
@@ -52,6 +47,17 @@ export class JwtService {
         }
     }
 
+
+    async logout(refreshToken: string) {
+        const token = await jwtRepository.removeToken(refreshToken);
+        return token;
+    }
+
+    async createRefreshJWT(user: UserAccType) { // --- |
+        const token = jwt.sign({userId: user._id}, envSetting.JWT_REFRESH, {expiresIn: `${envSetting.REFRESH_TOKEN_EXPIRES_IN}`})
+        return token
+    }
+
     async ValidateDbRefreshToken(refreshToken: string) { //ValidateDbRefreshToken
         if (!refreshToken) return null
         const userId = this.validateRefreshToken(refreshToken);
@@ -60,10 +66,6 @@ export class JwtService {
         return userId
     }
 
-    async logout(refreshToken: string) {
-        const token = await jwtRepository.removeToken(refreshToken);
-        return token;
-    }
 }
 
 

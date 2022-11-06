@@ -3,8 +3,7 @@ import {TokenModelClass} from "./db";
 export const jwtRepository = {
 
     async removeToken(refreshToken: string) {
-        return TokenModelClass.deleteMany({refreshToken});
-
+        return TokenModelClass.deleteOne({refreshToken});
     },
 
     async addTokenToDB(refreshToken: string) {
