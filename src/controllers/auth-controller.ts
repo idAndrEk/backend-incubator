@@ -2,9 +2,6 @@ import {UsersService} from "../domain/users-service";
 import {Request, Response} from "express";
 import {injectable} from "inversify";
 import {jwtService} from "../composition-root";
-import jwt from "jsonwebtoken";
-import {envSetting} from "../env_setting";
-import {validationResult} from "express-validator";
 import {DevicesService} from "../domain/devices-service";
 
 @injectable()
