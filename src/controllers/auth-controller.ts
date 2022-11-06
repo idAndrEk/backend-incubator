@@ -3,12 +3,14 @@ import {Request, Response} from "express";
 import {injectable} from "inversify";
 import {jwtService} from "../composition-root";
 import {DevicesService} from "../domain/devices-service";
+import {DevicesRepository} from "../repositories/devices-repository";
 
 @injectable()
 export class AuthController {
 
     constructor(protected usersService: UsersService,
-                protected devicesService: DevicesService) {
+                protected devicesService: DevicesService,
+                protected devicesRepository: DevicesRepository) {
     }
 
     async login(req: Request, res: Response) {
@@ -36,7 +38,11 @@ export class AuthController {
     async logout(req: Request, res: Response) {
         try {
             const refreshToken = req.cookies.refreshToken
-            await jwtService.logout(refreshToken)
+            if (!refreshToken) return res.sendStatus(401)
+            const payload = await jwtService.deviceIdRefreshJToken(refreshToken)
+            const userId = payload?.userId
+            const devicesId = payload?.deviceId
+            const deleteDevicesId = await this.devicesService.deleteSession(userId as string, devicesId as string)
             res.clearCookie('refreshToken')
             return res.sendStatus(204)
         } catch (error) {
