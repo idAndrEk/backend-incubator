@@ -32,14 +32,17 @@ export class UsersRepository {
     }
 
     async findUserConfirmationCode(confirmationCode: string) {
-        console.log(confirmationCode)
         const user = await UserModelClass.findOne({'emailConfirmation.confirmationCode': confirmationCode})
-        console.log(user)
         return user
     }
 
+    async newPasswordRecovery(passwordHash:string, userId:string):Promise<boolean|null>{
+        const updatePassword = await UserModelClass.updateOne({_id:userId}, {$set:{'accountData.passwordHash': passwordHash}})
+        return updatePassword.modifiedCount === 1
+    }
+
     async updateConfirmation(id: string): Promise<boolean | null> {
-        const result = await UserModelClass.updateOne({id}, {$set: {'emailConfirmation.isConfirmed': true}})
+        const result = await UserModelClass.updateOne({_id:id}, {$set: {'emailConfirmation.isConfirmed': true}})
         return result.modifiedCount === 1
     }
 

@@ -75,11 +75,9 @@ export class AuthController {
             const recoveryCode = req.body.recoveryCode
             const codeRecoveryBD = await this.usersService.confirmCodeRecovery(recoveryCode)
             if (!codeRecoveryBD) return res.status(404).send('Wrong password')
-            // console.log(codeRecoveryBD)
-            // const userId
+            const userId = codeRecoveryBD._id
             const password = req.body.newPassword
-            // if (codeRecovery != password) return res.sendStatus(404)
-            // const newPassword = await this.usersService.newPasswordByEmail(password)
+            const newPassword = await this.usersService.newPasswordRecovery(userId.toString(), password)
             return res.sendStatus(204)
         } catch (error) {
             console.log(error)

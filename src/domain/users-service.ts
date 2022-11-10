@@ -51,8 +51,9 @@ export class UsersService {
         return codeRandom
     }
 
-    async newPasswordByEmail(email: string, password: string) {
-
+    async newPasswordRecovery(userId: string, password: string) {
+        const passwordHash = await bcrypt.hash(password, 10)
+        const updatePassword = await this.usersRepository.newPasswordRecovery(passwordHash, userId)
     }
 
     async deleteUserById(id: string): Promise<boolean> {
@@ -76,10 +77,10 @@ export class UsersService {
         return isConfirmed
     }
 
-    async confirmCodeRecovery (confirmationCode: string): Promise<boolean> {
+    async confirmCodeRecovery (confirmationCode: string) {
         const codeDB = await this.usersRepository.findUserConfirmationCode(confirmationCode)
         if (!codeDB) return false
-        return true
+        return codeDB
     }
 
     async confirmNewCode(user: UserAccType) {
