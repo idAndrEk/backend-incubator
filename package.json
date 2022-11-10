@@ -7,7 +7,8 @@
     "dev": "nodemon --inspect dist/index.js",
     "watch": "tsc -w",
     "build": "tsc",
-    "start": "node dist/index.js",
+    "start": "vercel dev",
+    "deploy" : "vercel deploy --prod",
     "test": "jest"
   },
   "dependencies": {
