@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "nodemon --inspect dist/index.js",
     "watch": "tsc -w",
-    "build": "./src -d ./dist --transforms typescript,imports",
+    "build": "tsc -p",
     "start": "node dist/index.js",
     "test": "jest"
   },
