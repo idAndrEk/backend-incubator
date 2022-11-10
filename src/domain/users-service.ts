@@ -45,10 +45,14 @@ export class UsersService {
         return null
     }
 
-    // genertion UUID
+    async generationCodeRecovery(email: string, id: string) {
+        const codeRandom = randomUUID()
+        await this.usersRepository.updateRecoveryConfirmation(email, id, codeRandom)
+        return codeRandom
+    }
 
-    async generationRandomUUID () {
-        return  randomUUID()
+    async newPasswordByEmail(email: string, password: string) {
+
     }
 
     async deleteUserById(id: string): Promise<boolean> {
@@ -64,12 +68,18 @@ export class UsersService {
     }
 
     async confirmEmail(code: string): Promise<boolean> {
-        const user = await this.usersRepository.findUserByConfirmationCode(code)
+        const user = await this.usersRepository.findUserConfirmationCode(code)
         if (!user) return false
         if (user.emailConfirmation.expirationDate < new Date()) return false;
         const isConfirmed = await this.usersRepository.updateConfirmation(user?.id)
         if (!isConfirmed) return false
         return isConfirmed
+    }
+
+    async confirmCodeRecovery (confirmationCode: string): Promise<boolean> {
+        const codeDB = await this.usersRepository.findUserConfirmationCode(confirmationCode)
+        if (!codeDB) return false
+        return true
     }
 
     async confirmNewCode(user: UserAccType) {
@@ -103,7 +113,7 @@ export class UsersService {
         return token
     }
 
-    async devicesIdDb(){
+    async devicesIdDb() {
         const devicesId = uuidv4()
         return devicesId
     }

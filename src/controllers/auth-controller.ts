@@ -61,10 +61,8 @@ export class AuthController {
                     field: "email"
                 }]
             })
-            const code = await this.usersService.generationRandomUUID()
-            console.log(code)
-            const codeRecoverySendMessage = emailAdapter.sendEmailConfirmationMessage(code.toString(), userEmail.accountData.email)
-           // update code BD
+            const code = await this.usersService.generationCodeRecovery(userEmail.accountData.email, userEmail._id.toString())
+            const codeRecoverySendMessage = emailAdapter.sendEmailRecoveryMessage(code.toString(), userEmail.accountData.email)
             return res.sendStatus(204)
         } catch (error) {
             console.log(error)
@@ -72,6 +70,22 @@ export class AuthController {
         }
     }
 
+    async newPassword(req: Request, res: Response) {
+        try {
+            const recoveryCode = req.body.recoveryCode
+            const codeRecoveryBD = await this.usersService.confirmCodeRecovery(recoveryCode)
+            if (!codeRecoveryBD) return res.status(404).send('Wrong password')
+            // console.log(codeRecoveryBD)
+            // const userId
+            const password = req.body.newPassword
+            // if (codeRecovery != password) return res.sendStatus(404)
+            // const newPassword = await this.usersService.newPasswordByEmail(password)
+            return res.sendStatus(204)
+        } catch (error) {
+            console.log(error)
+            return res.send('Error')
+        }
+    }
     async refreshToken(req: Request, res: Response) {
         try {
             const oldRefreshToken = req.cookies.refreshToken
@@ -107,7 +121,6 @@ export class AuthController {
 
     async registration(req: Request, res: Response) {
         try {
-            console.log(req.body.email)
             const userLogin = await this.usersService.getUserByLogin(req.body.login)
             const userEmail = await this.usersService.getUserByEmail(req.body.email)
             if (userLogin) return res.status(400).send({

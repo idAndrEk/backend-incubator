@@ -30,6 +30,11 @@ authRouter.post('/password-recovery',
     userValidationEmail,
     authController.passwordRecovery.bind(authController))
 
+authRouter.post('/new-password',
+    requestInput,
+    userValidationPassword,
+    authController.newPassword.bind(authController))
+
 authRouter.post('/refresh-token',
     JwtRefreshAuthMiddleware,
     authController.refreshToken.bind(authController))

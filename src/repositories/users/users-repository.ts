@@ -22,8 +22,6 @@ export class UsersRepository {
     }
 
     async findByLogin(login: string): Promise<UserAccType | null> {
-        // console.log(login)
-        // const byLogin = await UserModelClass.findOne({'accountData.userName': login})
         const byLogin = await UserModelClass.findOne({'accountData.login': login})
         return byLogin
     }
@@ -33,13 +31,20 @@ export class UsersRepository {
         return byEmail
     }
 
-    async findUserByConfirmationCode(emailConfirmationCode: string) {
-        const user = await UserModelClass.findOne({'emailConfirmation.confirmationCode': emailConfirmationCode})
+    async findUserConfirmationCode(confirmationCode: string) {
+        console.log(confirmationCode)
+        const user = await UserModelClass.findOne({'emailConfirmation.confirmationCode': confirmationCode})
+        console.log(user)
         return user
     }
 
     async updateConfirmation(id: string): Promise<boolean | null> {
         const result = await UserModelClass.updateOne({id}, {$set: {'emailConfirmation.isConfirmed': true}})
+        return result.modifiedCount === 1
+    }
+
+    async updateRecoveryConfirmation(id: string, email: string,codeRandom:string): Promise<boolean | null> {
+        const result = await UserModelClass.updateOne({id: id, email: email}, {$set: {'emailConfirmation.confirmationCode': codeRandom}})
         return result.modifiedCount === 1
     }
 
