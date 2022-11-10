@@ -1,3 +1,5 @@
+import * as dotenv from 'dotenv'
+dotenv.config()
 import express from "express";
 import cors from "cors";
 import {bloggersRouter} from "./router/bloggers-router";
@@ -17,7 +19,7 @@ app.use(express.json())
 
 app.set('trust proxy', true)
 
-const port = process.env.PORT || 5000
+const port = process.env.PORT || 3000
 
 app.use('/blogs', bloggersRouter)
 app.use('/posts', postsRouter)
