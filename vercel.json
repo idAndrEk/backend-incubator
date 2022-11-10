@@ -1,6 +1,8 @@
 {
   "version": 2,
-  "name": "express-products-vercel",
+  "buildCommand": "yarn build",
+  "devCommand": "yarn dev",
+  "outputDirectory": "dist",
   "builds": [
     {
       "src": "dist/index.js",
@@ -10,7 +12,7 @@
   "routes": [
     {
       "src": "/(.*)",
-      "dest": "/src/index.ts"
+      "dest": "dist/index.js"
     }
   ]
 }
