@@ -10,8 +10,23 @@ const usersController = container.resolve(UsersController)
 
 export const usersRouter = Router({})
 
-usersRouter.get('/', usersController.getUsers.bind(usersController))
-usersRouter.get('/:id', checkIdParamMiddleware, usersController.getUser.bind(usersController))
-usersRouter.post('/', authMiddleware, userValidationLogin, userValidationPassword, userValidationEmail, allValidation, usersController.createUser.bind(usersController))
-usersRouter.delete('/:id', checkIdParamMiddleware, authMiddleware, usersController.deleteUser.bind(usersController))
+usersRouter.get('/',
+    usersController.getUsers.bind(usersController))
+
+usersRouter.get('/:id',
+    checkIdParamMiddleware,
+    usersController.getUser.bind(usersController))
+
+usersRouter.post('/',
+    authMiddleware,
+    userValidationLogin,
+    userValidationPassword,
+    userValidationEmail,
+    allValidation,
+    usersController.createUser.bind(usersController))
+
+usersRouter.delete('/:id',
+    checkIdParamMiddleware,
+    authMiddleware,
+    usersController.deleteUser.bind(usersController))
 

@@ -25,6 +25,11 @@ authRouter.post('/logout',
     JwtRefreshAuthMiddleware,
     authController.logout.bind(authController))
 
+authRouter.post('/password-recovery',
+    requestInput,
+    userValidationEmail,
+    authController.passwordRecovery.bind(authController))
+
 authRouter.post('/refresh-token',
     JwtRefreshAuthMiddleware,
     authController.refreshToken.bind(authController))

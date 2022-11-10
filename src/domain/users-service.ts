@@ -8,6 +8,7 @@ import bcrypt from "bcrypt";
 import {jwtRepository} from "../repositories/jwt-repository";
 import {jwtService} from "../composition-root";
 import {injectable} from "inversify";
+import {randomUUID} from "crypto";
 
 @injectable()
 export class UsersService {
@@ -44,6 +45,12 @@ export class UsersService {
         return null
     }
 
+    // genertion UUID
+
+    async generationRandomUUID () {
+        return  randomUUID()
+    }
+
     async deleteUserById(id: string): Promise<boolean> {
         return await this.usersRepository.deleteUserById(id);
     }
@@ -72,13 +79,6 @@ export class UsersService {
         await emailAdapter.sendEmailConfirmationMessage(NewConfirmationCode, user.accountData.email)
     }
 
-    // async checkCredential(login: string): Promise<UserAccType | null> {
-    //     // console.log(login)
-    //     const user = await this.usersRepository.findByLogin(login)
-    //     if (!user) return null
-    //     return user
-    // }
-
     async checkPassword(password: string, hash: string) {
         return await bcrypt.compare(password, hash)
     }
@@ -103,7 +103,7 @@ export class UsersService {
         return token
     }
 
-    async devicesIdDb() {
+    async devicesIdDb(){
         const devicesId = uuidv4()
         return devicesId
     }

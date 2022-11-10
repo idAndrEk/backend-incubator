@@ -4,6 +4,7 @@ import {injectable} from "inversify";
 import {jwtService} from "../composition-root";
 import {DevicesService} from "../domain/devices-service";
 import {DevicesRepository} from "../repositories/devices-repository";
+import {emailAdapter} from "../adapters/email-adapter";
 
 @injectable()
 export class AuthController {
@@ -51,6 +52,26 @@ export class AuthController {
         }
     }
 
+    async passwordRecovery(req: Request, res: Response) {
+        try {
+            const userEmail = await this.usersService.getUserByEmail(req.body.email)
+            if (!userEmail) return res.status(400).send({
+                errorsMessages: [{
+                    message: "Mail already exists",
+                    field: "email"
+                }]
+            })
+            const code = await this.usersService.generationRandomUUID()
+            console.log(code)
+            const codeRecoverySendMessage = emailAdapter.sendEmailConfirmationMessage(code.toString(), userEmail.accountData.email)
+           // update code BD
+            return res.sendStatus(204)
+        } catch (error) {
+            console.log(error)
+            return res.send('Error')
+        }
+    }
+
     async refreshToken(req: Request, res: Response) {
         try {
             const oldRefreshToken = req.cookies.refreshToken
@@ -86,14 +107,23 @@ export class AuthController {
 
     async registration(req: Request, res: Response) {
         try {
+            console.log(req.body.email)
             const userLogin = await this.usersService.getUserByLogin(req.body.login)
             const userEmail = await this.usersService.getUserByEmail(req.body.email)
-            if (userLogin) {
-                return res.status(400).send({errorsMessages: [{message: "User already exists", field: "login"}]})
-            }
-            if (userEmail) {
-                return res.status(400).send({errorsMessages: [{message: "Mail already exists", field: "email"}]})
-            }
+            if (userLogin) return res.status(400).send({
+                errorsMessages: [{
+                    message: "User already exists",
+                    field: "login"
+                }]
+            })
+
+            if (userEmail) return res.status(400).send({
+                errorsMessages: [{
+                    message: "Mail already exists",
+                    field: "email"
+                }]
+            })
+
             const user = await this.usersService.createUser(req.body.login, req.body.email, req.body.password)
             if (user) return res.sendStatus(204)
             return res.sendStatus(400)
