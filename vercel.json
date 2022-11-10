@@ -1,5 +1,7 @@
+
 {
   "version": 2,
+  "name": "express-products-vercel",
   "builds": [
     {
       "src": "src/index.ts",
@@ -9,7 +11,7 @@
   "routes": [
     {
       "src": "/(.*)",
-      "dest": "src/server.ts",
+      "dest": "src/index.ts"
     }
   ]
 }
