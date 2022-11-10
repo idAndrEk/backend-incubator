@@ -1,7 +1,7 @@
 {
   "version": 2,
-  "public": true,
   "name": "express-products-vercel",
+  "outputDirectory": "dist",
   "builds": [
     {
       "src": "src/index.ts",
