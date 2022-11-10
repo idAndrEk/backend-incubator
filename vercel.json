@@ -3,7 +3,7 @@
   "name": "express-products-vercel",
   "builds": [
     {
-      "src": "src/index.js",
+      "src": "dist/index.js",
       "use": "@vercel/node"
     }
   ],
