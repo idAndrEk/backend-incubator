@@ -1,4 +1,6 @@
 {
+  "version": 2,
+  "name": "express-products-vercel",
   "builds": [
     {
       "src": "src/index.ts",
@@ -8,13 +10,7 @@
   "routes": [
     {
       "src": "/(.*)",
-      "dist": "index.js",
-      "methods": [
-        "GET",
-        "POST",
-        "PUT",
-        "DELETE"
-      ]
+      "dest": "src/index.ts"
     }
   ]
 }
