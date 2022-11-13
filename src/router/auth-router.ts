@@ -3,7 +3,7 @@ import {
     userValidationCode,
     userValidationEmail,
     userValidationLogin, userValidationNewPassword,
-    userValidationPassword
+    userValidationPassword, validationRecoveryCode
 } from "../middlewares/User-validation";
 import {allValidation} from "../middlewares/ValidationError";
 import {requestInput} from "../middlewares/requestIp-middleware";
@@ -34,6 +34,7 @@ authRouter.post('/password-recovery',
 authRouter.post('/new-password',
     requestInput,
     userValidationNewPassword,
+    validationRecoveryCode,
     allValidation,
     authController.newPassword.bind(authController))
 
