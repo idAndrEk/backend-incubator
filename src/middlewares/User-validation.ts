@@ -11,14 +11,14 @@ export const userValidationPassword = [
     body('password')
         .isLength({max: 20, min: 6})
         .isString()
-        .withMessage('password or login is wrong')
+        // .withMessage('password or login is wrong')
 ]
 
 export const userValidationNewPassword = [
     body('newPassword')
         .isLength({max: 20, min: 6})
         .isString()
-        .withMessage('password or login is wrong')
+        // .withMessage('password or login is wrong')
 ]
 
 export const userValidationEmail = [
