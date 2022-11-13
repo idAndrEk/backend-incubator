@@ -34,7 +34,7 @@ export const emailAdapter = {
             from: 'Andrey',
             to: email,
             subject: 'Confirmation code',
-            text: `https://somesite.com/confirm-email?code=${code}`
+            text: `https://somesite.com/password-recovery?recoveryCode=your_recovery_code=${code}`
         })
         return result
 
