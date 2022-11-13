@@ -21,6 +21,7 @@ export const emailAdapter = {
         //     return (result.response).split(' ')[0]
         // }
     },
+
     async sendEmailRecoveryMessage(code: string, email: string) {
         const transporter = nodemailer.createTransport({
             service: 'gmail',
