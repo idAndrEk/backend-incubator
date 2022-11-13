@@ -2,7 +2,7 @@ import {Router} from "express";
 import {
     userValidationCode,
     userValidationEmail,
-    userValidationLogin,
+    userValidationLogin, userValidationNewPassword,
     userValidationPassword
 } from "../middlewares/User-validation";
 import {allValidation} from "../middlewares/ValidationError";
@@ -28,11 +28,13 @@ authRouter.post('/logout',
 authRouter.post('/password-recovery',
     requestInput,
     userValidationEmail,
+    allValidation,
     authController.passwordRecovery.bind(authController))
 
 authRouter.post('/new-password',
     requestInput,
-    userValidationPassword,
+    userValidationNewPassword,
+    allValidation,
     authController.newPassword.bind(authController))
 
 authRouter.post('/refresh-token',
