@@ -1,7 +1,6 @@
-
 {
   "version": 2,
-  "name": "express-products-vercel",
+  "name": "incubator",
   "builds": [
     {
       "src": "src/index.ts",
@@ -10,8 +9,14 @@
   ],
   "routes": [
     {
-      "src": "/(.*)",
-      "dest": "src/index.ts"
+      "src": "(.*)",
+      "dest": "src/index.ts",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "DELETE",
+        "PATCH"
+      ]
+      ]
     }
-  ]
-}
