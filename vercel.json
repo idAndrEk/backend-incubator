@@ -1,15 +1,17 @@
+
 {
   "version": 2,
+  "name": "express-products-vercel",
   "builds": [
     {
-      "src": "dist/index.js",
-      "use": "@now/node"
+      "src": "src/index.ts",
+      "use": "@vercel/node"
     }
   ],
   "routes": [
     {
       "src": "/(.*)",
-      "dest": "dist/index.js"
+      "dest": "src/index.ts"
     }
   ]
 }
