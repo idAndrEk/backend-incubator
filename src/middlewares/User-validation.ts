@@ -31,11 +31,11 @@ export const userValidationEmail = [
 
 export const userValidationCode = [
     body('code')
-        .isString()
+        .isUUID()
 ]
 
 export const validationRecoveryCode = [
     body('recoveryCode')
-        .isString()
+        .isUUID()
 ]
 
