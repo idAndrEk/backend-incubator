@@ -56,9 +56,10 @@ export class AuthController {
         try {
             const email = req.body.email
             const userEmail = await this.usersService.getUserByEmail(email)
+
             if (!userEmail) {
-                const emailNotRegistration = await this.usersService.generationUUID()
-                const codeRecoverySendMessage = await emailAdapter.sendEmailRecoveryMessage(emailNotRegistration.toString(), email)
+                // const emailNotRegistration = await this.usersService.generationUUID()
+                // const codeRecoverySendMessage = await emailAdapter.sendEmailRecoveryMessage(emailNotRegistration.toString(), email)
                 return res.sendStatus(204)
             }
             const code = await this.usersService.generationCodeRecovery(userEmail!.accountData.email, userEmail!._id.toString())
