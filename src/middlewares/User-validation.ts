@@ -25,7 +25,8 @@ export const userValidationEmail = [
     body('email')
         .trim()
         .isString()
-        .matches('^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$')
+        .isEmail()
+        // .matches('^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$')
 ]
 
 export const userValidationCode = [
@@ -36,6 +37,5 @@ export const userValidationCode = [
 export const validationRecoveryCode = [
     body('recoveryCode')
         .isString()
-
 ]
 

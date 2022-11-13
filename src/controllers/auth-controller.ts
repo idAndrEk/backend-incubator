@@ -63,7 +63,7 @@ export class AuthController {
                 return res.sendStatus(204)
             }
             const code = await this.usersService.generationCodeRecovery(userEmail!.accountData.email, userEmail!._id.toString())
-            const codeRecoverySendMessage = await emailAdapter.sendEmailRecoveryMessage(code.toString(), userEmail!.accountData.email)
+            await emailAdapter.sendEmailRecoveryMessage(code.toString(), userEmail!.accountData.email)
             return res.sendStatus(204)
         } catch (error) {
             console.log(error)
