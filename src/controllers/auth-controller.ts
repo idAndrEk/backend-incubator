@@ -16,7 +16,7 @@ export class AuthController {
 
     async login(req: Request, res: Response) {
         try {
-            const devicesId = await this.usersService.devicesIdDb()
+            const devicesId = await this.usersService.generationUUID()
             const accessToken = await this.usersService.createAccessToken(req?.user.accountData.login)
             const refreshToken = await this.usersService.createDevicesIdRefreshToken(req?.user, devicesId)
             const ip = req.ip
@@ -54,15 +54,15 @@ export class AuthController {
 
     async passwordRecovery(req: Request, res: Response) {
         try {
-            const userEmail = await this.usersService.getUserByEmail(req.body.email)
-            if (!userEmail) return res.status(400).send({
-                errorsMessages: [{
-                    message: "Mail already exists",
-                    field: "email"
-                }]
-            })
-            const code = await this.usersService.generationCodeRecovery(userEmail.accountData.email, userEmail._id.toString())
-            const codeRecoverySendMessage = emailAdapter.sendEmailRecoveryMessage(code.toString(), userEmail.accountData.email)
+            const email = req.body.email
+            const userEmail = await this.usersService.getUserByEmail(email)
+            if (!userEmail) {
+                const emailNotRegistration = await this.usersService.generationUUID()
+                const codeRecoverySendMessage = await emailAdapter.sendEmailRecoveryMessage(emailNotRegistration.toString(), email)
+                return res.sendStatus(204)
+            }
+            const code = await this.usersService.generationCodeRecovery(userEmail!.accountData.email, userEmail!._id.toString())
+            const codeRecoverySendMessage = await emailAdapter.sendEmailRecoveryMessage(code.toString(), userEmail!.accountData.email)
             return res.sendStatus(204)
         } catch (error) {
             console.log(error)
@@ -84,6 +84,7 @@ export class AuthController {
             return res.send('Error')
         }
     }
+
     async refreshToken(req: Request, res: Response) {
         try {
             const oldRefreshToken = req.cookies.refreshToken

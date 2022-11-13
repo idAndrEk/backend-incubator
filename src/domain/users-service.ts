@@ -114,7 +114,7 @@ export class UsersService {
         return token
     }
 
-    async devicesIdDb() {
+    async generationUUID() {
         const devicesId = uuidv4()
         return devicesId
     }
