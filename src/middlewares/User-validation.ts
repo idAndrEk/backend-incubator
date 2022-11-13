@@ -4,7 +4,7 @@ export const userValidationLogin = [
     body('login')
         .isLength({max: 10, min: 3})
         .isString()
-        .withMessage('password or login is wrong')
+        // .withMessage('password or login is wrong')
 ]
 
 export const userValidationPassword = [
