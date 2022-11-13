@@ -33,8 +33,8 @@ export const emailAdapter = {
         const result = await transporter.sendMail({
             from: 'Andrey',
             to: email,
-            subject: 'Confirmation code',
-            text: `https://somesite.com/password-recovery?recoveryCode=your_recovery_code=${code}`
+            subject: 'Recovery code',
+            text: `https://somesite.com/password-recovery?recoveryCode=${code}`
         })
         return result
 
