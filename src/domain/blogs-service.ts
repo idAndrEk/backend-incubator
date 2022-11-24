@@ -13,24 +13,24 @@ export class BlogsService {
         protected likesRepository: LikesRepository) {
     }
 
-    async createBlog(name: string, youtubeUrl: string): Promise<BloggerViewType | null> {
+    async createBlog(name: string, websiteUrl: string): Promise<BloggerViewType | null> {
         const newBlogger: CreateBloggerDto = {
             name: name,
-            youtubeUrl: youtubeUrl,
+            websiteUrl: websiteUrl,
             createdAt: new Date
         }
         const createdBlogger = await this.bloggersRepository.createBlogger(newBlogger)
         if (createdBlogger) return {
             id: createdBlogger._id.toString(),
             name: createdBlogger.name,
-            youtubeUrl: createdBlogger.youtubeUrl,
+            websiteUrl: createdBlogger.websiteUrl,
             createdAt: createdBlogger.createdAt
         }
         return null
     }
 
-    async updateBlogger(id: string, name: string, youtubeUrl: string): Promise<boolean> {
-        return await this.bloggersRepository.updateBlogger(id, name, youtubeUrl)
+    async updateBlogger(id: string, name: string, websiteUrl: string): Promise<boolean> {
+        return await this.bloggersRepository.updateBlogger(id, name, websiteUrl)
     }
 
     async deleteBlogger(id: string): Promise<boolean> {

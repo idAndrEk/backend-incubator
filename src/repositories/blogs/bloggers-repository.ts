@@ -15,8 +15,8 @@ export class BloggersRepository {
         }
     }
 
-    async updateBlogger(id: string, name: string, youtubeUrl: string): Promise<boolean> {
-        const updateResult = await BloggerModelClass.findByIdAndUpdate(id, {name, youtubeUrl})
+    async updateBlogger(id: string, name: string, websiteUrl: string): Promise<boolean> {
+        const updateResult = await BloggerModelClass.findByIdAndUpdate(id, {name, websiteUrl})
         if (updateResult) return true
         return false
     }

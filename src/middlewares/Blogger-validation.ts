@@ -7,13 +7,13 @@ export const BloggerValidation = [
         .trim()
         .isLength({max: 15, min: 1})
         .withMessage('Error name'),
-    body('youtubeUrl')
+    body('websiteUrl')
         .notEmpty()
         .isString()
         .trim()
         .isLength({max: 100, min: 1})
         .matches('^https://([a-zA-Z0-9_-]+\\.)+[a-zA-Z0-9_-]+(\\/[a-zA-Z0-9_-]+)*\\/?$')
-        .withMessage('Error youtubeUrl')
+        .withMessage('Error websiteUrl')
     ]
 
 // const reges = RegExp('^https:\/\/([a-zA-Z0-9_-]+\.)+[a-zA-Z0-9_-]+(\/[a-zA-Z0-9_-]+)*\/?$');

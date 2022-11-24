@@ -10,7 +10,7 @@ describe('integration tests for BlogsService', () => {
 
     const validBlog = {
         name: 'Andrey',
-        youtubeUrl: "https://www.youtube.com"
+        websiteUrl: "https://www.youtube.com"
     }
 
     let mongoServer: MongoMemoryServer
@@ -22,11 +22,11 @@ describe('integration tests for BlogsService', () => {
 
     describe('blogs', () => {
         it("should return new blogs", async () => {
-            const result = await blogsService.createBlog(validBlog.name, validBlog.youtubeUrl);
+            const result = await blogsService.createBlog(validBlog.name, validBlog.websiteUrl);
             expect(result).toBeDefined()
             if (!result) throw new Error('create blog error')
             expect(result.name).toBe(validBlog.name);
-            expect(result.youtubeUrl).toBe(validBlog.youtubeUrl);
+            expect(result.websiteUrl).toBe(validBlog.websiteUrl);
         });
     })
 })

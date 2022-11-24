@@ -28,7 +28,7 @@ export class BlogsQueryRepository {
             "items": findBlogs.map(findBlogs => ({
                 id: findBlogs._id.toString(),
                 name: findBlogs.name,
-                youtubeUrl: findBlogs.youtubeUrl,
+                websiteUrl: findBlogs.websiteUrl,
                 createdAt: new Date
             }))
         }
@@ -40,7 +40,7 @@ export class BlogsQueryRepository {
         return {
             id: blogs._id.toString(),
             name: blogs.name,
-            youtubeUrl: blogs.youtubeUrl,
+            websiteUrl: blogs.websiteUrl,
             createdAt: blogs.createdAt
         }
     }

@@ -42,7 +42,7 @@ export class BloggersController {
     async createBlogger(req: Request, res: Response) {
         try {
             const bloggerName = req.body.name;
-            const bloggerYoutubeUrl = req.body.youtubeUrl;
+            const bloggerYoutubeUrl = req.body.websiteUrl;
             const newBlogger = await this.blogsService.createBlog(bloggerName, bloggerYoutubeUrl);
             if (!newBlogger) return res.status(400).send('incorrect values')
             return res.status(201).send(newBlogger)
@@ -54,7 +54,7 @@ export class BloggersController {
 
     async updateBlogger(req: Request, res: Response) {
         try {
-            const updateBlogger = await this.blogsService.updateBlogger(req.params.id, req.body.name, req.body.youtubeUrl)
+            const updateBlogger = await this.blogsService.updateBlogger(req.params.id, req.body.name, req.body.websiteUrl)
             if (updateBlogger) return res.sendStatus(204)
             return res.sendStatus(404)
         } catch (error) {

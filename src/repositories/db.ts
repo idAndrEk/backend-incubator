@@ -21,7 +21,7 @@ import {DevicesDtoType, DevicesType} from "../types/divaseTypes";
 
 const bloggerSchema = new mongoose.Schema<BloggerType>({
     name: {type: String, required: true},
-    youtubeUrl: {type: String, required: true},
+    websiteUrl: {type: String, required: true},
     createdAt: {type: Date, required: true}
 })
 
