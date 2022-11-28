@@ -1,6 +1,6 @@
 import {ObjectId} from "mongodb";
 import {envSetting} from "../env_setting";
-import {BloggerType} from "../types/bloggersTypes";
+import {BloggerType} from "../types/blogsTypes";
 import {PostType} from "../types/postsTypes";
 import {CommentType} from "../types/commentsTypes";
 import {TokenType, UserAccType} from "../types/UsersTypes";

@@ -1,7 +1,7 @@
 import {PostsRepository} from "../repositories/posts/posts-repository";
 import {CreatePostDto, PaginationPostType, PostType, PostViewType} from "../types/postsTypes";
 import {CommentViewType, PaginationCommentType} from "../types/commentsTypes";
-import {BloggersRepository} from "../repositories/blogs/bloggers-repository";
+import {BlogsRepository} from "../repositories/blogs/blogs-repository";
 import {injectable} from "inversify";
 import {LikesRepository} from "../repositories/like-repoository";
 import {UserViewResponse} from "../types/UsersTypes";
@@ -12,7 +12,7 @@ import {BlogsQueryRepository} from "../repositories/blogs/blogsQueryRepository";
 @injectable()
 export class PostsService {
     constructor(protected postsRepository: PostsRepository,
-                protected bloggersRepository: BloggersRepository,
+                protected bloggersRepository: BlogsRepository,
                 protected commentsRepository: CommentsRepository,
                 protected likesRepository: LikesRepository,
                 protected blogsQueryRepository: BlogsQueryRepository) {}

@@ -1,5 +1,5 @@
-import {BloggersRepository} from "../repositories/blogs/bloggers-repository";
-import {BloggerViewType, CreateBloggerDto} from "../types/bloggersTypes";
+import {BlogsRepository} from "../repositories/blogs/blogs-repository";
+import {BloggerViewType, CreateBloggerDto} from "../types/blogsTypes";
 import {PostsRepository} from "../repositories/posts/posts-repository";
 import {inject, injectable} from "inversify";
 import {LikesRepository} from "../repositories/like-repoository";
@@ -8,7 +8,7 @@ import {LikesRepository} from "../repositories/like-repoository";
 export class BlogsService {
     constructor(
         // protected bloggersRepository: BloggersRepository, // проделать blogs
-        @inject(BloggersRepository) protected bloggersRepository: BloggersRepository, // проделать blogs
+        @inject(BlogsRepository) protected bloggersRepository: BlogsRepository, // проделать blogs
         protected postsRepository: PostsRepository,
         protected likesRepository: LikesRepository) {
     }
@@ -20,23 +20,23 @@ export class BlogsService {
             websiteUrl: websiteUrl,
             createdAt: new Date
         }
-        const createdBlogger = await this.bloggersRepository.createBlogger(newBlogger)
-        if (createdBlogger) return {
-            id: createdBlogger._id.toString(),
-            name: createdBlogger.name,
-            description: createdBlogger.description,
-            websiteUrl: createdBlogger.websiteUrl,
-            createdAt: createdBlogger.createdAt
+        const createdBlog = await this.bloggersRepository.createBlogger(newBlogger)
+        if (createdBlog) return {
+            id: createdBlog._id.toString(),
+            name: createdBlog.name,
+            description: createdBlog.description,
+            websiteUrl: createdBlog.websiteUrl,
+            createdAt: createdBlog.createdAt
         }
         return null
     }
 
-    async updateBlogger(id: string, name: string,description: string, websiteUrl: string): Promise<boolean> {
-        return await this.bloggersRepository.updateBlogger(id, name,description, websiteUrl)
+    async updateBlog(id: string, name: string, description: string, websiteUrl: string): Promise<boolean> {
+        return await this.bloggersRepository.updateBlog(id, name,description, websiteUrl)
     }
 
-    async deleteBlogger(id: string): Promise<boolean> {
-        return await this.bloggersRepository.deleteBlogger(id)
+    async deleteBlog(id: string): Promise<boolean> {
+        return await this.bloggersRepository.deleteBlog(id)
     }
 
     // async getBloggerPosts(blogId: string, page: number, pageSize: number, user: UserViewResponse | undefined): Promise<PaginationPostType> {

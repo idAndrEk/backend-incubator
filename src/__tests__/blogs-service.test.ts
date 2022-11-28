@@ -2,7 +2,7 @@ import "reflect-metadata";
 import {MongoMemoryServer} from "mongodb-memory-server";
 import mongoose from "mongoose";
 import {container} from "../composition-root";
-import {BlogsService} from "../domain/blogs-service";
+import {BlogsService} from "../domain/blogs.service";
 
 
 describe('integration tests for BlogsService', () => {

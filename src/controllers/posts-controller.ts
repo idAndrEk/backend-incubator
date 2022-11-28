@@ -1,6 +1,6 @@
 import {CommentsService} from "../domain/comments-service";
 import {PostsService} from "../domain/posts-service";
-import {BlogsService} from "../domain/blogs-service";
+import {BlogsService} from "../domain/blogs.service";
 import {Request, Response} from "express";
 import {injectable} from "inversify";
 import {LikesRepository} from "../repositories/like-repoository";

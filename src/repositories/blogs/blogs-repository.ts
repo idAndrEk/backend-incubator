@@ -1,9 +1,9 @@
 import {BloggerModelClass} from "../db";
-import {BloggerType, CreateBloggerDto} from "../../types/bloggersTypes";
+import {BloggerType, CreateBloggerDto} from "../../types/blogsTypes";
 import {injectable} from "inversify";
 
 @injectable()
-export class BloggersRepository {
+export class BlogsRepository {
 
     async createBlogger(newBlogger: CreateBloggerDto): Promise<BloggerType | null> {
         try {
@@ -15,13 +15,13 @@ export class BloggersRepository {
         }
     }
 
-    async updateBlogger(id: string, name: string, description:string,websiteUrl: string): Promise<boolean> {
+    async updateBlog(id: string, name: string, description:string, websiteUrl: string): Promise<boolean> {
         const updateResult = await BloggerModelClass.findByIdAndUpdate(id, {name,description, websiteUrl})
         if (updateResult) return true
         return false
     }
 
-    async deleteBlogger(id: string): Promise<boolean> {
+    async deleteBlog(id: string): Promise<boolean> {
         const deleteResult = await BloggerModelClass.findByIdAndDelete(id)
         if (deleteResult) return true
         return false

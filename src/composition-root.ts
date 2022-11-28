@@ -1,7 +1,7 @@
 import "reflect-metadata";
 import {Container} from "inversify";
-import {BloggersRepository} from "./repositories/blogs/bloggers-repository";
-import {BlogsService} from "./domain/blogs-service";
+import {BlogsRepository} from "./repositories/blogs/blogs-repository";
+import {BlogsService} from "./domain/blogs.service";
 import {BlogsController} from "./controllers/blogs.controller";
 import {PostsRepository} from "./repositories/posts/posts-repository";
 import {PostsService} from "./domain/posts-service";
@@ -34,7 +34,7 @@ export const container = new Container();
 
 container.bind<BlogsController>(BlogsController).to(BlogsController);
 container.bind<BlogsService>(BlogsService).to(BlogsService);
-container.bind<BloggersRepository>(BloggersRepository).to(BloggersRepository);
+container.bind<BlogsRepository>(BlogsRepository).to(BlogsRepository);
 container.bind<BlogsQueryRepository>(BlogsQueryRepository).to(BlogsQueryRepository);
 
 container.bind<LikesRepository>(LikesRepository).to(LikesRepository);

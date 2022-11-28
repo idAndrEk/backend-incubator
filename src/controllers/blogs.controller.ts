@@ -1,5 +1,5 @@
 import {PostsService} from "../domain/posts-service";
-import {BlogsService} from "../domain/blogs-service";
+import {BlogsService} from "../domain/blogs.service";
 import {Request, Response} from "express";
 import {injectable} from "inversify";
 import {SortDirection} from "../types/paginationType";
@@ -55,7 +55,7 @@ export class BlogsController {
 
     async updateBlogger(req: Request, res: Response) {
         try {
-            const updateBlogger = await this.blogsService.updateBlogger(req.params.id, req.body.name,req.body.description,  req.body.youtubeUrl)
+            const updateBlogger = await this.blogsService.updateBlog(req.params.id, req.body.name,req.body.description,  req.body.youtubeUrl)
             if (updateBlogger) return res.sendStatus(204)
             return res.sendStatus(404)
         } catch (error) {
@@ -66,7 +66,7 @@ export class BlogsController {
 
     async deleteBlogger(req: Request, res: Response) {
         try {
-            const isDeleted = await this.blogsService.deleteBlogger(req.params.id)
+            const isDeleted = await this.blogsService.deleteBlog(req.params.id)
             if (isDeleted) return res.sendStatus(204)
             return res.sendStatus(404)
         } catch (error) {

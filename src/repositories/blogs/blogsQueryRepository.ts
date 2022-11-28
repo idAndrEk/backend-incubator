@@ -1,5 +1,5 @@
 import {SortDirection} from "../../types/paginationType";
-import {BloggerViewType, PaginationBloggerType} from "../../types/bloggersTypes";
+import {BloggerViewType, PaginationBloggerType} from "../../types/blogsTypes";
 import {BloggerModelClass} from "../db";
 import {injectable} from "inversify";
 import {getCountPage, getSkipPage} from "../../helpers/getPage";
@@ -9,17 +9,21 @@ import {getCountPage, getSkipPage} from "../../helpers/getPage";
 export class BlogsQueryRepository {
 
     async getBlogs(page: number, pageSize: number, searchNameTerm: string | null, sortBy: string, sortDirection: SortDirection): Promise<PaginationBloggerType> {
-        let filter = {}
-        if (searchNameTerm) {
-            filter = {name: {$regex: {searchNameTerm}}}
-        }
+        // let filter = {}
+        // if (searchNameTerm) {
+        //     filter = {name: {$regex: {searchNameTerm}}}
+        // }
         const findBlogs = await BloggerModelClass
-            .find(filter)
+            .find({
+                $or: [{ name: { $regex: searchNameTerm ?? '', $options: 'i' } }],
+            })
             .skip(getSkipPage(page, pageSize))
             .sort({[sortBy]: sortDirection === SortDirection.Asc ? 1 : -1})
             .limit(pageSize)
             .lean()
-        const totalCount = await BloggerModelClass.countDocuments(filter)
+        const totalCount = await BloggerModelClass.countDocuments({
+            $or: [{ name: { $regex: searchNameTerm ?? '', $options: 'i' } }],
+        })
         return {
             "pagesCount": getCountPage(totalCount, pageSize),
             "page": page,

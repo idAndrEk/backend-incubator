@@ -91,12 +91,17 @@ export class PostsQueryRepository {
     }
 
     async findPostsBlogger(blogId: string, page: number, pageSize: number, user: UserViewResponse | undefined): Promise<PaginationPostType> {
+
         const postData = await PostModelClass
-            .find({blogId})
+            .find({
+                $or: [{ blogId: { $regex: blogId ?? '' } }],
+            })
             .skip(getSkipPage(page, pageSize))
             .limit(pageSize)
             .lean()
-        const totalCount = await BloggerModelClass.countDocuments({blogId})
+        const totalCount = await PostModelClass.countDocuments({
+            $or: [{ blogId: { $regex: blogId ?? '' } }],
+        })
         let items: PostViewType[] = []
         for (const post of postData) {
             const {likes, dislikes} = await this.likesRepository.getLikesAndDislikesCountByParentId((post._id).toString())
