@@ -7,7 +7,7 @@ import {BlogsQueryRepository} from "../repositories/blogs/blogsQueryRepository";
 import {PostsQueryRepository} from "../repositories/posts/postsQueryRepository";
 
 @injectable()
-export class BloggersController {
+export class BlogsController {
     constructor(protected blogsService: BlogsService,
                 protected postsService: PostsService,
                 protected blogsQueryRepository: BlogsQueryRepository,
@@ -41,9 +41,10 @@ export class BloggersController {
 
     async createBlogger(req: Request, res: Response) {
         try {
-            const bloggerName = req.body.name;
-            const bloggerYoutubeUrl = req.body.youtubeUrl;
-            const newBlogger = await this.blogsService.createBlog(bloggerName, bloggerYoutubeUrl);
+            const blogName = req.body.name;
+            const blogDescription = req.body.description
+            const blogWebsiteUrl = req.body.websiteUrl;
+            const newBlogger = await this.blogsService.createBlog(blogName, blogDescription, blogWebsiteUrl);
             if (!newBlogger) return res.status(400).send('incorrect values')
             return res.status(201).send(newBlogger)
         } catch (error) {
@@ -54,7 +55,7 @@ export class BloggersController {
 
     async updateBlogger(req: Request, res: Response) {
         try {
-            const updateBlogger = await this.blogsService.updateBlogger(req.params.id, req.body.name, req.body.youtubeUrl)
+            const updateBlogger = await this.blogsService.updateBlogger(req.params.id, req.body.name,req.body.description,  req.body.youtubeUrl)
             if (updateBlogger) return res.sendStatus(204)
             return res.sendStatus(404)
         } catch (error) {

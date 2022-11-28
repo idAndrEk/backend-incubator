@@ -2,7 +2,7 @@ import "reflect-metadata";
 import {Container} from "inversify";
 import {BloggersRepository} from "./repositories/blogs/bloggers-repository";
 import {BlogsService} from "./domain/blogs-service";
-import {BloggersController} from "./controllers/bloggers-controller";
+import {BlogsController} from "./controllers/blogs.controller";
 import {PostsRepository} from "./repositories/posts/posts-repository";
 import {PostsService} from "./domain/posts-service";
 import {PostsController} from "./controllers/posts-controller";
@@ -32,7 +32,7 @@ export const jwtService = new JwtService()
 
 export const container = new Container();
 
-container.bind<BloggersController>(BloggersController).to(BloggersController);
+container.bind<BlogsController>(BlogsController).to(BlogsController);
 container.bind<BlogsService>(BlogsService).to(BlogsService);
 container.bind<BloggersRepository>(BloggersRepository).to(BloggersRepository);
 container.bind<BlogsQueryRepository>(BlogsQueryRepository).to(BlogsQueryRepository);

@@ -3,7 +3,7 @@
 import 'dotenv/config';
 import express from "express";
 import cors from "cors";
-import {bloggersRouter} from "./router/bloggers-router";
+import {blogsRouter} from "./router/blogs.router";
 import {postsRouter} from "./router/posts-router";
 import {usersRouter} from "./router/users-router";
 import {runDb} from "./repositories/db";
@@ -22,7 +22,7 @@ app.set('trust proxy', true)
 
 const port = process.env.PORT || 5000
 
-app.use('/blogs', bloggersRouter)
+app.use('/blogs', blogsRouter)
 app.use('/posts', postsRouter)
 app.use('/users', usersRouter)
 app.use('/auth', authRouter)
