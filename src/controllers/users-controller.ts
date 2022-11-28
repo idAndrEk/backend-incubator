@@ -40,7 +40,6 @@ export class UsersController {
 
     async createUser(req: Request, res: Response) {
         try {
-
             const user = await this.usersService.createUser(req.body.login, req.body.email, req.body.password)
             if (user) {
                 return res.status(201).send(user)
