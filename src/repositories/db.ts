@@ -99,7 +99,7 @@ const deviseSchema = new mongoose.Schema<DevicesDtoType>({
     expireTime:{type: Date, required: true},
 })
 
-export const BloggerModelClass = mongoose.model('bloggers', bloggerSchema)
+export const BloggerModelClass = mongoose.model('blogs', bloggerSchema)
 export const PostModelClass = mongoose.model('posts', postSchema)
 export const CommentModelClass = mongoose.model('comments', commentSchema)
 export const UserModelClass = mongoose.model('users', userSchema)
