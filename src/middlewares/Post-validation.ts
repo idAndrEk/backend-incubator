@@ -19,10 +19,10 @@ export const postValidation = [
         .trim()
         .isLength({max: 1000, min: 3})
         .withMessage('Error content'),
-    body('blogId')
-        .notEmpty()
-        .isString()
-        .trim()
+    // body('blogId')
+    //     .notEmpty()
+    //     .isString()
+    //     .trim()
     ]
 
 
