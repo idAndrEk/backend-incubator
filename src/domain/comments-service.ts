@@ -15,11 +15,11 @@ export class CommentsService {
             userId: userId,
             userLogin: userLogin,
             createdAt: new Date(),
-            // likesInfo: {
-            //     likesCount: 0,
-            //     dislikesCount: 0,
-            //     myStatus: "None"
-            // }
+            likesInfo: {
+                likesCount: 0,
+                dislikesCount: 0,
+                myStatus: "None"
+            }
         }
         const isCommentCreate = await this.commentsRepository.creteComment(newComment)
         if (isCommentCreate) return {
@@ -28,7 +28,7 @@ export class CommentsService {
             userId: isCommentCreate.userId,
             userLogin: isCommentCreate.userLogin,
             createdAt: isCommentCreate.createdAt,
-            // likesInfo: isCommentCreate.likesInfo
+            likesInfo: isCommentCreate.likesInfo
         }
         return null
     }

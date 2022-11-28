@@ -132,7 +132,7 @@ export class PostsController {
             const postId = req.params.id
             const post = await this.postsQueryRepository.checkPost(postId)
             if (post) {
-                const postComment = await this.postsService.getPostComment(postId, +page, +pageSize, sortBy.toString(), sortDirection)
+                const postComment = await this.postsService.getPostComment(postId, +page, +pageSize, sortBy.toString(), sortDirection, req.user)
                 return res.status(200).send(postComment)
             } else {
                 const errors = [];

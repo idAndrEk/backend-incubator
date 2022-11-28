@@ -17,7 +17,7 @@ export type CommentViewType = {
     userId: string
     userLogin: string
     createdAt: Date
-    // likesInfo: LikesInfo
+    likesInfo: LikesInfo
 }
 
 export type CreateCommentDto = {
@@ -26,7 +26,7 @@ export type CreateCommentDto = {
     userId: string
     userLogin: string
     createdAt: Date
-    // likesInfo: LikesInfo
+    likesInfo: LikesInfo
 }
 
 export type PaginationCommentType = {
