@@ -6,12 +6,14 @@ import {jwtRepository} from "../repositories/jwt-repository";
 export class JwtService {
 
     async createAccessJWT(user: UserAccType) { // +++
-        const token = jwt.sign({userId: user._id}, envSetting.JWT_ACCESS, {expiresIn: `${envSetting.ACCESS_TOKEN_EXPIRES_IN}`})
+        const token = jwt.sign({userId: user._id}, envSetting.JWT_ACCESS, {expiresIn: '10s'})
+        // const token = jwt.sign({userId: user._id}, envSetting.JWT_ACCESS, {expiresIn: `${envSetting.ACCESS_TOKEN_EXPIRES_IN}`})
         return token
     }
 
     async createDevicesIdRefreshJWT(user: UserAccType, deviceId: string) {
-        const token = jwt.sign({userId: user._id, deviceId}, envSetting.JWT_REFRESH, {expiresIn: `${envSetting.REFRESH_TOKEN_EXPIRES_IN}`})
+        const token = jwt.sign({userId: user._id, deviceId}, envSetting.JWT_REFRESH, {expiresIn: '20s'})
+        // const token = jwt.sign({userId: user._id, deviceId}, envSetting.JWT_REFRESH, {expiresIn: `${envSetting.REFRESH_TOKEN_EXPIRES_IN}`})
         return token
     }
 
