@@ -20,7 +20,7 @@ app.use(express.json())
 
 app.set('trust proxy', true)
 
-const port = process.env.PORT || 5000
+const port = process.env.PORT || 3000
 
 app.use('/blogs', blogsRouter)
 app.use('/posts', postsRouter)
