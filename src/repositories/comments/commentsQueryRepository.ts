@@ -1,14 +1,15 @@
 import {CommentViewType} from "../../types/commentsTypes";
 import {CommentModelClass} from "../db";
 import {injectable} from "inversify";
-import {UserViewResponse} from "../../types/UsersTypes";
+import {UserResponse, UserViewResponse} from "../../types/UsersTypes";
 import {LikesRepository} from "../like-repoository";
+import {log} from "util";
 
 @injectable()
 export class CommentsQueryRepository {
     constructor (protected likesRepository: LikesRepository) {}
 
-    async getComment(id: string, user: UserViewResponse | undefined): Promise<CommentViewType | null> {
+    async getComment(id: string, user: UserResponse | undefined): Promise<CommentViewType | null> {
         const comment = await CommentModelClass.findById(id)
         if (!comment) return null
         const {likes, dislikes} = await this.likesRepository.getLikesAndDislikesCountByParentId((comment._id).toString())
@@ -16,7 +17,7 @@ export class CommentsQueryRepository {
         comment.likesInfo.dislikesCount = dislikes
         let defaultMyStatus = 'None'
         if (user) {
-            defaultMyStatus = await this.likesRepository.getLikeStatusByUserId((comment._id).toString(), (user._id).toString())
+            defaultMyStatus = await this.likesRepository.getLikeStatusByUserId((comment._id).toString(), (user.id).toString())
         }
         comment.likesInfo.myStatus = defaultMyStatus
         return {

@@ -16,13 +16,7 @@ import {securityRouter} from "./router/devices-router";
 const app = express()
 app.use(cookieParser())
 app.use(cors())
-
-// const cors = require('cors');
-// app.use(cors({
-//     origin: 'http://localhost:3000/'
-// }));
 app.use(express.json())
-
 app.set('trust proxy', true)
 
 const port = process.env.PORT || 3000

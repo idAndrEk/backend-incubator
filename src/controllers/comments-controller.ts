@@ -49,11 +49,11 @@ export class CommentsController {
 
     async addLikeToComment(req: Request<{ id: string }, never, { likeStatus: string }, never>, res: Response) {
         try {
-            const comment = await this.commentsQueryRepository.getComment(req.params.id, req.user)
+            const comment = await this.commentsQueryRepository.getComment(req.params.id.toString(), req.user)
             if (!comment) return res.sendStatus(404)
             const commentId = req.params.id;
             const userId = req.user.id;
-            const login = req.user.accountData.userName;
+            const login = req.user.login;
             const {likeStatus} = req.body;
             await this.commentsService.addLikeToComment(commentId, userId, login, likeStatus)
             return res.sendStatus(204)
