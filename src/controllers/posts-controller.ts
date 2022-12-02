@@ -20,8 +20,8 @@ export class PostsController {
 
     async getPosts(req: Request, res: Response) {
         try {
-            const page = req.query.PageNumber || 1
-            const pageSize = req.query.PageSize || 10
+            const page = req.query.pageNumber || 1
+            const pageSize = req.query.pageSize || 10
             let sortBy = req.query.sortBy ?? "createdAt"
             let sortDirection: SortDirection = req.query.sortDirection === 'asc' ? SortDirection.Asc : SortDirection.Desc
             const posts = await this.postsQueryRepository.getPosts(+page, +pageSize, req.user, sortBy.toString(), sortDirection)

@@ -77,8 +77,8 @@ export class BlogsController {
 
     async getBloggerPosts(req: Request, res: Response) {
         try {
-            let page = req.query.PageNumber || 1
-            let pageSize = req.query.PageSize || 10
+            const page = req.query.pageNumber || 1
+            const pageSize = req.query.pageSize || 10
             // console.log('getBloggerPosts', `page: ${page}`, `pageSize: ${pageSize}`)
             const blogId = req.params.id
             const blogger = await this.blogsQueryRepository.getBlog(blogId)
