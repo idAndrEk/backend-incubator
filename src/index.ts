@@ -2,7 +2,7 @@
 // dotenv.config()
 import 'dotenv/config';
 import express from "express";
-// import cors from "cors";
+import cors from "cors";
 import {blogsRouter} from "./router/blogs.router";
 import {postsRouter} from "./router/posts-router";
 import {usersRouter} from "./router/users-router";
@@ -15,12 +15,12 @@ import {securityRouter} from "./router/devices-router";
 
 const app = express()
 app.use(cookieParser())
-// app.use(cors())
+app.use(cors())
 
-const cors = require('cors');
-app.use(cors({
-    origin: 'http://localhost:3000/'
-}));
+// const cors = require('cors');
+// app.use(cors({
+//     origin: 'http://localhost:3000/'
+// }));
 app.use(express.json())
 
 app.set('trust proxy', true)
