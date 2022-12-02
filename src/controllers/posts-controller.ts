@@ -155,7 +155,7 @@ export class PostsController {
             if (!post) return res.sendStatus(404)
             const content = req.body.content;
             const userId = req.user.id;
-            const userLogin = req.user.accountData.userName;
+            const userLogin = req.user.login;
             const newCommentPost = await this.commentsService.createComment(postId, content, userId, userLogin)
             if (newCommentPost) return res.status(201).send(newCommentPost)
             const errors = [];
