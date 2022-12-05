@@ -123,12 +123,10 @@ export class PostsController {
 
     async getCommentPost(req: Request, res: Response) {
         try {
-            let page = req.query.pageNumber || 1
-            let pageSize = req.query.pageSize || 10
+            const page = req.query.pageNumber || 1
+            const pageSize = req.query.pageSize || 10
             let sortBy = req.query.sortBy ?? "createdAt"
-            // let sortBy = req.query.sortBy === 'name' ? SortBy.Name : SortBy.CreatedAt
             let sortDirection: SortDirection = req.query.sortDirection === 'asc' ? SortDirection.Asc : SortDirection.Desc
-            // const user = req.user
             const postId = req.params.id
             const post = await this.postsQueryRepository.checkPost(postId)
             if (post) {
