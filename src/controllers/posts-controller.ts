@@ -20,7 +20,7 @@ export class PostsController {
 
     async getPosts(req: Request, res: Response) {
         try {
-            const page = req.query.page || 1
+            const page = req.query.pageNumber || 1
             const pageSize = req.query.pageSize || 10
             let sortBy = req.query.sortBy ?? "createdAt"
             let sortDirection: SortDirection = req.query.sortDirection === 'asc' ? SortDirection.Asc : SortDirection.Desc
@@ -123,7 +123,7 @@ export class PostsController {
 
     async getCommentPost(req: Request, res: Response) {
         try {
-            const page = req.query.page || 1
+            const page = req.query.pageNumber || 1
             const pageSize = req.query.pageSize || 10
             let sortBy = req.query.sortBy ?? "createdAt"
             let sortDirection: SortDirection = req.query.sortDirection === 'asc' ? SortDirection.Asc : SortDirection.Desc
