@@ -8,7 +8,7 @@ export type UserResponse = {
 }
 
 export type UserViewResponse = {
-    _id: ObjectId
+    id: ObjectId
     login: string
 }
 

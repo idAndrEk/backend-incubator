@@ -26,7 +26,7 @@ export class PostsQueryRepository {
             } = await this.likesRepository.getLikesAndDislikesCountByParentId((post._id).toString())
             post.extendedLikesInfo.likesCount = likes
             post.extendedLikesInfo.dislikesCount = dislikes
-            let myStatus = !user ? 'None' : await this.likesRepository.getLikeStatusByUserId((post._id).toString(), (user._id).toString())
+            let myStatus = !user ? 'None' : await this.likesRepository.getLikeStatusByUserId((post._id).toString(), user.id)
             post.extendedLikesInfo.myStatus = myStatus
             const newestLikes = await this.likesRepository.getNewestLikesByParentId((post._id).toString(), 3)
             items.push({
@@ -62,7 +62,7 @@ export class PostsQueryRepository {
         post.extendedLikesInfo.dislikesCount = dislikes
         let defaultMyStatus = 'None'
         if (user) {
-            defaultMyStatus = await this.likesRepository.getLikeStatusByUserId((post._id).toString(), (user._id).toString())
+            defaultMyStatus = await this.likesRepository.getLikeStatusByUserId((post._id).toString(), user.id)
         }
         post.extendedLikesInfo.myStatus = defaultMyStatus
         const newestLikes = await this.likesRepository.getNewestLikesByParentId((post._id).toString(), 3)
@@ -107,7 +107,7 @@ export class PostsQueryRepository {
             const {likes, dislikes} = await this.likesRepository.getLikesAndDislikesCountByParentId((post._id).toString())
             post.extendedLikesInfo.likesCount = likes
             post.extendedLikesInfo.dislikesCount = dislikes
-            let myStatus = !user ? 'None' : await this.likesRepository.getLikeStatusByUserId((post._id).toString(), (user._id).toString())
+            let myStatus = !user ? 'None' : await this.likesRepository.getLikeStatusByUserId((post._id).toString(), user.id)
             post.extendedLikesInfo.myStatus = myStatus
             const newestLikes = await this.likesRepository.getNewestLikesByParentId((post._id).toString(), 3)
             items.push({

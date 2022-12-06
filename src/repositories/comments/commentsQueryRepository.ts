@@ -17,7 +17,7 @@ export class CommentsQueryRepository {
         comment.likesInfo.dislikesCount = dislikes
         let defaultMyStatus = 'None'
         if (user) {
-            defaultMyStatus = await this.likesRepository.getLikeStatusByUserId((comment._id).toString(), (user.id).toString())
+            defaultMyStatus = await this.likesRepository.getLikeStatusByUserId((comment._id).toString(), user.id)
         }
         comment.likesInfo.myStatus = defaultMyStatus
         return {
