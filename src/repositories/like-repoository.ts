@@ -1,5 +1,6 @@
 import {injectable} from "inversify";
 import {LikesModelClass} from "./db";
+import {ObjectId} from "mongodb";
 
 @injectable()
 export class LikesRepository {
@@ -14,7 +15,7 @@ export class LikesRepository {
         return {likes, dislikes}
     }
 
-    async getLikeStatusByUserId(parentId: string, userId: string) {
+    async getLikeStatusByUserId(parentId: string, userId: ObjectId) {
         const result = await LikesModelClass.findOne({parentId, userId})
         if (result) return result.status
         return 'None'

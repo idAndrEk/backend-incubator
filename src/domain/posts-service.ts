@@ -82,7 +82,7 @@ export class PostsService {
             } = await this.likesRepository.getLikesAndDislikesCountByParentId((comment._id).toString())
             comment.likesInfo.likesCount = likes
             comment.likesInfo.dislikesCount = dislikes
-            let myStatus = !user ? 'None' : await this.likesRepository.getLikeStatusByUserId(comment._id.toString(), user._id.toString())
+            let myStatus = !user ? 'None' : await this.likesRepository.getLikeStatusByUserId(comment._id.toString(), user._id)
 
             comment.likesInfo.myStatus = myStatus
             items.push({
