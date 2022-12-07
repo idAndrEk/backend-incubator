@@ -81,9 +81,11 @@ export class BlogsController {
             const pageSize = req.query.pageSize || 10
             // console.log('getBloggerPosts', `page: ${page}`, `pageSize: ${pageSize}`)
             const blogId = req.params.id
+            let sortBy = req.query.sortBy ?? "createdAt"
+            let sortDirection: SortDirection = req.query.sortDirection === 'asc' ? SortDirection.Asc : SortDirection.Desc
             const blogger = await this.blogsQueryRepository.getBlog(blogId)
             if (blogger) {
-                const bloggerPosts = await this.postsQueryRepository.findPostsBlogger(blogId, +page, +pageSize, req.user)
+                const bloggerPosts = await this.postsQueryRepository.findPostsBlogger(blogId, +page, +pageSize, req.user, sortBy.toString(), sortDirection)
                 return res.status(200).send(bloggerPosts)
             } else {
                 const errors = [];

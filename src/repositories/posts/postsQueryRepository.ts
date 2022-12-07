@@ -90,13 +90,14 @@ export class PostsQueryRepository {
         return post
     }
 
-    async findPostsBlogger(blogId: string, page: number, pageSize: number, user: UserViewResponse | undefined): Promise<PaginationPostType> {
+    async findPostsBlogger(blogId: string, page: number, pageSize: number, user: UserViewResponse | undefined,  sortBy: string, sortDirection: SortDirection): Promise<PaginationPostType> {
 
         const postData = await PostModelClass
             .find({
                 $or: [{ blogId: { $regex: blogId ?? '' } }],
             })
             .skip(getSkipPage(page, pageSize))
+            .sort({[sortBy]: sortDirection === SortDirection.Asc ? 1 : -1})
             .limit(pageSize)
             .lean()
         const totalCount = await PostModelClass.countDocuments({
