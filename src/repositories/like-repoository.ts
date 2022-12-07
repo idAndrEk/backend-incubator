@@ -5,7 +5,7 @@ import {ObjectId} from "mongodb";
 @injectable()
 export class LikesRepository {
     async addLikeOrDislikeOrNone(parentId: string, userId: string, login: string, status: string) {
-        await LikesModelClass.findOneAndUpdate({parentId, userId}, {status, createdAt: new Date(), login}, {upsert: true})
+        await LikesModelClass.findOneAndUpdate({parentId, userId}, {status, addedAt: new Date(), login}, {upsert: true})
         return
     }
 
