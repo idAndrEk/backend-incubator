@@ -84,7 +84,7 @@ const tokenSchema = new mongoose.Schema<TokenType>({
 const likesSchema = new mongoose.Schema<LikesType>({
     parentId: {type: ObjectId, required: true},
     status: {type: String, required: true},
-    createdAt: {type: Date, required: true},
+    addedAt: {type: Date, required: true},
     userId: {type: ObjectId, required: true},
     login: {type: String, required: true},
 })

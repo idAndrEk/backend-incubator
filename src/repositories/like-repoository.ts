@@ -26,7 +26,7 @@ export class LikesRepository {
             {parentId, status: 'Like'},
             {_id: 0, __v: 0, parentId: 0, status: 0},
         )
-            .sort({'createdAt': -1}) //
+            .sort({'addedAt': -1}) //
             .limit(count)
             .lean()
         return newestLikes
