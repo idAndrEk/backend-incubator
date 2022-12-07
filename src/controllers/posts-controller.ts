@@ -100,7 +100,7 @@ export class PostsController {
             if (!post) return res.sendStatus(404)
             const postId = req.params.id;
             const userId = req.user.id;
-            const login = req.user.accountData.userName;
+            const login = req.user.login;
             const {likeStatus} = req.body;
             await this.postsService.addLikeToPost(postId, userId, login, likeStatus)
             return res.sendStatus(204)
